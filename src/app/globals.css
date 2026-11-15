@@ -332,6 +332,50 @@ label { display: block; font-weight: 650; margin: 12px 0 6px; }
 }
 
 /* --------------------------------------------------------------------------
+   Question card
+   -------------------------------------------------------------------------- */
+
+.question-card { padding: 22px 22px 24px; }
+.q-head {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.q-scope { margin-top: -2px; }
+.prompt-text {
+  margin: 14px 0 10px;
+  font-size: 1.24rem;
+  font-weight: 680;
+  line-height: 1.42;
+  letter-spacing: -0.008em;
+}
+@media (max-width: 420px) {
+  .prompt-text { font-size: 1.12rem; }
+  .question-card { padding: 18px 16px 20px; }
+}
+
+/* Checkbox rows (share options) */
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 12px 0 0;
+  font-weight: 500;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.check-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 3px 0 0;
+  accent-color: var(--accent-2);
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+.check-row:hover { color: var(--text); }
+
+/* --------------------------------------------------------------------------
    HUD: round stepper + score
    -------------------------------------------------------------------------- */
 
@@ -450,6 +494,13 @@ label { display: block; font-weight: 650; margin: 12px 0 6px; }
 .mark-Pass { background: transparent; color: var(--text-dim); }
 
 /* Reveal stamp */
+.stamp-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
 .stamp {
   display: inline-flex;
   align-items: center;
@@ -460,17 +511,18 @@ label { display: block; font-weight: 650; margin: 12px 0 6px; }
   padding: 6px 14px;
   animation: stamp 340ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
 }
+.points-pop {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-3);
+  text-shadow: 0 1px 8px color-mix(in srgb, var(--accent-3) 35%, transparent);
+  animation: rise 600ms cubic-bezier(0.2, 0.9, 0.3, 1.4) 120ms both;
+}
 @keyframes stamp {
   0% { transform: scale(1.7) rotate(-7deg); opacity: 0; }
   60% { transform: scale(0.94) rotate(1deg); opacity: 1; }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
-}
-
-.points-pop {
-  display: inline-block;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  animation: rise 600ms cubic-bezier(0.2, 0.9, 0.3, 1.4) 120ms both;
 }
 @keyframes rise {
   0% { transform: translateY(10px) scale(0.7); opacity: 0; }
@@ -481,8 +533,9 @@ label { display: block; font-weight: 650; margin: 12px 0 6px; }
 .reveal-box {
   border-left: 3px solid;
   border-image: linear-gradient(180deg, #6ea8ff, #b48cff) 1;
-  padding: 4px 0 4px 16px;
+  padding: 10px 4px 10px 16px;
   margin-top: 14px;
+  background: linear-gradient(90deg, rgba(110, 140, 255, 0.07), transparent 72%);
   animation: fadeUp 320ms ease 80ms both;
 }
 
@@ -579,24 +632,57 @@ details.hint[open] summary { margin-bottom: 6px; }
    Result hero
    -------------------------------------------------------------------------- */
 
-.result-hero { text-align: center; padding: 26px 18px 22px; }
-.result-hero .score-ring { width: 168px; height: 168px; margin: 6px auto 2px; }
-.result-hero .total {
-  font-size: 3rem;
-  font-weight: 850;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.1;
-}
-.result-hero .total .denom { font-size: 1.4rem; font-weight: 700; color: var(--text-faint); }
-.result-hero .ring-label {
+.result-hero { text-align: center; padding: 26px 18px 24px; }
+
+/* Score dial: label is absolutely centered inside the wrap, so it can never
+   drift out of the ring regardless of font metrics or inline-baseline gaps. */
+.score-wrap {
   position: relative;
-  margin-top: -118px;
-  height: 118px;
+  margin: 14px auto 6px;
+}
+.score-ring {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 8px 26px rgba(110, 140, 255, 0.22));
+}
+.score-wrap .ring-label {
+  position: absolute;
+  inset: 0;
   display: grid;
   place-items: center;
+  text-align: center;
   pointer-events: none;
 }
-.result-hero .sub { color: var(--text-dim); margin-top: 4px; }
+.score-wrap .total {
+  font-size: 2.8rem;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.score-wrap .denom {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
+
+.result-hero .verdict {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin: 10px 0 2px;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.result-hero .sub { color: var(--text-dim); margin-top: 2px; }
+.result-hero .marks { justify-content: center; margin-top: 14px; }
+.result-hero .muted.small { margin-top: 6px; }
 
 .countdown { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--accent); }
 
@@ -620,9 +706,16 @@ details.review summary {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
 }
-details.review summary .q { color: var(--text-dim); font-weight: 500; }
+details.review summary .q {
+  color: var(--text-dim);
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 /* --------------------------------------------------------------------------
    Share card
@@ -708,7 +801,7 @@ table.archive tbody tr:hover { background: var(--surface-2); }
   .step .dot { width: 22px; height: 22px; }
   .input-row { flex-wrap: wrap; }
   .unit-tag { width: 100%; justify-content: center; }
-  .result-hero .total { font-size: 2.4rem; }
+  .score-wrap .total { font-size: 2.4rem; }
 }
 
 @media (orientation: landscape) and (max-height: 480px) {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { AttemptState, RoundResolved } from "@/lib/dto";
 import { parseNumber, formatDisplay } from "@/lib/domain/numberParser";
 import { SIBLING_GAMES } from "@/lib/site";
+import ScoreRing from "@/components/ScoreRing";
 
 type ApiResult = { ok: boolean; state?: AttemptState; code?: string; message?: string; suggestion?: string };
 
@@ -395,10 +396,12 @@ export default function EstimationGame({ mode, date }: Props) {
 
       {resolved ? (
         <section className="card fade-up" aria-live="polite">
-          <span className={`stamp ${markClass(resolved.mark)}`}>
-            {MARK_ICONS[resolved.mark] ?? ""} {resolved.mark}
-          </span>{" "}
-          <span className="points-pop">+{resolved.points} pts</span>
+          <div className="stamp-row">
+            <span className={`stamp ${markClass(resolved.mark)}`}>
+              {MARK_ICONS[resolved.mark] ?? ""} {resolved.mark}
+            </span>
+            <span className="points-pop">+{resolved.points} pts</span>
+          </div>
           {resolved.mark === "Exact" || resolved.mark === "Close" ? <Burst seed={burstSeed} /> : null}
           {resolved.outcome === "pass" ? (
             <p className="muted">You passed — here&apos;s the same explanation you would have seen.</p>
@@ -411,15 +414,21 @@ export default function EstimationGame({ mode, date }: Props) {
           </div>
         </section>
       ) : prompt ? (
-        <section className="card fade-up">
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            <span className="chip">
-              {categoryIcon(prompt.category)} {prompt.category ?? ROUND_LABELS[prompt.roundType]}
-            </span>
-            <span className="pill">{ROUND_LABELS[prompt.roundType]}</span>
+        <section className="card question-card fade-up">
+          <div className="q-head">
+            {prompt.category ? (
+              <>
+                <span className="chip">
+                  {categoryIcon(prompt.category)} {prompt.category}
+                </span>
+                <span className="pill">{ROUND_LABELS[prompt.roundType]}</span>
+              </>
+            ) : (
+              <span className="chip">{ROUND_LABELS[prompt.roundType]}</span>
+            )}
           </div>
-          <h2 className="small" style={{ marginTop: 12 }}>{prompt.prompt}</h2>
-          {prompt.scope ? <p className="muted small">{prompt.scope}</p> : null}
+          <p className="prompt-text">{prompt.prompt}</p>
+          {prompt.scope ? <p className="muted small q-scope">{prompt.scope}</p> : null}
 
           {prompt.roundType === "target_match" ? (
             <>
@@ -666,42 +675,6 @@ function RevealDetails({ r }: { r: RoundResolved }) {
   );
 }
 
-function ScoreRing({ total, max }: { total: number; max: number }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
-  const frac = max > 0 ? Math.max(0, Math.min(1, total / max)) : 0;
-  const r = 70;
-  const c = 2 * Math.PI * r;
-  return (
-    <svg className="score-ring" viewBox="0 0 160 160" role="img" aria-label={`Score ${total} of ${max}`}>
-      <defs>
-        <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#6ea8ff" />
-          <stop offset="55%" stopColor="#8f7bff" />
-          <stop offset="100%" stopColor="#b48cff" />
-        </linearGradient>
-      </defs>
-      <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(148,170,255,0.12)" strokeWidth="11" />
-      <circle
-        cx="80"
-        cy="80"
-        r={r}
-        fill="none"
-        stroke="url(#ringGrad)"
-        strokeWidth="11"
-        strokeLinecap="round"
-        strokeDasharray={c}
-        strokeDashoffset={mounted ? c * (1 - frac) : c}
-        transform="rotate(-90 80 80)"
-        style={{ transition: "stroke-dashoffset 1.1s cubic-bezier(0.2, 0.7, 0.3, 1)" }}
-      />
-    </svg>
-  );
-}
-
 function RecapView({
   state,
   shareUrl,
@@ -750,23 +723,15 @@ function RecapView({
         {great ? <Burst seed={recap.total} count={20} /> : null}
         <span className="chip">{recap.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
         <ScoreRing total={recap.total} max={recap.maxTotal} />
-        <div className="ring-label">
-          <div>
-            <div className="total">
-              {recap.total}
-              <span className="denom"> / {recap.maxTotal}</span>
-            </div>
-            <div className="sub small">
-              {recap.total >= 450
-                ? "Spectacular guessing."
-                : recap.total >= 350
-                  ? "Strong instincts."
-                  : recap.total >= 200
-                    ? "Solidly roughly right."
-                    : "Tomorrow's another puzzle."}
-            </div>
-          </div>
-        </div>
+        <p className="verdict">
+          {recap.total >= 450
+            ? "Spectacular guessing."
+            : recap.total >= 350
+              ? "Strong instincts."
+              : recap.total >= 200
+                ? "Solidly roughly right."
+                : "Tomorrow's another puzzle."}
+        </p>
         <p className="sub">
           Estimation #{recap.displayNumber} · {recap.puzzleDate}
         </p>
@@ -785,7 +750,7 @@ function RecapView({
 
       <div className="card">
         <h2>Share result</h2>
-        <label>
+        <label className="check-row">
           <input
             type="checkbox"
             checked={comparison}
@@ -793,8 +758,8 @@ function RecapView({
               setComparison(e.target.checked);
               setShareUrl(null);
             }}
-          />{" "}
-          Let friends who finished the same puzzle compare per question
+          />
+          <span>Let friends who finished the same puzzle compare per question</span>
         </label>
         <div className="actions">
           <button className="primary" onClick={() => onShare(comparison)}>Share result</button>
