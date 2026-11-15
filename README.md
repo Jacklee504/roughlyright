@@ -27,7 +27,7 @@ puzzle).
 | `npm run dev`       | Next.js dev server |
 | `npm run build`     | Production build |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm test`          | Unit tests (vitest: parser, scoring) **and** the integration suite (`tsx tests/integration.mts`, assert-based, fresh in-memory Postgres each run) |
+| `npm test`          | Unit tests (vitest: parser, scoring, autocorrect) **and** the integration suite (`tsx tests/integration.mts`, assert-based, fresh in-memory Postgres each run) |
 | `npm run db:migrate`| Apply versioned SQL migrations from `migrations/*.sql` |
 | `npm run db:seed`   | Import editorial content from `content/fixtures/` and `content/live/` (same validator for both) |
 | `npm run db:reset`  | Delete the local database and redo migrate + seed |
@@ -75,6 +75,14 @@ this project — it has no external service dependencies.)
   with distinct rules for counted things (whole numbers only) vs measured
   quantities. Rejections always explain themselves
   (`tests/parser.test.ts`).
+- **Autocorrect** — rejected guesses get an *offered* correction, never a
+  silent rewrite: lookalike letters (`9oo` → 900), wrapping prose
+  ("about 900"), currency symbols, appended units (`900kg`), broken grouping
+  (`1.234.567`, `3,50,000`), doubled decimal points, and the decimal-comma
+  ambiguity (`5,00` → 5 measured / 500 counted). Target-match typing gets
+  fuzzy typo matching ("harbr lights" → Harbor Lights) in both the resolve
+  flow and the autocomplete fallback. See `src/lib/domain/autocorrect.ts`
+  and `tests/autocorrect.test.ts`.
 - **Finish window** — a daily attempt may start only on its own UTC date and
   may finish up to 30 minutes past midnight (00:30 UTC next day); late
   completions still credit the original day for streaks. Runs still open past
@@ -116,7 +124,7 @@ this project — it has no external service dependencies.)
 ```
 migrations/          versioned SQL schema (single migration today)
 content/fixtures/    demo puzzles + demo target dataset
-src/lib/domain/      decimal/scoring/parser/calendar/text (pure, no I/O)
+src/lib/domain/      decimal/scoring/parser/autocorrect/calendar/text (pure, no I/O)
 src/lib/content/     editorial types, validation, importer
 src/lib/service/     attempts, puzzles, stats, share, reports, status
 src/lib/db/          PGlite client, migrations runner

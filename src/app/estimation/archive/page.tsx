@@ -27,13 +27,19 @@ export default async function ArchiveIndexPage() {
 
   return (
     <main>
-      <h1>Estimation archive</h1>
-      <p className="muted">
-        Released dates before today. Completed dates open their recap; missed dates can be played
-        once as unranked archive puzzles. Archive runs never affect your daily streak.
-      </p>
+      <div className="hero">
+        <h1>
+          Estimation <span className="grad-text">archive</span>
+        </h1>
+        <p className="tagline muted">
+          Released dates before today. Completed dates open their recap; missed dates can be played
+          once as unranked archive puzzles. Archive runs never affect your daily streak.
+        </p>
+      </div>
       {rows.length === 0 ? (
-        <p role="status" className="muted">No released dates yet.</p>
+        <div className="card">
+          <p role="status" className="muted">No released dates yet.</p>
+        </div>
       ) : (
         <table className="archive">
           <thead>
@@ -50,7 +56,7 @@ export default async function ArchiveIndexPage() {
                   <Link href={`/estimation/archive/${r.date}`}>#{r.display_number}{r.theme_tag ? ` · ${r.theme_tag}` : ""}</Link>
                 </td>
                 <td>{r.date}</td>
-                <td>{r.state === "completed" ? `Completed · ${r.score}/500` : "Not played"}</td>
+                <td>{r.state === "completed" ? <span className="pill">✓ {r.score}/500</span> : <span className="muted">Not played</span>}</td>
               </tr>
             ))}
           </tbody>

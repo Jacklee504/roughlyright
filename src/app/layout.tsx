@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0e1220",
+  themeColor: "#060a17",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -21,7 +21,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <header className="site">
-          <Link className="brand" href="/">Roughly Right</Link>
+          <Link className="brand" href="/">
+            <span className="logo" aria-hidden="true">RR</span>
+            Roughly Right
+          </Link>
           <nav aria-label="Games">
             {/* Partial rollout: only released games appear in navigation. */}
             <Link href="/estimation">Estimation</Link>

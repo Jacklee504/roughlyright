@@ -12,6 +12,7 @@ import { getDb, q, type Queryable } from "@/lib/db/client";
 import { parseDecimalToRat, rat, cmp, div, sub, type Rat } from "@/lib/domain/decimal";
 import { scoreValue, direction as guessDirection } from "@/lib/domain/scoring";
 import { parseNumber, formatDisplay } from "@/lib/domain/numberParser";
+import { repairNumberInput, fuzzyEntityMatches, type FuzzyCandidate } from "@/lib/domain/autocorrect";
 import { normalizeKey } from "@/lib/domain/text";
 import { utcToday, dailyFinishWindowEndIso, nextResetIso } from "@/lib/domain/calendar";
 import { now } from "@/lib/domain/clock";
@@ -30,7 +31,7 @@ export type ResolveInput =
 
 export type ResolveResult =
   | { ok: true; state: AttemptState }
-  | { ok: false; code: "invalid_input" | "wrong_guest" | "not_found" | "stale" | "expired" | "conflict"; message: string };
+  | { ok: false; code: "invalid_input" | "wrong_guest" | "not_found" | "stale" | "expired" | "conflict"; message: string; suggestion?: string };
 
 export type AdvanceInput = { attemptId: string; ordinal: number; requestId: string };
 export type AdvanceResult =
@@ -393,10 +394,26 @@ export async function resolveRound(guestId: string, input: ResolveInput): Promis
           e.aliases.some((a) => normalizeKey(a) === wanted),
       );
       if (!match) {
+        // Advisory autocorrect: offer a close typo correction only when there
+        // is exactly one best candidate (ambiguity never gets guessed).
+        const cands: FuzzyCandidate[] = entries.flatMap((e) => {
+          const forms = [e.label, e.disambiguator ? `${e.label} (${e.disambiguator})` : null, ...e.aliases];
+          return forms.filter((f): f is string => !!f).map((display) => ({ display, entryKey: e.entry_id }));
+        });
+        const hits = fuzzyEntityMatches(input.entity, cands, normalizeKey);
+        const best = hits[0];
+        const tie = hits.length > 1 && hits[1].distance === best?.distance && hits[1].candidate.entryKey !== best?.candidate.entryKey;
+        let suggestion: string | undefined;
+        if (best && !tie) {
+          const bestEntry = entries.find((e) => e.entry_id === best.candidate.entryKey);
+          // The plain label is always an accepted match form on resolve.
+          suggestion = bestEntry?.label ?? best.candidate.display;
+        }
         return {
           ok: false as const,
           code: "invalid_input" as const,
           message: `We couldn't match "${input.entity.trim()}" to an item in this list. Try the suggestions, or check the spelling.`,
+          ...(suggestion ? { suggestion } : {}),
         };
       }
       submittedEntity = { entryId: match.entry_id, label: match.label, value: match.value };
@@ -409,7 +426,14 @@ export async function resolveRound(guestId: string, input: ResolveInput): Promis
     } else {
       const parsed = parseNumber(input.guess ?? "", revision.count_mode ? "count" : "measured", revision.unit);
       if (!parsed.ok) {
-        return { ok: false as const, code: "invalid_input" as const, message: parsed.message };
+        const repair = repairNumberInput(input.guess ?? "", revision.count_mode ? "count" : "measured", revision.unit);
+        return {
+          ok: false as const,
+          code: "invalid_input" as const,
+          message: parsed.message,
+          // Advisory only: the client offers it; the player still confirms it.
+          ...(repair ? { suggestion: repair.fixed } : {}),
+        };
       }
       const targetRat = targetValue(scoring);
       if (!targetRat) return { ok: false as const, code: "stale" as const, message: "Benchmark missing." };

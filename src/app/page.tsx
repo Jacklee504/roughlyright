@@ -20,25 +20,35 @@ export default async function LandingPage() {
 
   return (
     <main>
-      <section className="card">
-        <h1>Roughly Right</h1>
-        <p>
-          Make five real-world estimates. Get closer to earn more points. No timer, no registration —
-          just general knowledge, intuition and rough maths. A new puzzle every day at 00:00 UTC.
+      <section className="hero">
+        <span className="chip">Daily games · one roof</span>
+        <h1>
+          Roughly <span className="grad-text">Right</span>
+        </h1>
+        <p className="tagline">
+          Five real-world estimates a day. Get closer to earn more points. No timer, no
+          registration — just general knowledge, intuition and rough maths.
         </p>
+        <div className="pills">
+          <span className="pill">🧭 5 rounds a day</span>
+          <span className="pill">🎯 Scored /500</span>
+          <span className="pill">🌅 Resets 00:00 UTC</span>
+          {status.streak.current > 0 || status.streak.best > 0 ? (
+            <span className="pill">🔥 {status.streak.current} streak · best {status.streak.best}</span>
+          ) : null}
+        </div>
       </section>
 
       {/* Primary game position. A second game (Rarity) takes the lead slot once both are public. */}
       <section className="card" aria-labelledby="estimation-heading">
-        <span className="chip">Daily</span>
-        <h2 id="estimation-heading">Estimation</h2>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <span className="chip">🛰️ Daily</span>
+          <h2 id="estimation-heading" style={{ margin: 0 }}>Estimation</h2>
+        </div>
         <p className="muted">
           {status.puzzleNumber
-            ? `Puzzle #${status.puzzleNumber}${status.themeTag ? ` · ${status.themeTag}` : ""} · resets in your local time`
+            ? `Puzzle #${status.puzzleNumber}${status.themeTag ? ` · ${status.themeTag}` : ""}`
             : "A new puzzle is being prepared."}
-        </p>
-        <p className="muted small">
-          Streak: {status.streak.current} current · {status.streak.best} best
         </p>
         <div className="actions">
           {status.puzzleAvailable ? (
@@ -50,11 +60,29 @@ export default async function LandingPage() {
         </div>
       </section>
 
+      <section className="feature-row" aria-label="How it works">
+        <div className="feature">
+          <span className="ico" aria-hidden="true">🤔</span>
+          <strong>Guess</strong>
+          <span>Type a number — suffixes like 5k are fine, typos get gently corrected.</span>
+        </div>
+        <div className="feature">
+          <span className="ico" aria-hidden="true">📏</span>
+          <strong>Score</strong>
+          <span>Exact, Close, In range, Far — every round shows how your guess landed.</span>
+        </div>
+        <div className="feature">
+          <span className="ico" aria-hidden="true">🔗</span>
+          <strong>Compare</strong>
+          <span>Share spoiler-free marks; per-question comparison for friends who played.</span>
+        </div>
+      </section>
+
       <section className="card">
         <h2>More games are coming</h2>
         <p className="muted">
-          Roughly Right will host a small collection of daily games under one roof. Estimation is the
-          first; the next one is on the way.
+          Roughly Right will host a small collection of daily games under one roof. Estimation is
+          the first; the next one is on the way.
         </p>
       </section>
     </main>

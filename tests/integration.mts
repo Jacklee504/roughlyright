@@ -154,6 +154,8 @@ test("rejects invalid input without closing the round, and explains the issue", 
   if (!bad.ok) {
     assert.equal(bad.code, "invalid_input");
     assert.match(bad.message, /separators/);
+    // Round 1 is a measured quantity, so the decimal-comma reading is offered.
+    assert.equal(bad.suggestion, "5.00");
   }
   const stillOpen = await resolveRound(guest, { attemptId: s.attemptId, ordinal: 1, requestId: rid(), pass: false, guess: "899" });
   assert.ok(stillOpen.ok);
@@ -161,6 +163,52 @@ test("rejects invalid input without closing the round, and explains the issue", 
     assert.equal(stillOpen.state.resolved?.guess?.canonical, "899");
     assert.equal(stillOpen.state.resolved?.points, 100);
   }
+});
+
+test("offers an autocorrect suggestion for a numeric typo; applying it scores normally", async () => {
+  const guest = await newGuest();
+  const s = await startDaily(guest);
+  const typo = await resolveRound(guest, { attemptId: s.attemptId, ordinal: 1, requestId: rid(), pass: false, guess: "9oo" });
+  assert.ok(!typo.ok);
+  if (!typo.ok) {
+    assert.equal(typo.code, "invalid_input");
+    assert.equal(typo.suggestion, "900");
+  }
+  // The round is still open; the corrected value resolves normally.
+  const applied = await resolveRound(guest, { attemptId: s.attemptId, ordinal: 1, requestId: rid(), pass: false, guess: "900" });
+  assert.ok(applied.ok);
+  if (applied.ok) assert.equal(applied.state.resolved?.points, 100);
+});
+
+test("fuzzy-matches a mistyped entity and offers the correction; ambiguous typos get none", async () => {
+  const guest = await newGuest();
+  const s = await startDaily(guest);
+  for (let i = 1; i <= 4; i++) {
+    await resolveRound(guest, { attemptId: s.attemptId, ordinal: i, requestId: rid(), pass: true });
+    await advanceRound(guest, { attemptId: s.attemptId, ordinal: i, requestId: rid() });
+  }
+  const typo = await resolveRound(guest, { attemptId: s.attemptId, ordinal: 5, requestId: rid(), pass: false, entity: "harbr lights" });
+  assert.ok(!typo.ok);
+  if (!typo.ok) {
+    assert.equal(typo.code, "invalid_input");
+    assert.equal(typo.suggestion, "Harbor Lights");
+  }
+  const applied = await resolveRound(guest, { attemptId: s.attemptId, ordinal: 5, requestId: rid(), pass: false, entity: "Harbor Lights" });
+  assert.ok(applied.ok);
+  if (applied.ok) {
+    assert.equal(applied.state.resolved?.mark, "Exact");
+    assert.equal(applied.state.resolved?.points, 100);
+  }
+  // A typo equally close to two different entries must not be guessed.
+  const g2 = await newGuest();
+  const s2 = await startDaily(g2);
+  for (let i = 1; i <= 4; i++) {
+    await resolveRound(g2, { attemptId: s2.attemptId, ordinal: i, requestId: rid(), pass: true });
+    await advanceRound(g2, { attemptId: s2.attemptId, ordinal: i, requestId: rid() });
+  }
+  const ambiguous = await resolveRound(g2, { attemptId: s2.attemptId, ordinal: 5, requestId: rid(), pass: false, entity: "harbor" });
+  assert.ok(!ambiguous.ok);
+  if (!ambiguous.ok) assert.equal(ambiguous.suggestion, undefined);
 });
 
 test("count mode rejects non-whole guesses after expansion", async () => {

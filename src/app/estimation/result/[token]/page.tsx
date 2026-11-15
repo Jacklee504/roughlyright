@@ -57,22 +57,51 @@ export default async function ResultPage({ params }: { params: Promise<{ token: 
 
   const p = result.payload;
   const ownLink = viewerGuest && viewerGuest === (await ownerOf(result.attemptId));
+  const frac = p.maxTotal > 0 ? Math.max(0, Math.min(1, p.total / p.maxTotal)) : 0;
+  const ringR = 70;
+  const ringC = 2 * Math.PI * ringR;
 
   return (
     <main>
       <div className="card result-hero">
         <span className="chip">{p.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
-        <h1>
-          {p.total}
-          <span className="muted"> / {p.maxTotal}</span>
-        </h1>
-        <p className="muted">
+        <svg className="score-ring" viewBox="0 0 160 160" role="img" aria-label={`Score ${p.total} of ${p.maxTotal}`}>
+          <defs>
+            <linearGradient id="ringGradShare" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#6ea8ff" />
+              <stop offset="55%" stopColor="#8f7bff" />
+              <stop offset="100%" stopColor="#b48cff" />
+            </linearGradient>
+          </defs>
+          <circle cx="80" cy="80" r={ringR} fill="none" stroke="rgba(148,170,255,0.12)" strokeWidth="11" />
+          <circle
+            cx="80"
+            cy="80"
+            r={ringR}
+            fill="none"
+            stroke="url(#ringGradShare)"
+            strokeWidth="11"
+            strokeLinecap="round"
+            strokeDasharray={ringC}
+            strokeDashoffset={ringC * (1 - frac)}
+            transform="rotate(-90 80 80)"
+          />
+        </svg>
+        <div className="ring-label">
+          <div>
+            <div className="total">
+              {p.total}
+              <span className="denom"> / {p.maxTotal}</span>
+            </div>
+          </div>
+        </div>
+        <p className="sub">
           Estimation #{p.displayNumber} · {p.puzzleDate}
         </p>
         <div className="marks" role="list" aria-label="Round marks">
           {p.marks.map((m) => (
             <span role="listitem" key={m.ordinal} className={`mark mark-${m.mark.replace(/\s+/g, "-")}`}>
-              R{m.ordinal}: {m.mark}
+              {m.mark}
             </span>
           ))}
         </div>

@@ -5,6 +5,7 @@ import { q } from "@/lib/db/client";
 import { normalizeKey } from "@/lib/domain/text";
 import { getTargetDatasetForRound } from "@/lib/service/attempts";
 import { isUuid } from "@/lib/http/validate";
+import { fuzzyEntityMatches } from "@/lib/domain/autocorrect";
 
 export const dynamic = "force-dynamic";
 
@@ -42,8 +43,34 @@ export async function GET(req: NextRequest) {
      limit 8`,
     [dataset.datasetId, norm, dataset.eligibleEntryIds],
   );
+
+  if (rows.length > 0) {
+    return NextResponse.json({
+      ok: true,
+      suggestions: rows.map((r) => ({ label: r.label, disambiguator: r.disambiguator })),
+    });
+  }
+
+  // Prefix search found nothing: fall back to fuzzy typo matching over the
+  // eligible labels (labels only — never values or answers).
+  const labels = await q<{ label: string; disambiguator: string | null }>(
+    `select distinct e.label, e.disambiguator
+     from target_entries e
+     where e.dataset_id = $1
+       and ($2::text[] is null or e.entry_id = any($2::text[]))`,
+    [dataset.datasetId, dataset.eligibleEntryIds],
+  );
+  const hits = fuzzyEntityMatches(
+    raw,
+    labels.map((r) => ({ display: r.disambiguator ? `${r.label} (${r.disambiguator})` : r.label, entryKey: r.label })),
+    normalizeKey,
+  ).slice(0, 8);
   return NextResponse.json({
     ok: true,
-    suggestions: rows.map((r) => ({ label: r.label, disambiguator: r.disambiguator })),
+    suggestions: hits.map((h) => {
+      const label = h.candidate.entryKey;
+      const row = labels.find((r) => r.label === label);
+      return { label, disambiguator: row?.disambiguator ?? null, fuzzy: true as const };
+    }),
   });
 }
