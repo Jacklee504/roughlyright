@@ -1,0 +1,163 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "dayOffset": 0,
+  "quality": "fixture",
+  "themeTag": null,
+  "prompts": [
+    {
+      "promptId": "curiosity-mass",
+      "roundType": "direct_fact",
+      "category": "space",
+      "prompt": "What is the mass of NASA’s Curiosity rover itself, in kilograms?",
+      "scope": "The mass of the rover itself as reported by NASA — not the launch mass with the cruise stage and descent hardware.",
+      "unit": "kg",
+      "countMode": false,
+      "hint": {
+        "text": "Curiosity is about the size of a small SUV, but much of that volume is empty space and instrument decks.",
+        "image": {
+          "url": "/hint-images/curiosity.svg",
+          "alt": "Illustration of the Curiosity rover beside three people for scale; the rover reaches roughly shoulder height. (Fixture placeholder artwork.)",
+          "credit": "Fixture placeholder artwork",
+          "rights": "Original placeholder illustration for demonstration only"
+        }
+      },
+      "scoring": {
+        "type": "direct_fact",
+        "value": "899",
+        "precision": 0,
+        "source": { "title": "NASA Mars Science Laboratory (Curiosity) mission page", "url": "https://science.nasa.gov/mission/msl-curiosity/" },
+        "asOf": "2026-01"
+      },
+      "reveal": {
+        "explanation": "NASA lists the Curiosity rover’s own mass as 899 kg — about 15 adult humans, or roughly the mass of a grand piano plus its mover.",
+        "sourceTitle": "NASA Mars Science Laboratory mission page",
+        "sourceUrl": "https://science.nasa.gov/mission/msl-curiosity/",
+        "comparison": "That is about the mass of a small car with nobody in it."
+      }
+    },
+    {
+      "promptId": "bread-per-acre",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "Roughly how many loaves of sandwich bread could you make from the wheat grown on one acre, using the fixture yield and a 450 g flour recipe? (The fixture uses 3,000 kg of wheat per acre, 0.75 kg of flour recovered per kg of wheat, and 0.45 kg of flour per loaf.)",
+      "scope": "Demonstration fixture with declared assumptions: 3,000 kg wheat per acre, 75% flour extraction, 450 g flour per baked loaf. A live version would source crop, country and harvest year.",
+      "unit": "loaves",
+      "countMode": true,
+      "hint": {
+        "image": {
+          "url": "/hint-images/bread.svg",
+          "alt": "Illustration of a standard 450 g sliced sandwich loaf beside a measuring cup of flour. (Fixture placeholder artwork.)",
+          "credit": "Fixture placeholder artwork",
+          "rights": "Original placeholder illustration for demonstration only"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "wheatYield * flourRecovery / flourPerLoaf",
+        "inputs": [
+          { "name": "wheatYield", "value": "3000", "unit": "kg of wheat per acre", "assumption": "Representative fixture yield for one acre of wheat (a live puzzle would source crop, country and year)." },
+          { "name": "flourRecovery", "value": "0.75", "unit": "kg flour per kg wheat", "assumption": "Typical white-flour extraction rate." },
+          { "name": "flourPerLoaf", "value": "0.45", "unit": "kg flour per loaf", "source": { "title": "Fixture recipe: 450 g flour sandwich loaf" } }
+        ],
+        "outputUnit": "loaves",
+        "precision": 0,
+        "steps": [
+          "One acre yields 3,000 kg of wheat (declared fixture assumption).",
+          "Milling recovers 75% as flour: 3,000 × 0.75 = 2,250 kg of flour.",
+          "Each loaf takes 0.45 kg of flour: 2,250 ÷ 0.45 = 5,000 loaves. Worked estimate: 5,000 loaves."
+        ]
+      },
+      "reveal": {
+        "explanation": "Wheat → flour → loaves: 3,000 kg × 0.75 ÷ 0.45 = 5,000 loaves per acre under the declared assumptions.",
+        "comparison": "One acre (about the size of half a football pitch) could keep a small bakery in sandwich bread for a week."
+      }
+    },
+    {
+      "promptId": "marathon-steps",
+      "roundType": "calculation",
+      "category": "sport",
+      "prompt": "How many individual steps would a representative runner take to finish a marathon? The official race distance is 42.195 km. The fixture assumes a 1.2 m step length.",
+      "scope": "Representative runner model: 42.195 km at a 1.2 m step length (a typical easy-pace stride). A live puzzle would define the runner model in the scope.",
+      "unit": "steps",
+      "countMode": true,
+      "hint": {
+        "text": "At an easy pace most runners take roughly 160–170 steps per minute — you can also work from stride length."
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "distance * 1000 / stepLength",
+        "inputs": [
+          { "name": "distance", "value": "42.195", "unit": "km", "source": { "title": "World Athletics marathon overview", "url": "https://worldathletics.org/disciplines/road-running/marathon" } },
+          { "name": "stepLength", "value": "1.2", "unit": "m per step", "assumption": "Representative easy-pace stride length (declared in the prompt)." }
+        ],
+        "outputUnit": "steps",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Convert the official distance: 42.195 km = 42,195 m.",
+          "Divide by the assumed step length: 42,195 ÷ 1.2 = 35,162.5 steps.",
+          "Round to an editorially meaningful benchmark. Worked estimate: 35,000 steps."
+        ]
+      },
+      "reveal": {
+        "explanation": "42,195 m ÷ 1.2 m per step ≈ 35,162.5, published as a representative benchmark of 35,000 steps.",
+        "sourceTitle": "World Athletics marathon overview",
+        "sourceUrl": "https://worldathletics.org/disciplines/road-running/marathon"
+      }
+    },
+    {
+      "promptId": "eiffel-paper-stack",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "How many sheets of standard office paper, stacked flat, would reach the top of the Eiffel Tower, including its antenna? The fixture uses a tower height of 330 m and a ream of 500 sheets about 5 cm thick.",
+      "scope": "Declared fixture paper specification: 0.05 m per 500-sheet ream (0.1 mm per sheet). Tower height 330 m including antennas.",
+      "unit": "sheets",
+      "countMode": true,
+      "hint": {
+        "figure": { "value": "0.05", "unit": "m per 500-sheet ream", "scope": "Thickness of the fixture’s standard office ream" }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "height / (reamThickness / sheetsPerReam)",
+        "inputs": [
+          { "name": "height", "value": "330", "unit": "m", "source": { "title": "Eiffel Tower official site (height with antennas)", "url": "https://www.toureiffel.paris/en" } },
+          { "name": "reamThickness", "value": "0.05", "unit": "m per ream", "assumption": "Declared fixture paper specification." },
+          { "name": "sheetsPerReam", "value": "500", "unit": "sheets per ream", "assumption": "Standard office ream size." }
+        ],
+        "outputUnit": "sheets",
+        "precision": 0,
+        "steps": [
+          "One ream is 0.05 m for 500 sheets, so one sheet is 0.05 ÷ 500 = 0.0001 m (0.1 mm).",
+          "Divide the tower height by the sheet thickness: 330 ÷ 0.0001.",
+          "Worked estimate: 3,300,000 sheets."
+        ]
+      },
+      "reveal": {
+        "explanation": "A sheet of office paper is about 0.1 mm thick, so 330 m ÷ 0.0001 m = 3,300,000 sheets.",
+        "sourceTitle": "Eiffel Tower official site",
+        "sourceUrl": "https://www.toureiffel.paris/en"
+      }
+    },
+    {
+      "promptId": "film-runtime-150",
+      "roundType": "target_match",
+      "category": "entertainment",
+      "prompt": "Name a feature film whose original theatrical runtime is closest to 150 minutes.",
+      "scope": "Starter dataset: the fixture collection of ten films with original theatrical runtimes. Spell the title as closely as you can; suggestions appear as you type.",
+      "unit": "minutes",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "films-fixture",
+        "target": "150",
+        "eligibleEntryIds": null
+      },
+      "reveal": {
+        "explanation": "Your film’s runtime is compared against the target; the dataset’s closest eligible entries are shown.",
+        "sourceTitle": "Synthetic fixture dataset"
+      }
+    }
+  ]
+}

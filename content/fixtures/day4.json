@@ -1,0 +1,138 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "dayOffset": -3,
+  "quality": "fixture",
+  "prompts": [
+    {
+      "promptId": "opportunity-mass",
+      "roundType": "direct_fact",
+      "category": "space",
+      "prompt": "What is the mass of NASA’s Opportunity rover itself, in kilograms?",
+      "scope": "The mass of the rover itself (dry mass), not the launch mass with the landing system.",
+      "unit": "kg",
+      "countMode": false,
+      "hint": {
+        "text": "Opportunity was the smaller of NASA’s 2000s Mars rovers — noticeably lighter than Curiosity, which followed a decade later."
+      },
+      "scoring": {
+        "type": "direct_fact",
+        "value": "185",
+        "precision": 0,
+        "source": { "title": "NASA Mars Exploration Rover mission (fixture-checked figure)" },
+        "asOf": "fixture"
+      },
+      "reveal": {
+        "explanation": "Opportunity’s rover body had a dry mass of about 185 kg — roughly a fifth of Curiosity’s 899 kg.",
+        "sourceTitle": "NASA Mars Exploration Rover mission"
+      }
+    },
+    {
+      "promptId": "bread-per-acre-c",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "Roughly how many loaves of sandwich bread could you make from the wheat grown on one acre, using the fixture yield and a 450 g flour recipe? (The fixture uses 3,200 kg of wheat per acre, 0.75 kg of flour recovered per kg of wheat, and 0.45 kg of flour per loaf.)",
+      "scope": "Demonstration fixture with declared assumptions: 3,200 kg wheat per acre, 75% extraction, 450 g flour per loaf.",
+      "unit": "loaves",
+      "countMode": true,
+      "hint": {
+        "figure": { "value": "0.45", "unit": "kg of flour per loaf", "scope": "Fixture recipe quantity" }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "wheatYield * flourRecovery / flourPerLoaf",
+        "inputs": [
+          { "name": "wheatYield", "value": "3200", "unit": "kg of wheat per acre", "assumption": "Representative fixture yield." },
+          { "name": "flourRecovery", "value": "0.75", "unit": "kg flour per kg wheat", "assumption": "Typical extraction rate." },
+          { "name": "flourPerLoaf", "value": "0.45", "unit": "kg flour per loaf", "source": { "title": "Fixture recipe: 450 g flour loaf" } }
+        ],
+        "outputUnit": "loaves",
+        "precision": 0,
+        "steps": [
+          "One acre yields 3,200 kg of wheat (declared fixture assumption).",
+          "Milling recovers 75% as flour: 3,200 × 0.75 = 2,400 kg.",
+          "Each loaf takes 0.45 kg: 2,400 ÷ 0.45 = 5,333.33 loaves. Worked estimate: 5,333 loaves."
+        ]
+      },
+      "reveal": {
+        "explanation": "3,200 kg × 0.75 ÷ 0.45 = 5,333 loaves per acre under the declared assumptions."
+      }
+    },
+    {
+      "promptId": "pool-litres",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "Roughly how many litres of water fill a rectangular pool 25 m long, 10 m wide and 2 m deep?",
+      "scope": "Rectangular pool, 25 m × 10 m × 2 m. One cubic metre holds 1,000 litres.",
+      "unit": "litres",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "length * width * depth * 1000",
+        "inputs": [
+          { "name": "length", "value": "25", "unit": "m", "source": { "title": "Fixture pool dimensions" } },
+          { "name": "width", "value": "10", "unit": "m", "source": { "title": "Fixture pool dimensions" } },
+          { "name": "depth", "value": "2", "unit": "m", "source": { "title": "Fixture pool dimensions" } }
+        ],
+        "outputUnit": "litres",
+        "precision": 0,
+        "steps": [
+          "Volume = 25 × 10 × 2 = 500 cubic metres.",
+          "One cubic metre is 1,000 litres.",
+          "500 × 1,000 = 500,000 litres. Worked estimate: 500,000 litres."
+        ]
+      },
+      "reveal": {
+        "explanation": "25 × 10 × 2 = 500 m³, and 1 m³ = 1,000 L, so 500,000 litres — half a million bottles of water."
+      }
+    },
+    {
+      "promptId": "eiffel-paper-stack-b",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "How many sheets of standard office paper, stacked flat, would reach the top of a 320 m tower? The fixture ream of 500 sheets is about 5 cm thick.",
+      "scope": "Declared fixture paper specification: 0.05 m per 500-sheet ream (0.1 mm per sheet).",
+      "unit": "sheets",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "height / (reamThickness / sheetsPerReam)",
+        "inputs": [
+          { "name": "height", "value": "320", "unit": "m", "source": { "title": "Fixture tower height" } },
+          { "name": "reamThickness", "value": "0.05", "unit": "m per ream", "assumption": "Declared fixture paper specification." },
+          { "name": "sheetsPerReam", "value": "500", "unit": "sheets per ream", "assumption": "Standard office ream size." }
+        ],
+        "outputUnit": "sheets",
+        "precision": 0,
+        "steps": [
+          "One sheet is 0.05 ÷ 500 = 0.0001 m thick.",
+          "320 ÷ 0.0001 = 3,200,000 sheets. Worked estimate: 3,200,000 sheets."
+        ]
+      },
+      "reveal": {
+        "explanation": "320 m ÷ 0.1 mm per sheet = 3,200,000 sheets."
+      }
+    },
+    {
+      "promptId": "film-runtime-97",
+      "roundType": "target_match",
+      "category": "entertainment",
+      "prompt": "Name a feature film whose original theatrical runtime is closest to 97 minutes.",
+      "scope": "Starter dataset: the fixture collection of ten films with original theatrical runtimes.",
+      "unit": "minutes",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "films-fixture",
+        "target": "97"
+      },
+      "reveal": {
+        "explanation": "Your film’s runtime is compared against the target; the dataset’s closest eligible entries are shown.",
+        "sourceTitle": "Synthetic fixture dataset"
+      }
+    }
+  ]
+}

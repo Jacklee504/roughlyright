@@ -1,0 +1,21 @@
+{
+  "kind": "target_dataset",
+  "game": "estimation",
+  "id": "films-fixture",
+  "name": "Fixture feature films (synthetic)",
+  "unit": "minutes",
+  "revision": "r1",
+  "eligibleScope": "Synthetic fixture dataset of ten feature films with original theatrical runtimes. For mechanics tests only — never published as live content.",
+  "entries": [
+    { "id": "midnight-harvest", "label": "Midnight Harvest", "value": "148", "source": { "title": "Synthetic fixture dataset" } },
+    { "id": "the-long-crossing", "label": "The Long Crossing", "value": "150", "aliases": ["Long Crossing"], "source": { "title": "Synthetic fixture dataset" } },
+    { "id": "signal-lost", "label": "Signal Lost", "value": "152", "source": { "title": "Synthetic fixture dataset" } },
+    { "id": "paper-mountains", "label": "Paper Mountains", "value": "120", "source": { "title": "Synthetic fixture dataset" } },
+    { "id": "a-quiet-divide", "label": "A Quiet Divide", "value": "165", "aliases": ["Quiet Divide"], "source": { "title": "Synthetic fixture dataset" } },
+    { "id": "north-by-night", "label": "North by Night", "value": "97", "source": { "title": "Synthetic fixture dataset" } },
+    { "id": "the-salt-road", "label": "The Salt Road", "value": "135", "aliases": ["Salt Road"], "source": { "title": "Synthetic fixture dataset" } },
+    { "id": "winter-bloom", "label": "Winter Bloom", "value": "149", "source": { "title": "Synthetic fixture dataset" } },
+    { "id": "harbor-lights", "label": "Harbor Lights", "value": "150", "source": { "title": "Synthetic fixture dataset" } },
+    { "id": "ten-summers", "label": "Ten Summers", "value": "183", "source": { "title": "Synthetic fixture dataset" } }
+  ]
+}

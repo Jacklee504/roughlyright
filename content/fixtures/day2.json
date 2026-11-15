@@ -1,0 +1,142 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "dayOffset": -1,
+  "quality": "fixture",
+  "prompts": [
+    {
+      "promptId": "marathon-distance",
+      "roundType": "direct_fact",
+      "category": "sport",
+      "prompt": "What is the official race distance of the marathon, in kilometres?",
+      "scope": "The official distance set by World Athletics, in kilometres (not miles).",
+      "unit": "km",
+      "countMode": false,
+      "hint": {
+        "text": "The distance became official in 1921 and is also the figure printed on race signage and finish-line clocks."
+      },
+      "scoring": {
+        "type": "direct_fact",
+        "value": "42.195",
+        "precision": 3,
+        "source": { "title": "World Athletics marathon overview", "url": "https://worldathletics.org/disciplines/road-running/marathon" }
+      },
+      "reveal": {
+        "explanation": "The official marathon distance is 42.195 km — set when the 1908 London course was later standardised.",
+        "sourceTitle": "World Athletics marathon overview",
+        "sourceUrl": "https://worldathletics.org/disciplines/road-running/marathon"
+      }
+    },
+    {
+      "promptId": "bread-per-acre-b",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "Roughly how many loaves of sandwich bread could you make from the wheat grown on one acre, using the fixture yield and a 500 g flour recipe? (The fixture uses 2,800 kg of wheat per acre, 0.72 kg of flour recovered per kg of wheat, and 0.5 kg of flour per loaf.)",
+      "scope": "Demonstration fixture with declared assumptions: 2,800 kg wheat per acre, 72% extraction, 500 g flour per loaf.",
+      "unit": "loaves",
+      "countMode": true,
+      "hint": {
+        "figure": { "value": "0.5", "unit": "kg of flour per loaf", "scope": "Fixture recipe quantity" }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "wheatYield * flourRecovery / flourPerLoaf",
+        "inputs": [
+          { "name": "wheatYield", "value": "2800", "unit": "kg of wheat per acre", "assumption": "Representative fixture yield." },
+          { "name": "flourRecovery", "value": "0.72", "unit": "kg flour per kg wheat", "assumption": "Typical extraction rate." },
+          { "name": "flourPerLoaf", "value": "0.5", "unit": "kg flour per loaf", "source": { "title": "Fixture recipe: 500 g flour loaf" } }
+        ],
+        "outputUnit": "loaves",
+        "precision": 0,
+        "steps": [
+          "One acre yields 2,800 kg of wheat (declared fixture assumption).",
+          "Milling recovers 72% as flour: 2,800 × 0.72 = 2,016 kg.",
+          "Each loaf takes 0.5 kg of flour: 2,016 ÷ 0.5 = 4,032 loaves. Worked estimate: 4,032 loaves."
+        ]
+      },
+      "reveal": {
+        "explanation": "2,800 kg × 0.72 ÷ 0.5 = 4,032 loaves per acre under the declared assumptions."
+      }
+    },
+    {
+      "promptId": "tenk-steps",
+      "roundType": "calculation",
+      "category": "sport",
+      "prompt": "How many steps would a representative runner take in a 10 km road race? The fixture assumes a 1.15 m step length.",
+      "scope": "Representative runner model: 10 km at a 1.15 m step length.",
+      "unit": "steps",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "distance * 1000 / stepLength",
+        "inputs": [
+          { "name": "distance", "value": "10", "unit": "km", "assumption": "Race distance given in the prompt." },
+          { "name": "stepLength", "value": "1.15", "unit": "m per step", "assumption": "Declared fixture stride length." }
+        ],
+        "outputUnit": "steps",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "10 km = 10,000 m.",
+          "10,000 ÷ 1.15 = 8,695.65 steps.",
+          "Round to a representative benchmark. Worked estimate: 8,700 steps."
+        ]
+      },
+      "reveal": {
+        "explanation": "10,000 m ÷ 1.15 m ≈ 8,695.65, published as 8,700 steps."
+      }
+    },
+    {
+      "promptId": "burj-paper-stack",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "How many sheets of standard office paper, stacked flat, would reach the top of the Burj Khalifa? The fixture uses a height of 828 m and a ream of 500 sheets about 5 cm thick.",
+      "scope": "Declared fixture paper specification: 0.05 m per 500-sheet ream (0.1 mm per sheet).",
+      "unit": "sheets",
+      "countMode": true,
+      "hint": {
+        "figure": { "value": "0.05", "unit": "m per 500-sheet ream", "scope": "Thickness of the fixture’s standard office ream" }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "height / (reamThickness / sheetsPerReam)",
+        "inputs": [
+          { "name": "height", "value": "828", "unit": "m", "source": { "title": "Burj Khalifa official fact sheet", "url": "https://www.burjkhalifa.ae/en/" } },
+          { "name": "reamThickness", "value": "0.05", "unit": "m per ream", "assumption": "Declared fixture paper specification." },
+          { "name": "sheetsPerReam", "value": "500", "unit": "sheets per ream", "assumption": "Standard office ream size." }
+        ],
+        "outputUnit": "sheets",
+        "precision": 0,
+        "steps": [
+          "One sheet is 0.05 ÷ 500 = 0.0001 m thick.",
+          "828 ÷ 0.0001 = 8,280,000 sheets. Worked estimate: 8,280,000 sheets."
+        ]
+      },
+      "reveal": {
+        "explanation": "828 m ÷ 0.1 mm per sheet = 8,280,000 sheets.",
+        "sourceTitle": "Burj Khalifa official fact sheet",
+        "sourceUrl": "https://www.burjkhalifa.ae/en/"
+      }
+    },
+    {
+      "promptId": "film-runtime-120",
+      "roundType": "target_match",
+      "category": "entertainment",
+      "prompt": "Name a feature film whose original theatrical runtime is closest to 120 minutes.",
+      "scope": "Starter dataset: the fixture collection of ten films with original theatrical runtimes.",
+      "unit": "minutes",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "films-fixture",
+        "target": "120"
+      },
+      "reveal": {
+        "explanation": "Your film’s runtime is compared against the target; the dataset’s closest eligible entries are shown.",
+        "sourceTitle": "Synthetic fixture dataset"
+      }
+    }
+  ]
+}

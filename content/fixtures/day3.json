@@ -1,0 +1,136 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "dayOffset": -2,
+  "quality": "fixture",
+  "prompts": [
+    {
+      "promptId": "eiffel-height",
+      "roundType": "direct_fact",
+      "category": "geography",
+      "prompt": "How tall is the Eiffel Tower, including its antennas, in metres?",
+      "scope": "The structure’s total height to the top of its antennas, in metres.",
+      "unit": "m",
+      "countMode": false,
+      "hint": {
+        "text": "The tower has grown over its lifetime — antennas added in recent decades pushed the official height figure upward."
+      },
+      "scoring": {
+        "type": "direct_fact",
+        "value": "330",
+        "precision": 0,
+        "source": { "title": "Eiffel Tower official site", "url": "https://www.toureiffel.paris/en" }
+      },
+      "reveal": {
+        "explanation": "Since the 2022 antenna addition, the Eiffel Tower measures 330 m including its antennas.",
+        "sourceTitle": "Eiffel Tower official site",
+        "sourceUrl": "https://www.toureiffel.paris/en"
+      }
+    },
+    {
+      "promptId": "half-steps",
+      "roundType": "calculation",
+      "category": "sport",
+      "prompt": "How many steps would a representative runner take in a half marathon? The fixture uses the official 21.0975 km distance and a 1.2 m step length.",
+      "scope": "Representative runner model: 21.0975 km at a 1.2 m step length.",
+      "unit": "steps",
+      "countMode": true,
+      "hint": {
+        "text": "The half marathon distance is exactly half the official marathon distance."
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "distance * 1000 / stepLength",
+        "inputs": [
+          { "name": "distance", "value": "21.0975", "unit": "km", "source": { "title": "World Athletics road running disciplines", "url": "https://worldathletics.org/disciplines/road-running/marathon" } },
+          { "name": "stepLength", "value": "1.2", "unit": "m per step", "assumption": "Declared fixture stride length." }
+        ],
+        "outputUnit": "steps",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "21.0975 km = 21,097.5 m.",
+          "21,097.5 ÷ 1.2 = 17,581.25 steps.",
+          "Round to a representative benchmark. Worked estimate: 17,600 steps."
+        ]
+      },
+      "reveal": {
+        "explanation": "21,097.5 m ÷ 1.2 m ≈ 17,581, published as 17,600 steps."
+      }
+    },
+    {
+      "promptId": "coffee-cups",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "Roughly how many cups of filter coffee can you brew from one 1 kg bag of grounds, using 12 g per cup?",
+      "scope": "Declared fixture quantities: 1,000 g bag, 12 g of grounds per cup.",
+      "unit": "cups",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "bagWeight / perCup",
+        "inputs": [
+          { "name": "bagWeight", "value": "1000", "unit": "g per bag", "source": { "title": "Fixture: standard 1 kg coffee bag" } },
+          { "name": "perCup", "value": "12", "unit": "g per cup", "assumption": "Declared fixture dose per cup." }
+        ],
+        "outputUnit": "cups",
+        "precision": 0,
+        "steps": [
+          "The bag holds 1,000 g of grounds.",
+          "1,000 ÷ 12 = 83.33 cups.",
+          "Worked estimate: 83 cups."
+        ]
+      },
+      "reveal": {
+        "explanation": "1,000 g ÷ 12 g per cup = 83⅓, so about 83 full cups."
+      }
+    },
+    {
+      "promptId": "cargo-crossing",
+      "roundType": "calculation",
+      "category": "geography",
+      "prompt": "A container ship steams at 24 km/h. Roughly how many hours does it take to cross 600 km of open water?",
+      "scope": "Constant speed of 24 km/h over 600 km; ignore currents, port approach and stops.",
+      "unit": "hours",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "distance / speed",
+        "inputs": [
+          { "name": "distance", "value": "600", "unit": "km", "source": { "title": "Fixture route length" } },
+          { "name": "speed", "value": "24", "unit": "km/h", "assumption": "Declared fixture cruising speed." }
+        ],
+        "outputUnit": "hours",
+        "precision": 0,
+        "steps": [
+          "Time = distance ÷ speed.",
+          "600 ÷ 24 = 25. Worked estimate: 25 hours."
+        ]
+      },
+      "reveal": {
+        "explanation": "600 km ÷ 24 km/h = 25 hours — a full day at sea."
+      }
+    },
+    {
+      "promptId": "film-runtime-165",
+      "roundType": "target_match",
+      "category": "entertainment",
+      "prompt": "Name a feature film whose original theatrical runtime is closest to 165 minutes.",
+      "scope": "Starter dataset: the fixture collection of ten films with original theatrical runtimes.",
+      "unit": "minutes",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "films-fixture",
+        "target": "165"
+      },
+      "reveal": {
+        "explanation": "Your film’s runtime is compared against the target; the dataset’s closest eligible entries are shown.",
+        "sourceTitle": "Synthetic fixture dataset"
+      }
+    }
+  ]
+}
