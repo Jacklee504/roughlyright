@@ -48,14 +48,23 @@ instance later only requires swapping the client in `src/lib/db/client.ts`
 
 ## Environment variables
 
-There are no required environment variables. Optional ones:
+There are no required environment variables for local development. Optional:
 
 | Variable        | Meaning | Example value |
 | --------------- | ------- | ------------- |
 | `DATABASE_PATH` | PGlite data directory, or `:memory:` for a RAM-only database | `./.data/pg` |
+| `DATABASE_URL`  | Hosted PostgreSQL connection string; when set, it takes precedence over PGlite (production/Netlify mode) | `postgresql://…-pooler…/neondb?sslmode=require` |
 
-No `.env` file is needed; nothing here reads secrets. (Never put secrets in
-this project — it has no external service dependencies.)
+No `.env` file is needed for local play; nothing here reads secrets.
+(Never put secrets in this project or in chat — hosted credentials live in
+Netlify's environment settings.)
+
+## Deploying
+
+See `DEPLOY.md` for the full Netlify + hosted-Postgres walkthrough (Neon
+recommended, ~5 minutes of browser setup plus one migrate/seed run).
+`netlify.toml` pins Node 22 and the official Next runtime; `.github/workflows/ci.yml`
+runs typecheck + the full test suite on every push.
 
 ## How the game works (contract summary)
 

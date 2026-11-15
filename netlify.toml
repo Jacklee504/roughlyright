@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# The official Next.js runtime handles routing/serverless packaging.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Keep the migrations directory available to serverless functions
+# (needed if the embedded-PGlite fallback ever runs server-side).
+[functions]
+  included_files = ["migrations/**"]

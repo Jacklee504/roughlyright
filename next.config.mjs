@@ -1,7 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // PGlite ships WASM assets and must stay outside the bundler.
-  serverExternalPackages: ["@electric-sql/pglite"],
+  // Native/WASM drivers must stay outside the bundler.
+  serverExternalPackages: ["@electric-sql/pglite", "pg"],
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

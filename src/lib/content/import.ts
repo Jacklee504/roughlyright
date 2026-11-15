@@ -7,7 +7,7 @@
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import path from "node:path";
-import type { PGlite } from "@electric-sql/pglite";
+import type { Db } from "@/lib/db/client";
 import { utcToday } from "@/lib/domain/calendar";
 import { validateDataset, validatePuzzle, type DatasetIndex } from "./validate";
 import type { EditorialDataset, EditorialPuzzle } from "./types";
@@ -30,7 +30,7 @@ export type ImportResult = {
 
 export class ImportError extends Error {}
 
-async function upsertGame(db: PGlite, slug: string): Promise<void> {
+async function upsertGame(db: Db, slug: string): Promise<void> {
   const names: Record<string, string> = { estimation: "Estimation", rarity: "Rarity" };
   await db.query(
     `insert into games (slug, name, rules_version) values ($1, $2, '1')
@@ -39,7 +39,7 @@ async function upsertGame(db: PGlite, slug: string): Promise<void> {
   );
 }
 
-export async function importDataset(db: PGlite, ds: EditorialDataset): Promise<void> {
+export async function importDataset(db: Db, ds: EditorialDataset): Promise<void> {
   const issues: { field: string; message: string }[] = [];
   const ok = validateDataset(ds, issues);
   if (!ok) {
@@ -86,7 +86,7 @@ export async function importDataset(db: PGlite, ds: EditorialDataset): Promise<v
   }
 }
 
-async function importPuzzle(db: PGlite, puzzle: EditorialPuzzle, datasets: DatasetIndex): Promise<void> {
+async function importPuzzle(db: Db, puzzle: EditorialPuzzle, datasets: DatasetIndex): Promise<void> {
   const result = validatePuzzle(puzzle, datasets);
   if (!result.ok) {
     throw new ImportError(
@@ -193,7 +193,7 @@ function addDays(date: string, days: number): string {
 }
 
 /** Recompute sequential display numbers (per game, by date ascending). */
-async function renumber(db: PGlite): Promise<void> {
+async function renumber(db: Db): Promise<void> {
   await db.query(
     `with ranked as (
        select id, row_number() over (partition by game_slug order by date asc) as rn
@@ -205,7 +205,7 @@ async function renumber(db: PGlite): Promise<void> {
 }
 
 /** Import every JSON file under the given directory (datasets before puzzles). */
-export async function importDirectory(db: PGlite, dir: string): Promise<ImportResult> {
+export async function importDirectory(db: Db, dir: string): Promise<ImportResult> {
   const files: string[] = [];
   const walk = (d: string) => {
     if (!existsSync(d)) return;

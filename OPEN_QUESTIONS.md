@@ -168,14 +168,15 @@ items are lower priority.
 
 ## A. Deviations from the handoff document
 
-### A1. PGlite instead of a hosted PostgreSQL server
+### A1. PGlite locally, hosted PostgreSQL in production (dual-mode client)
 The handoff specifies PostgreSQL with versioned SQL migrations. No Postgres
-server is installed in this environment, so the app runs on
+server is installed in this environment, so local development runs on
 `@electric-sql/pglite` (a genuine Postgres build compiled to WASM, embedded
-in the Node process). Everything above the driver — migrations, SQL, types,
-transaction logic — is plain Postgres and unchanged; only `src/lib/db/client.ts`
-would be swapped to talk to a hosted server (e.g. via `pg` or a serverless
-driver). Consequences worth knowing:
+in the Node process). Setting `DATABASE_URL` switches the same code to a
+hosted PostgreSQL via `pg` — same `Queryable` interface, same SQL, same
+migrations; services are untouched. On serverless hosts (Netlify) PGlite
+cannot persist (ephemeral filesystem), so production always uses
+`DATABASE_URL`; see `DEPLOY.md`. Consequences worth knowing:
 
 - Single connection per process, so services are transaction-aware
   (transaction-bound helpers take the client explicitly). A hosted pool with
@@ -186,7 +187,8 @@ driver). Consequences worth knowing:
   vitest's module runner (`Aborted(). Build with -sASSERTIONS…`). The
   integration suite therefore runs under plain Node via `tsx`
   (`tests/integration.mts`, assert-based, in-memory database). Unit tests for
-  pure logic stay in vitest. `npm test` runs both.
+  pure logic stay in vitest. `npm test` runs both, and CI (GitHub Actions)
+  runs typecheck + the full suite on every push.
 - Migration runner splits SQL files into single statements (PGlite's prepared
   queries reject multi-statement strings) and strips `--` comments first.
   If/when moving to a hosted server, the splitting can stay or go — it is
@@ -301,10 +303,16 @@ a stripped minus sign ("-900" → "900") should be offered.
 ## D. Known limitations (accepted for the prototype)
 
 - Rate limiting and event aggregation are in-memory; they do not survive
-  restarts and do not aggregate across instances.
+  restarts and do not aggregate across instances (on Netlify: per function
+  instance, so limits are approximate).
 - No full-text search or filtering in the archive beyond the date index.
 - The parser supports the handoff's grammar (units suffixes, grouping,
   scientific notation, fractions of counted things rejected) but not
   spelled-out English numbers ("eight hundred").
-- `next build`/production deployment has not been exercised here (no hosting
-  target yet); dev-mode behaviour is verified.
+- Migrations are never auto-applied in hosted mode; a fresh database must be
+  migrated/seeded once via `npm run db:migrate && npm run db:seed` with
+  `DATABASE_URL` set (see `DEPLOY.md`).
+
+*(Resolved since first written: `next build` now passes — all routes build
+with the dynamic/static split as intended; security headers, favicon,
+robots.txt and CI are in place.)*
