@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { getGuestId } from "@/lib/http/session";
+import { isPremiumGuest, premiumUnlockedByEnv } from "@/lib/service/premium";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: {
@@ -16,9 +19,21 @@ export const viewport: Viewport = {
   themeColor: "#060a17",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const guestId = await getGuestId();
+  // Header renders in every request; skip the DB hit when the env unlock is on.
+  const premium = premiumUnlockedByEnv() ? !!guestId : await isPremiumGuest(guestId);
+
   return (
     <html lang="en">
+      <head>
+        {/* Apply a persisted premium theme before first paint (no flash). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem("rr_theme")==="light")document.documentElement.dataset.theme="light"}catch(e){}`,
+          }}
+        />
+      </head>
       <body>
         <header className="site">
           <Link className="brand" href="/">
@@ -28,7 +43,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <nav aria-label="Games">
             {/* Partial rollout: only released games appear in navigation. */}
             <Link href="/estimation">Estimation</Link>
+            <Link href="/estimation/insights">Insights</Link>
           </nav>
+          {premium ? (
+            <span className="premium-badge" title="Premium">
+              ★
+            </span>
+          ) : null}
+          {premium ? <ThemeToggle /> : null}
         </header>
         {children}
       </body>

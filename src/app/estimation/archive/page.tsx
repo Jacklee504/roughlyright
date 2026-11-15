@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getGuestId } from "@/lib/http/session";
 import { utcToday } from "@/lib/domain/calendar";
 import { q } from "@/lib/db/client";
+import { isPremiumGuest, archiveFloorDate, FREE_ARCHIVE_DAYS } from "@/lib/service/premium";
 import PixelSprite from "@/components/pixel/PixelSprite";
 import { PLANET, PALETTES } from "@/components/pixel/sprites";
 
@@ -17,15 +18,30 @@ type Row = { date: string; display_number: number; theme_tag: string | null; sta
 export default async function ArchiveIndexPage() {
   const today = utcToday();
   const guestId = await getGuestId();
+  const premium = await isPremiumGuest(guestId);
+  const floor = archiveFloorDate(today, premium);
+
+  // Free tier sees only the recent window; premium sees everything.
   const rows = await q<Row>(
     `select p.date::text as date, p.display_number, p.theme_tag, a.state, a.score
      from puzzles p
      left join attempts a on a.puzzle_id = p.id and a.guest_id = $1 and a.state = 'completed'
         and a.mode = (case when p.date = current_date then 'daily' else 'archive' end)
      where p.game_slug = 'estimation' and p.status = 'live' and p.date < $2
+       ${floor ? "and p.date >= $3" : ""}
      order by p.date desc`,
-    [guestId ?? "", today],
+    floor ? [guestId ?? "", today, floor] : [guestId ?? "", today],
   );
+
+  const lockedCount = floor
+    ? (
+        await q<{ n: string }>(
+          `select count(*)::text as n from puzzles
+           where game_slug = 'estimation' and status = 'live' and date < $1 and date < $2`,
+          [floor, today],
+        )
+      )[0]?.n ?? "0"
+    : "0";
 
   return (
     <main>
@@ -65,6 +81,17 @@ export default async function ArchiveIndexPage() {
           </tbody>
         </table>
       )}
+      {floor && Number(lockedCount) > 0 ? (
+        <div className="card upsell-card" style={{ marginTop: 14 }}>
+          <p style={{ margin: 0 }}>
+            🔒 <strong>{lockedCount} more {Number(lockedCount) === 1 ? "date" : "dates"}</strong> hidden —
+            the free archive keeps the last {FREE_ARCHIVE_DAYS} days.
+          </p>
+          <div className="actions" style={{ marginTop: 10 }}>
+            <Link className="primary btn" href="/estimation/upgrade">Unlock everything</Link>
+          </div>
+        </div>
+      ) : null}
       <div className="actions">
         <Link className="btn" href="/estimation">Today's daily</Link>
         <Link className="btn" href="/">Home</Link>

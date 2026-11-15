@@ -5,6 +5,7 @@
   "description": "Roughly Right — daily estimation web game (Estimation prototype, shared site per handoff contract)",
   "scripts": {
     "dev": "next dev",
+    "dev:premium": "PREMIUM_ALL=1 next dev",
     "build": "next build",
     "verify": "NEXT_DIST_DIR=.next-verify next build",
     "start": "next start",

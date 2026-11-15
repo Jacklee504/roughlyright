@@ -13,6 +13,7 @@ import { parseDecimalToRat, rat, cmp, div, sub, type Rat } from "@/lib/domain/de
 import { scoreValue, direction as guessDirection } from "@/lib/domain/scoring";
 import { parseNumber, formatDisplay } from "@/lib/domain/numberParser";
 import { repairNumberInput, fuzzyEntityMatches, type FuzzyCandidate } from "@/lib/domain/autocorrect";
+import { isPremiumGuest, archiveFloorDate } from "@/lib/service/premium";
 import { normalizeKey } from "@/lib/domain/text";
 import { utcToday, dailyFinishWindowEndIso, nextResetIso } from "@/lib/domain/calendar";
 import { now } from "@/lib/domain/clock";
@@ -23,7 +24,7 @@ import { buildCommunityPercentile } from "./stats";
 export type StartInput = { game: string; date?: string; mode?: "daily" | "archive" };
 export type StartResult =
   | { ok: true; state: AttemptState }
-  | { ok: false; code: "unavailable" | "not_found" | "forbidden" | "stale"; message: string };
+  | { ok: false; code: "unavailable" | "not_found" | "forbidden" | "stale" | "premium_required"; message: string };
 
 export type ResolveInput =
   | { attemptId: string; ordinal: number; requestId: string; pass: true }
@@ -96,6 +97,21 @@ export async function startOrResume(guestId: string, input: StartInput): Promise
   const puzzle = await getPuzzleByDate(game, date);
   if (!puzzle) {
     return { ok: false, code: "unavailable", message: "No puzzle is published for that date." };
+  }
+
+  // Freemium: archive replays of older dates require premium (server-enforced,
+  // not just UI). Resume of an existing attempt is always allowed.
+  if (date < today) {
+    const premium = await isPremiumGuest(guestId);
+    const floor = archiveFloorDate(today, premium);
+    const existing = await getAttemptFor(await getDb(), guestId, puzzle.id, "archive");
+    if (floor && date < floor && !existing) {
+      return {
+        ok: false,
+        code: "premium_required",
+        message: "This archive date is part of Premium. Redeem an upgrade code to unlock the full archive.",
+      };
+    }
   }
 
   const db = await getDb();

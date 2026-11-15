@@ -17,6 +17,8 @@ const { startOrResume, resolveRound, advanceRound, getRecapForGuest } = await im
 const { getGameStatus } = await import("@/lib/service/status");
 const { computeStreaks } = await import("@/lib/service/stats");
 const { createShare, getSharePayload, revokeShare } = await import("@/lib/service/share");
+const { isPremiumGuest, redeemPremiumCode, archiveFloorDate } = await import("@/lib/service/premium");
+const { utcToday } = await import("@/lib/domain/calendar");
 const { setClock } = await import("@/lib/domain/clock");
 
 type Test = { name: string; fn: () => Promise<void> };
@@ -414,6 +416,38 @@ test("creates a spoiler-free payload; comparison needs same-puzzle completion; r
 test("unknown or invalid tokens return a neutral not-found", async () => {
   const gone = await getSharePayload("definitely-not-a-token", null, null);
   assert.equal(gone.found, false);
+});
+
+// ---------------------------------------------------------------------------
+// Freemium entitlements
+// ---------------------------------------------------------------------------
+
+test("premium starts locked and can be granted by code", async () => {
+  const guest = await newGuest();
+  assert.equal(await isPremiumGuest(guest), false);
+
+  process.env.PREMIUM_CODES = "TEST-CODE-A, test-code-b";
+  const bad = await redeemPremiumCode(guest, "WRONG");
+  assert.equal(bad.ok, false);
+  assert.equal(await isPremiumGuest(guest), false);
+
+  const good = await redeemPremiumCode(guest, "test-code-b"); // case-insensitive
+  assert.equal(good.ok, true);
+  assert.equal(await isPremiumGuest(guest), true);
+
+  delete process.env.PREMIUM_CODES;
+  const noCodes = await redeemPremiumCode(await newGuest(), "TEST-CODE-A");
+  assert.equal(noCodes.ok, false);
+});
+
+test("archive floor limits free guests, not premium", async () => {
+  const today = utcToday();
+  assert.equal(archiveFloorDate(today, true), null);
+  assert.ok(archiveFloorDate(today, false) === null || archiveFloorDate(today, false)! < today);
+  // 7-day window: floor is 6 days before today.
+  const floor = new Date(`${today}T00:00:00Z`);
+  floor.setUTCDate(floor.getUTCDate() - 6);
+  assert.equal(archiveFloorDate(today, false), floor.toISOString().slice(0, 10));
 });
 
 async function completedPuzzleId(attemptId: string): Promise<string | null> {
