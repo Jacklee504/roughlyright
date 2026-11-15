@@ -129,6 +129,59 @@ header.site nav a:hover {
 }
 
 /* --------------------------------------------------------------------------
+   Pixel-art decorations
+   -------------------------------------------------------------------------- */
+
+.sprite { display: inline-block; vertical-align: middle; flex: 0 0 auto; }
+
+.hero { position: relative; }
+.hero-mascot { display: block; margin: 0 auto 8px; }
+
+.pixel-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.pixel-stars .tw {
+  position: absolute;
+  animation: twinkle 2.8s ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.75); }
+  50% { opacity: 0.95; transform: scale(1); }
+}
+
+.pixel-rule {
+  height: 6px;
+  max-width: 220px;
+  margin: 20px auto 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(148, 170, 255, 0.35) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+.pixel-loader {
+  display: inline-flex;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+.pixel-loader i {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  animation: pixelBounce 900ms ease-in-out infinite;
+}
+.pixel-loader i:nth-child(2) { animation-delay: 140ms; background: var(--accent-2); }
+.pixel-loader i:nth-child(3) { animation-delay: 280ms; background: var(--accent-3); }
+@keyframes pixelBounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-8px); }
+}
+
+/* --------------------------------------------------------------------------
    Cards & surfaces
    -------------------------------------------------------------------------- */
 
@@ -632,7 +685,7 @@ details.hint[open] summary { margin-bottom: 6px; }
    Result hero
    -------------------------------------------------------------------------- */
 
-.result-hero { text-align: center; padding: 26px 18px 24px; }
+.result-hero { position: relative; text-align: center; padding: 26px 18px 24px; }
 
 /* Score dial: label is absolutely centered inside the wrap, so it can never
    drift out of the ring regardless of font metrics or inline-baseline gaps. */
@@ -671,10 +724,16 @@ details.hint[open] summary { margin-bottom: 6px; }
   letter-spacing: 0.02em;
 }
 
-.result-hero .verdict {
+.verdict-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 12px 0 2px;
+}
+.verdict-text {
   font-size: 1.02rem;
   font-weight: 700;
-  margin: 10px 0 2px;
   background: var(--grad);
   -webkit-background-clip: text;
   background-clip: text;

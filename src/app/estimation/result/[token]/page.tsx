@@ -5,6 +5,9 @@ import { getGuestId } from "@/lib/http/session";
 import { getSharePayload } from "@/lib/service/share";
 import { q } from "@/lib/db/client";
 import ScoreRing from "@/components/ScoreRing";
+import PixelSprite from "@/components/pixel/PixelSprite";
+import PixelStars from "@/components/pixel/PixelStars";
+import { TROPHY, SPARKLE, PALETTES } from "@/components/pixel/sprites";
 
 export const dynamic = "force-dynamic";
 
@@ -62,8 +65,25 @@ export default async function ResultPage({ params }: { params: Promise<{ token: 
   return (
     <main>
       <div className="card result-hero">
+        <PixelStars count={7} seed={2} />
         <span className="chip">{p.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
         <ScoreRing total={p.total} max={p.maxTotal} />
+        <p className="verdict-row">
+          {p.total >= 350 ? (
+            <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={20} />
+          ) : (
+            <PixelSprite sprite={SPARKLE} palette={PALETTES.star} size={16} />
+          )}
+          <span className="verdict-text">
+            {p.total >= 450
+              ? "Spectacular guessing."
+              : p.total >= 350
+                ? "Strong instincts."
+                : p.total >= 200
+                  ? "Solidly roughly right."
+                  : "Tomorrow's another puzzle."}
+          </span>
+        </p>
         <p className="sub">
           Estimation #{p.displayNumber} · {p.puzzleDate}
         </p>

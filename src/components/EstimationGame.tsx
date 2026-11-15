@@ -6,6 +6,9 @@ import type { AttemptState, RoundResolved } from "@/lib/dto";
 import { parseNumber, formatDisplay } from "@/lib/domain/numberParser";
 import { SIBLING_GAMES } from "@/lib/site";
 import ScoreRing from "@/components/ScoreRing";
+import PixelSprite from "@/components/pixel/PixelSprite";
+import PixelStars from "@/components/pixel/PixelStars";
+import { TROPHY, SPARKLE, PLANET, PALETTES } from "@/components/pixel/sprites";
 
 type ApiResult = { ok: boolean; state?: AttemptState; code?: string; message?: string; suggestion?: string };
 
@@ -332,7 +335,10 @@ export default function EstimationGame({ mode, date }: Props) {
   if (phase === "boot") {
     return (
       <main>
-        <p className="muted" role="status">Loading today&apos;s puzzle…</p>
+        <div className="hero">
+          <div className="pixel-loader" aria-hidden="true"><i /><i /><i /></div>
+          <p className="muted" role="status">Loading today&apos;s puzzle…</p>
+        </div>
       </main>
     );
   }
@@ -341,7 +347,9 @@ export default function EstimationGame({ mode, date }: Props) {
     return (
       <main>
         <div className="hero">
+          <PixelSprite sprite={PLANET} palette={PALETTES.ghost} size={44} className="hero-mascot" />
           <h1>Estimation</h1>
+          <p className="tagline muted">Nothing to play right now — check back soon.</p>
         </div>
         <div className="card">
           <p role="alert">{notice ?? "The daily is unavailable right now."}</p>
@@ -360,6 +368,7 @@ export default function EstimationGame({ mode, date }: Props) {
     return (
       <main>
         <div className="hero">
+          <PixelSprite sprite={PLANET} palette={PALETTES.ghost} size={40} className="hero-mascot" />
           <span className="chip">Time&apos;s up</span>
           <h1>
             The window <span className="grad-text">closed</span>
@@ -720,17 +729,25 @@ function RecapView({
   return (
     <main>
       <div className="card result-hero" aria-live="polite">
+        <PixelStars count={7} seed={2} />
         {great ? <Burst seed={recap.total} count={20} /> : null}
         <span className="chip">{recap.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
         <ScoreRing total={recap.total} max={recap.maxTotal} />
-        <p className="verdict">
-          {recap.total >= 450
-            ? "Spectacular guessing."
-            : recap.total >= 350
-              ? "Strong instincts."
-              : recap.total >= 200
-                ? "Solidly roughly right."
-                : "Tomorrow's another puzzle."}
+        <p className="verdict-row">
+          {recap.total >= 350 ? (
+            <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={22} />
+          ) : (
+            <PixelSprite sprite={SPARKLE} palette={PALETTES.star} size={18} />
+          )}
+          <span className="verdict-text">
+            {recap.total >= 450
+              ? "Spectacular guessing."
+              : recap.total >= 350
+                ? "Strong instincts."
+                : recap.total >= 200
+                  ? "Solidly roughly right."
+                  : "Tomorrow's another puzzle."}
+          </span>
         </p>
         <p className="sub">
           Estimation #{recap.displayNumber} · {recap.puzzleDate}
