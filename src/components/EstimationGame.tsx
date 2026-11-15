@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
-import type { AttemptState, GameStatus, RoundResolved } from "@/lib/dto";
+import type { AttemptState, RoundResolved } from "@/lib/dto";
 import { parseNumber, formatDisplay } from "@/lib/domain/numberParser";
+import { SIBLING_GAMES } from "@/lib/site";
 
 type ApiResult = { ok: boolean; state?: AttemptState; code?: string; message?: string; suggestion?: string };
 
@@ -126,9 +127,8 @@ const ROUND_LABELS: Record<string, string> = {
 };
 
 export default function EstimationGame({ mode, date }: Props) {
-  const [status, setStatus] = useState<GameStatus | null>(null);
   const [state, setState] = useState<AttemptState | null>(null);
-  const [phase, setPhase] = useState<"boot" | "intro" | "play" | "unavailable">("boot");
+  const [phase, setPhase] = useState<"boot" | "play" | "unavailable">("boot");
   const [notice, setNotice] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -146,20 +146,25 @@ export default function EstimationGame({ mode, date }: Props) {
   // Called unconditionally (hook order must be stable across phases).
   const hudScore = useCountUp(state?.score ?? 0);
 
+  // One click to play: opening the page starts (or resumes) today's game
+  // immediately. startOrResume is idempotent, so double mounts are safe.
   useEffect(() => {
-    if (mode === "daily") {
-      api("/api/estimation/status").then(({ data }) => {
-        if (data.ok) {
-          setStatus(data.status as GameStatus);
-          setPhase("intro");
-        } else {
-          setPhase("unavailable");
-        }
-      });
-    } else {
-      setPhase("intro");
-    }
-  }, [mode]);
+    let cancelled = false;
+    (async () => {
+      const { data } = await api("/api/estimation/start", { game: "estimation", mode, date });
+      if (cancelled) return;
+      if (data.ok && data.state) {
+        setState(data.state as AttemptState);
+        setPhase("play");
+      } else {
+        setNotice(String(data.message ?? "Unavailable."));
+        setPhase("unavailable");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [mode, date]);
 
   useEffect(() => {
     if (state?.state === "active" && state.prompt && !state.resolved && input === "") {
@@ -326,73 +331,7 @@ export default function EstimationGame({ mode, date }: Props) {
   if (phase === "boot") {
     return (
       <main>
-        <p className="muted" role="status">Loading…</p>
-      </main>
-    );
-  }
-
-  if (phase === "intro") {
-    const a = status?.attempt;
-    return (
-      <main>
-        <div className="hero fade-up">
-          <span className="chip">{mode === "daily" ? "Daily · Estimation" : "Archive · unranked"}</span>
-          <h1>
-            How <span className="grad-text">roughly right</span> are you?
-          </h1>
-          <p className="tagline">
-            Five real-world estimates, one guess each. Closer answers earn more points, out of 500.
-            No timer, no registration — just intuition and rough maths.
-          </p>
-          <div className="pills">
-            {mode === "daily" && status?.puzzleNumber ? (
-              <span className="pill">🧩 Puzzle #{status.puzzleNumber}</span>
-            ) : null}
-            {mode === "daily" && status?.themeTag ? <span className="pill">🏷️ {status.themeTag}</span> : null}
-            {mode === "archive" && date ? <span className="pill">📅 {date}</span> : null}
-            <span className="pill">🎯 5 rounds</span>
-            <span className="pill">⏱️ Untimed</span>
-            {mode === "daily" && status ? (
-              <span className="pill">
-                🔥 {status.streak.current} streak{status.streak.best > 0 ? ` · best ${status.streak.best}` : ""}
-              </span>
-            ) : null}
-          </div>
-        </div>
-        {a?.state === "expired" ? (
-          <p role="status" className="notice">
-            A previous run ran out of its finish window and was saved as incomplete. Today&apos;s
-            fresh daily is ready.
-          </p>
-        ) : null}
-        <div className="actions">
-          {mode === "daily" && a?.state === "completed" ? (
-            <button className="primary" onClick={() => begin()} disabled={busy}>View results</button>
-          ) : (
-            <button className="primary" onClick={() => begin()} disabled={busy}>
-              {a?.state === "active" ? "Continue" : mode === "daily" ? "Start today's Estimation" : "Play this date"}
-            </button>
-          )}
-          <Link className="btn" href="/estimation/archive">Archive</Link>
-        </div>
-        <div className="feature-row">
-          <div className="feature">
-            <span className="ico" aria-hidden="true">📊</span>
-            <strong>Scored fairly</strong>
-            <span>Every guess is scored by how close it lands, not whether it&apos;s perfect.</span>
-          </div>
-          <div className="feature">
-            <span className="ico" aria-hidden="true">💡</span>
-            <strong>Hints, free</strong>
-            <span>Stuck? Every hint is free and never changes your score.</span>
-          </div>
-          <div className="feature">
-            <span className="ico" aria-hidden="true">🔗</span>
-            <strong>Share safely</strong>
-            <span>Results share as spoiler-free marks — never the answers.</span>
-          </div>
-        </div>
-        {notice ? <p role="alert" className="muted">{notice}</p> : null}
+        <p className="muted" role="status">Loading today&apos;s puzzle…</p>
       </main>
     );
   }
@@ -905,6 +844,16 @@ function RecapView({
         <Link className="btn" href="/">Home</Link>
         <Link className="btn" href="/estimation/archive">Archive</Link>
       </div>
+      {SIBLING_GAMES.length > 0 ? (
+        <p className="muted small" style={{ textAlign: "center", marginTop: 18 }}>
+          More daily games: {SIBLING_GAMES.map((g, i) => (
+            <span key={g.url}>
+              {i > 0 ? " · " : ""}
+              <a href={g.url}>{g.name}</a>
+            </span>
+          ))}
+        </p>
+      ) : null}
     </main>
   );
 }

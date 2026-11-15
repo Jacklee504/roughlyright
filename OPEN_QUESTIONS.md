@@ -162,6 +162,8 @@ items are lower priority.
 
 61. What is game #2 ("Rarity") and does it share the same attempt engine —
     if yes, which attempt-service assumptions do we keep generic now?
+    (Note per A7: Rarity would be a separate site, so "sharing" means
+    reusing code patterns, not co-hosting.)
 62. ? Is there a desired launch date that constrains any of the above?
 
 ---
@@ -235,6 +237,18 @@ fuzzy matching (edit distance scaled by word length); ambiguous typos are
 never guessed, and the suggest endpoint falls back to the same fuzzy match
 when no prefix matches. Flag any heuristic you disagree with — e.g. whether
 a stripped minus sign ("-900" → "900") should be offered.
+
+### A7. Games are separate websites, not one shared site
+The handoff says both games live on **one website** under one brand with a
+shared landing page and navigation. Owner decision overrides this: each game
+is a **completely separate entity/site**. The only permitted link between them
+is quiet cross-promotion — a single muted line on the home and results
+screens, "nothing OTT". Implemented via `SIBLING_GAMES` in
+`src/lib/site.ts` (currently an empty array, so nothing renders). Consequences:
+the handoff's shared landing page, shared navigation, "Rarity gets the lead
+position once both are public", and `/rarity/collection` page cohabitation do
+not apply as written; Rarity (if/when built, see question 61) would live on
+its own domain/codebase and reuse patterns rather than routes.
 
 ## B. Implemented decisions where the document was open-ended
 (Reasonable defaults chosen — veto any of these.)

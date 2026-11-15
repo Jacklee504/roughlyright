@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getGuestId } from "@/lib/http/session";
 import { getGameStatus } from "@/lib/service/status";
+import { SIBLING_GAMES } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ export default async function LandingPage() {
   return (
     <main>
       <section className="hero">
-        <span className="chip">Daily games · one roof</span>
+        <span className="chip">Daily estimation</span>
         <h1>
           Roughly <span className="grad-text">Right</span>
         </h1>
@@ -39,7 +40,6 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Primary game position. A second game (Rarity) takes the lead slot once both are public. */}
       <section className="card" aria-labelledby="estimation-heading">
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
           <span className="chip">🛰️ Daily</span>
@@ -78,13 +78,16 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      <section className="card">
-        <h2>More games are coming</h2>
-        <p className="muted">
-          Roughly Right will host a small collection of daily games under one roof. Estimation is
-          the first; the next one is on the way.
+      {SIBLING_GAMES.length > 0 ? (
+        <p className="muted small" style={{ textAlign: "center", marginTop: 20 }}>
+          Enjoying this? {SIBLING_GAMES.map((g, i) => (
+            <span key={g.url}>
+              {i > 0 ? " · " : ""}
+              <a href={g.url}>{g.name}</a> — {g.blurb}
+            </span>
+          ))}
         </p>
-      </section>
+      ) : null}
     </main>
   );
 }
