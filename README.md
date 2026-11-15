@@ -26,6 +26,7 @@ puzzle).
 | ------------------- | ------------ |
 | `npm run dev`       | Next.js dev server |
 | `npm run build`     | Production build |
+| `npm run verify`    | Production build into `.next-verify` — safe to run while `next dev` is serving |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm test`          | Unit tests (vitest: parser, scoring, autocorrect) **and** the integration suite (`tsx tests/integration.mts`, assert-based, fresh in-memory Postgres each run) |
 | `npm run db:migrate`| Apply versioned SQL migrations from `migrations/*.sql` |
