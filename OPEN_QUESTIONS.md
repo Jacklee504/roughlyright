@@ -7,7 +7,94 @@ decide.
 
 ---
 
+## Resolution log (Nov 2026)
+
+All 62 questions are now **resolved** by the owner's answers document
+(`Roughly_Right_Open_Questions_for_GLM.md`). Status of implementation:
+
+**Resolved and implemented in this pass**
+
+- Q1/Q12/C2 — strict production import path (`npm run content:publish`):
+  rejects fixture material, requires `content/live/approvals.json` with a
+  named editor + review date per puzzle date, and freezes datasets referenced
+  by published puzzles. Local seeding stays `npm run db:seed`.
+- Q2/B6 — display numbers are assigned once at first publication
+  (`max(display_number)+1`); renumbering removed entirely.
+- Q10 — slot mix shipped as one direct fact, three calculations, one target
+  match (fallback: second direct fact replaces the final target round).
+- Q11/C4 — report triage CLI (`scripts/triage.mts` list/resolve/dismiss).
+  No email integration, per the owner.
+- Q13 — every input in generated content is either sourced (publisher/title)
+  or explicitly labelled "Assumption:".
+- Q14 — published puzzles freeze; the importer refuses to replace a live
+  puzzle with different content outside a deliberate revision.
+- Q15 — best-entry threshold stays at ≥90 rounded points; editorial
+  plausibility review is part of the approval step.
+- Q16/B4 — autocomplete is prefix-only (3 chars, 8 labels); the fuzzy
+  fallback on the suggest endpoint was removed. Fuzzy matching remains in the
+  after-lock resolve flow only.
+- Q17 — hints exist only on numerical fact and calculation rounds; target
+  matches never show or serve a hint.
+- Q18/Q19 — library ships with text/figure hints only (no image hints yet).
+- Q20 — file-based scheduling + `scripts/verify-content.mts` as the calendar
+  check. No operator UI.
+- Q21/Q22 — device-bound cookie only; no email collection.
+- Q23/Q47 — `scripts/jobs-daily.mts` (`npm run jobs:daily`): atomic
+  restart-safe rollups of `site_events` from attempt ground truth, plus
+  retention (12-month inactive attempts purge, closed reports deleted after
+  12 months, granular operational events retained 90 days is operator-tunable
+  — the shipped cleanup removes rollup rows older than 12 months).
+- Q25 — privacy page (`/privacy`) with cookie-authenticated export and
+  deletion. Export contains only the guest's own attempts/rounds/share
+  tokens (no reports, no abuse counters, no answer keys). Deletion requires
+  typed confirmation and clears the session cookie.
+- Q28/Q29 — verified conformant (marks-only payload; same-puzzle either-mode
+  comparison with per-run labelling and owner opt-in). No changes needed.
+- Q30/C7 — percentiles shown only to the owner of a completed ranked daily,
+  gated at ≥50 other eligible completed ranked guesses, strict-worse error
+  factors, owner/passes/archive runs excluded.
+- Q33 — dark-only theme; the premium light theme was removed.
+- Q39 — short expandable "How scoring works" explainer on the first question
+  card and in the recap, with the reciprocal-errors-equal example. No
+  forced tutorial.
+- Q54 — privacy/cookie notice published on `/privacy` ahead of launch.
+
+**Resolved — remaining work is owner-owned**
+
+- Q12 (approval): `approvals.json` must be filled in with a real named editor
+  before any production publish; gates are deliberate.
+- Q49–Q53, Q62: staging pilot (≤20 invited players), device QA (real
+  VoiceOver/desktop AT per Q42), backup rehearsal (Q51), uptime probe (Q50)
+  and the 14-day sign-off remain the owner's launch gates.
+- Q55/Q57: owner territory/audience review and short terms/rules page before
+  public release.
+
+**Deviations recorded**
+
+- **Freemium removed entirely (Q58).** An earlier build shipped a supporter
+  tier (premium columns, redeem codes, upgrade page, gated archive/insights,
+  light theme). The owner's answer ("free at launch, no monetization
+  architecture") reversed this: the whole surface was deleted
+  (`migrations/0003_drop_premium.sql` drops the dormant columns; archive and
+  insights are free; `dev:premium` removed).
+- **Question library is mathematics-first (Q13/Q17).** The 300-question
+  launch library (dates 2026-11-16…2027-01-14) contains only defined unit
+  conversions, exact constants, Fermi calculations and quantitative
+  datasets — no single-figure trivia. 14 of 180 calculations carry a hint
+  (always one figure, never all inputs); hints appear on no direct facts and
+  no target matches. Generated content lives in `content/live/` and validates
+  with the production validator.
+- **A6 narrowed per Q16/B4:** the suggest endpoint no longer falls back to
+  fuzzy matching (see above); autocorrect heuristics remain advisory at
+  resolve time.
+
+---
+
 ## Question bank (needs owner input)
+
+*Historical record — every question below was answered in
+`Roughly_Right_Open_Questions_for_GLM.md` (Nov 2026); see the resolution log
+above for what changed in code.*
 
 Grouped by area. Each is phrased so it can be answered in one line; "?"
 
@@ -234,9 +321,11 @@ decimal points, and the decimal-comma ambiguity ("5,00" → 5 in measured
 mode, 500 in count mode). Corrections are never applied silently and the
 server re-validates the confirmed value. Target-match input gets unique-best
 fuzzy matching (edit distance scaled by word length); ambiguous typos are
-never guessed, and the suggest endpoint falls back to the same fuzzy match
-when no prefix matches. Flag any heuristic you disagree with — e.g. whether
-a stripped minus sign ("-900" → "900") should be offered.
+never guessed. **Update (Q16/B4, Nov 2026):** the suggest endpoint no longer
+falls back to fuzzy matching — autocomplete is prefix-only; fuzzy correction
+applies after a lock, not during live suggestions. Flag any heuristic you
+disagree with — e.g. whether a stripped minus sign ("-900" → "900") should
+be offered.
 
 ### A7. Games are separate websites, not one shared site
 The handoff says both games live on **one website** under one brand with a
@@ -273,10 +362,10 @@ its own domain/codebase and reuse patterns rather than routes.
 5. **Co-best target matches** — entries tied on the maximum `ratioClose` are
    all shown as "closest" (capped at 3 + a "more" count). The handoff
    mentions ties without prescribing presentation.
-6. **Display-number renumbering** — import renumbers `display_number` for all
-   released puzzles of a game so the count always starts at the earliest
-   puzzle, regardless of insertion order. Confirm this is the intent rather
-   than author-assigned numbers.
+6. **Display-number assignment** — ~~import renumbers~~ **REPLACED per Q2/B6
+   (Nov 2026):** numbers are assigned once at first publication
+   (`max(display_number)+1` per game) and never renumbered, so shared result
+   references stay stable.
 7. **Expiry replay UX** — an expired daily attempt freezes as incomplete
    (ranked, 0-500 partial), and the archive offers an unranked replay of that
    date the same day. The home page then treats the day as done for streak
@@ -290,16 +379,18 @@ its own domain/codebase and reuse patterns rather than routes.
    "kg/loaf ÷ kg flour" reduces to loaves). Editorial review must own unit
    sanity until a stronger check is built.
 2. **Fixture content is synthetic.** Every number, source title and URL in
-   `content/fixtures/` is invented for demonstration. Real launches need real
-   sourced content — the validator enforces *that sources are declared*, not
-   that they are correct.
+   `content/fixtures/` is invented for demonstration. **Closed per Q1/C2
+   (Nov 2026):** fixtures are local demo material only — the production
+   import path rejects them, they never displace live dailies in seeding,
+   and real launches publish only approved `content/live/` material via
+   `npm run content:publish`.
 3. **Hint images** are placeholder SVGs (`public/hint-images/`); the data
    model and the image/text fallback are implemented, but no real artwork
    exists. Who produces hint artwork, and under what rights model (the
    importer requires credit + rights strings)?
-4. **Report triage** — content reports are stored (private, rate-limited)
-   but there is no operator UI or export. Where should reports land (email,
-   spreadsheet, admin page)?
+4. **Report triage** — content reports are stored (private, rate-limited).
+   ~~Where should reports land~~ **RESOLVED per Q11/C4 (Nov 2026):** private
+   CLI triage (`npx tsx scripts/triage.mts list|resolve|dismiss`); no email.
 5. **Browser E2E automation deferred.** The API loop is covered by the
    integration suite and was smoke-tested through the real HTTP surface
    (pages, cookies, full five-round play, share, report), but no Playwright/

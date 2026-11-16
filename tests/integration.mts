@@ -17,8 +17,6 @@ const { startOrResume, resolveRound, advanceRound, getRecapForGuest } = await im
 const { getGameStatus } = await import("@/lib/service/status");
 const { computeStreaks } = await import("@/lib/service/stats");
 const { createShare, getSharePayload, revokeShare } = await import("@/lib/service/share");
-const { isPremiumGuest, redeemPremiumCode, archiveFloorDate } = await import("@/lib/service/premium");
-const { utcToday } = await import("@/lib/domain/calendar");
 const { setClock } = await import("@/lib/domain/clock");
 
 type Test = { name: string; fn: () => Promise<void> };
@@ -48,7 +46,7 @@ async function startDaily(guest: string) {
 // Content import + editorial validation
 // ---------------------------------------------------------------------------
 
-test("imports the whole fixture set and assigns display numbers", async () => {
+test("imports the whole fixture set and assigns first-publication numbers", async () => {
   const db = await getDb();
   const result = await importDirectory(db, FIXTURES);
   assert.equal(result.puzzles.length, 4);
@@ -56,7 +54,11 @@ test("imports the whole fixture set and assigns display numbers", async () => {
   const rows = await db.query<{ date: string; display_number: number }>(
     `select date::text as date, display_number from puzzles where game_slug='estimation' order by date`,
   );
-  assert.deepEqual(rows.rows.map((r) => r.display_number), [1, 2, 3, 4]);
+  // B6/Q2: numbers are assigned once at first publication — unique, positive,
+  // and never renumbered afterwards (stability is asserted by the idempotent
+  // re-import test below).
+  const numbers = rows.rows.map((r) => r.display_number);
+  assert.deepEqual([...numbers].sort((a, b) => a - b), [1, 2, 3, 4]);
 });
 
 test("is idempotent on re-import", async () => {
@@ -65,6 +67,15 @@ test("is idempotent on re-import", async () => {
   await importDirectory(db, FIXTURES);
   const after = await db.query<{ count: string }>(`select count(*)::text as count from prompt_revisions`);
   assert.equal(after.rows[0].count, before.rows[0].count);
+});
+
+test("production import rejects fixture content and demands approval metadata", async () => {
+  const db = await getDb();
+  // Fixtures are never publishable, even passed directly (Q1/C2).
+  await assert.rejects(() => importDirectory(db, FIXTURES, { production: true }), ImportError);
+  // The live library without approvals.json also cannot publish (Q12).
+  const live = path.join(process.cwd(), "content", "live");
+  await assert.rejects(() => importDirectory(db, live, { production: true }), /approval/i);
 });
 
 test("rejects datasets with colliding aliases", async () => {
@@ -146,6 +157,45 @@ test("plays the full daily: fact, three calcs, target match, then recap", async 
     assert.equal(a.state.recap?.closestRound?.ordinal, 2); // raw-factor ties break to earliest
   }
   completedDaily = { guest, attemptId };
+});
+
+test("privacy: export contains own rounds and share tokens but no answer keys; deletion wipes everything", async () => {
+  const { exportGuestData, deleteGuestData } = await import("@/lib/service/privacy");
+  const guest = await newGuest();
+  const s = await startDaily(guest);
+  const attemptId = s.attemptId;
+  const r = await resolveRound(guest, { attemptId, ordinal: 1, requestId: rid(), pass: false, guess: "900" });
+  assert.ok(r.ok);
+
+  let data = await exportGuestData(guest);
+  assert.ok(data);
+  if (!data) return;
+  assert.equal(data.attempts.length, 1);
+  assert.equal(data.attempts[0].rounds.length, 1);
+  assert.equal(data.attempts[0].rounds[0].submittedValue, "900");
+  // A share link (inserted directly to stay independent of completion) appears in the export.
+  const db = await getDb();
+  await db.query(`insert into share_results (token, attempt_id) values ('privacy-test-token', $1)`, [attemptId]);
+  data = await exportGuestData(guest);
+  assert.ok(data);
+  if (!data) return;
+  assert.equal(data.shareTokens.length, 1);
+  assert.ok(data.shareTokens[0].tokenPrefix.startsWith("privacy-"));
+  const serialized = JSON.stringify(data);
+  // No answer-key material (benchmark values) is exported.
+  assert.ok(!serialized.includes("benchmark"));
+
+  const gone = await deleteGuestData(guest);
+  assert.ok(gone.ok);
+  if (gone.ok) assert.equal(gone.attempts, 1);
+  const after = await db.query<{ attempts: string; rounds: string; shares: string; guests: string }>(
+    `select (select count(*) from attempts where guest_id = $1)::text as attempts,
+            (select count(*) from attempt_rounds r join attempts a on a.id = r.attempt_id where a.guest_id = $1)::text as rounds,
+            (select count(*) from share_results s join attempts a on a.id = s.attempt_id where a.guest_id = $1)::text as shares,
+            (select count(*) from guests where id = $1)::text as guests`,
+    [guest],
+  );
+  assert.deepEqual(after.rows[0], { attempts: "0", rounds: "0", shares: "0", guests: "0" });
 });
 
 test("rejects invalid input without closing the round, and explains the issue", async () => {
@@ -296,8 +346,10 @@ test("home status never creates an attempt and reports availability", async () =
   const status = await getGameStatus("estimation", await newGuest());
   assert.equal(status.puzzleAvailable, true);
   assert.equal(status.attempt?.exists, false);
-  assert.equal(status.puzzleNumber, 4);
-  assert.equal(status.date, "2026-11-15");
+  // Today's puzzle (live library or fixtures) is dated today with a positive number.
+  const { utcToday } = await import("@/lib/domain/calendar");
+  assert.equal(status.date, utcToday());
+  assert.ok((status.puzzleNumber ?? 0) >= 1);
 });
 
 // ---------------------------------------------------------------------------
@@ -416,38 +468,6 @@ test("creates a spoiler-free payload; comparison needs same-puzzle completion; r
 test("unknown or invalid tokens return a neutral not-found", async () => {
   const gone = await getSharePayload("definitely-not-a-token", null, null);
   assert.equal(gone.found, false);
-});
-
-// ---------------------------------------------------------------------------
-// Freemium entitlements
-// ---------------------------------------------------------------------------
-
-test("premium starts locked and can be granted by code", async () => {
-  const guest = await newGuest();
-  assert.equal(await isPremiumGuest(guest), false);
-
-  process.env.PREMIUM_CODES = "TEST-CODE-A, test-code-b";
-  const bad = await redeemPremiumCode(guest, "WRONG");
-  assert.equal(bad.ok, false);
-  assert.equal(await isPremiumGuest(guest), false);
-
-  const good = await redeemPremiumCode(guest, "test-code-b"); // case-insensitive
-  assert.equal(good.ok, true);
-  assert.equal(await isPremiumGuest(guest), true);
-
-  delete process.env.PREMIUM_CODES;
-  const noCodes = await redeemPremiumCode(await newGuest(), "TEST-CODE-A");
-  assert.equal(noCodes.ok, false);
-});
-
-test("archive floor limits free guests, not premium", async () => {
-  const today = utcToday();
-  assert.equal(archiveFloorDate(today, true), null);
-  assert.ok(archiveFloorDate(today, false) === null || archiveFloorDate(today, false)! < today);
-  // 7-day window: floor is 6 days before today.
-  const floor = new Date(`${today}T00:00:00Z`);
-  floor.setUTCDate(floor.getUTCDate() - 6);
-  assert.equal(archiveFloorDate(today, false), floor.toISOString().slice(0, 10));
 });
 
 async function completedPuzzleId(attemptId: string): Promise<string | null> {

@@ -12,17 +12,34 @@ embedded-Postgres locally and hosted-Postgres in production.
 2. Keep the string out of chat/repo. It goes in two places only: your local
    shell for seeding, and Netlify's environment settings.
 
-## One-time: migrate + seed the production database
+## One-time: migrate + publish the production database
 
 From the project root, with your connection string in place:
 
 ```sh
 export DATABASE_URL="postgresql://…-pooler…/neondb?sslmode=require"
-npm run db:migrate   # applies migrations/*.sql
-npm run db:seed      # imports content/fixtures (and content/live if present)
+npm run db:migrate        # applies migrations/*.sql
+npm run content:publish   # production content import (strict)
 ```
 
+`content:publish` is the **production content path** (never use `db:seed`
+against production): it rejects synthetic fixture material, requires
+`content/live/approvals.json` recording a named editor and review date for
+every puzzle date being published, and refuses to mutate datasets that
+published puzzles already reference. Before publishing, validate the
+content directory with `npx tsx scripts/verify-content.mts`.
+
 Both scripts are idempotent — re-running is always safe.
+
+## Scheduled jobs
+
+`npm run jobs:daily` performs the daily operations work: it atomically
+reconciles the anonymous `site_events` counters from attempt ground truth
+and applies the retention policy (attempts belonging to guests inactive for
+12 months are purged, closed content reports and rollup rows older than
+12 months are deleted). Schedule it once a day (e.g. Netlify scheduled
+function, cron) with the same `DATABASE_URL`. It is restart-safe and
+idempotent.
 
 ## Netlify site setup
 
@@ -41,16 +58,29 @@ Both scripts are idempotent — re-running is always safe.
 | --- | --- | --- |
 | Database | PGlite at `./.data/pg` | hosted Postgres via `DATABASE_URL` |
 | Migrations | automatic on boot | `npm run db:migrate` (manual, idempotent) |
+| Content | `npm run db:seed` (live library; fixtures only if none) | `npm run content:publish` (strict, approval-gated) |
 | Guest cookie | `Secure` off (http) | `Secure` on (https) |
 | Rate limits | in-memory per process | in-memory per function instance (approximate) |
+| Daily job | `npm run jobs:daily` (optional) | scheduled daily with `DATABASE_URL` |
 
 ## Updating content after launch
 
-Add files to `content/live/`, then re-run `npm run db:seed` with
-`DATABASE_URL` set locally (or from any machine with the env var). Published
-puzzles are immutable — changed prompts create new revisions; new dates
-import as new rows. Nothing needs to change on Netlify; the running site
-picks content up from the database.
+Add files under `content/live/` (with approval metadata for the new dates),
+verify with `npx tsx scripts/verify-content.mts`, then re-run
+`npm run content:publish` with `DATABASE_URL` set locally. Published puzzles
+are immutable — re-importing an unchanged puzzle is a no-op, datasets
+referenced by published puzzles are frozen, and changed prompts create new
+revisions rather than rewriting history. Display numbers are assigned once
+at first publication and never renumbered, so shared result links stay
+stable. Nothing needs to change on Netlify; the running site picks content
+up from the database.
+
+## Content reports
+
+Player-submitted content-error reports accumulate privately. Triage them
+with the operator CLI (`npx tsx scripts/triage.mts list|resolve|dismiss`)
+against the production `DATABASE_URL`; closed reports are deleted by the
+daily job after 12 months.
 
 ## If the site errors with "relation … does not exist"
 

@@ -169,10 +169,12 @@ async function importPuzzle(db: Db, puzzle: EditorialPuzzle, datasets: DatasetIn
   }
   await db.query(
     `insert into puzzles (id, game_slug, date, display_number, theme_tag, content_revision, rules_version, status, prompt_revision_ids)
-     values ($1,$2,$3,$4,$5,$6,'1','live',$7)
+     values ($1,$2,$3,
+             (select coalesce(max(display_number), 0) + 1 from puzzles where game_slug = $2),
+             $4,$5,'1','live',$6)
      on conflict (game_slug, date) do update
-       set display_number = $4, theme_tag = $5, content_revision = $6, status = 'live', prompt_revision_ids = $7`,
-    [puzzleId, puzzle.game, date, 0, puzzle.themeTag ?? null, contentRevision, revisionIds],
+       set theme_tag = $4, content_revision = $5, status = 'live', prompt_revision_ids = $6`,
+    [puzzleId, puzzle.game, date, puzzle.themeTag ?? null, contentRevision, revisionIds],
   );
 }
 
@@ -192,20 +194,56 @@ function addDays(date: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-/** Recompute sequential display numbers (per game, by date ascending). */
-async function renumber(db: Db): Promise<void> {
-  await db.query(
-    `with ranked as (
-       select id, row_number() over (partition by game_slug order by date asc) as rn
-       from puzzles
-     )
-     update puzzles p set display_number = r.rn
-     from ranked r where r.id = p.id and p.display_number <> r.rn`,
+/** Display numbers are assigned once at first publication (B6/Q2) and are
+ *  never renumbered: existing public result references must stay stable. */
+
+export type ImportOptions = {
+  /** Production mode: rejects fixture content and requires editorial approval
+   *  metadata (named editor + review date) for every live puzzle, and freezes
+   *  datasets referenced by published puzzles (Q1, Q12, C2). */
+  production?: boolean;
+};
+
+async function loadApprovals(dir: string, production: boolean): Promise<Map<string, { editor: string; reviewedAt: string }>> {
+  const file = path.join(dir, "approvals.json");
+  const out = new Map<string, { editor: string; reviewedAt: string }>();
+  if (!existsSync(file)) {
+    if (production) throw new ImportError(`Production import requires ${path.relative(process.cwd(), file)} (release approval metadata).`);
+    return out;
+  }
+  const raw = JSON.parse(readFileSync(file, "utf8")) as Record<string, { editor?: string; reviewedAt?: string }>;
+  for (const [date, a] of Object.entries(raw)) {
+    if (!a?.editor || !a?.reviewedAt) throw new ImportError(`Approval for ${date} needs "editor" and "reviewedAt".`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(a.reviewedAt)) throw new ImportError(`Approval for ${date} has a malformed reviewedAt date.`);
+    out.set(date, { editor: a.editor, reviewedAt: a.reviewedAt });
+  }
+  return out;
+}
+
+async function assertDatasetFrozen(db: Db, ds: EditorialDataset): Promise<void> {
+  const existing = await db.query<{ entry_id: string; label: string; disambiguator: string | null; value: string; aliases: string[] }>(
+    `select entry_id, label, disambiguator, value, aliases from target_entries where dataset_id = $1 order by entry_id`,
+    [ds.id],
   );
+  const fileEntries = new Map(ds.entries.map((e) => [e.id, e]));
+  const same = existing.rows.length === ds.entries.length &&
+    existing.rows.every((row) => {
+      const e = fileEntries.get(row.entry_id);
+      return e != null &&
+        e.label === row.label &&
+        e.value === row.value &&
+        (e.disambiguator ?? null) === row.disambiguator &&
+        JSON.stringify(e.aliases ?? []) === JSON.stringify(row.aliases ?? []);
+    });
+  if (!same) {
+    throw new ImportError(
+      `Dataset ${ds.id} is frozen: it is referenced by published puzzles and its entries, aliases or values differ (Q1). Publish a new dataset revision instead.`,
+    );
+  }
 }
 
 /** Import every JSON file under the given directory (datasets before puzzles). */
-export async function importDirectory(db: Db, dir: string): Promise<ImportResult> {
+export async function importDirectory(db: Db, dir: string, opts: ImportOptions = {}): Promise<ImportResult> {
   const files: string[] = [];
   const walk = (d: string) => {
     if (!existsSync(d)) return;
@@ -220,8 +258,29 @@ export async function importDirectory(db: Db, dir: string): Promise<ImportResult
   const datasets = rawFiles.filter((f) => (f.json as { kind?: string }).kind === "target_dataset") as { path: string; json: EditorialDataset }[];
   const puzzles = rawFiles.filter((f) => (f.json as { kind?: string }).kind === "estimation_puzzle") as { path: string; json: EditorialPuzzle }[];
 
+  // Production (Q1/C2): synthetic fixtures never reach the live importer,
+  // even when passed directly.
+  if (opts.production) {
+    for (const ds of datasets) if (ds.json.revision?.includes("fixture")) throw new ImportError(`Dataset ${ds.json.id}: fixture content is not publishable.`);
+    for (const pz of puzzles) {
+      if (pz.json.quality !== "live") throw new ImportError(`${pz.json.date ?? pz.path}: quality "${pz.json.quality}" — production publishes approved live content only.`);
+    }
+    const approvals = await loadApprovals(dir, true);
+    for (const pz of puzzles) {
+      const date = pz.json.date ?? addDays(utcToday(), pz.json.dayOffset ?? 0);
+      const approval = approvals.get(date);
+      if (!approval) throw new ImportError(`Puzzle ${pz.json.game} ${date}: no editor approval recorded in release metadata (Q12).`);
+      if (approval.reviewedAt < date) throw new ImportError(`Puzzle ${pz.json.game} ${date}: reviewed before its date.`);
+    }
+  }
+
   const index: DatasetIndex = new Map(datasets.map((d) => [d.json.id, d.json]));
   const result: ImportResult = { puzzles: [], datasets: [], warnings: [] };
+
+  // Freeze check must see the datasets that published questions reference (Q1).
+  if (opts.production) {
+    for (const ds of datasets) await assertDatasetFrozen(db, ds.json);
+  }
 
   for (const ds of datasets) {
     await importDataset(db, ds.json);
@@ -232,6 +291,5 @@ export async function importDirectory(db: Db, dir: string): Promise<ImportResult
     const date = pz.json.date ?? addDays(utcToday(), pz.json.dayOffset ?? 0);
     result.puzzles.push({ game: pz.json.game, date, quality: pz.json.quality });
   }
-  await renumber(db);
   return result;
 }

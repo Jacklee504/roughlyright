@@ -13,7 +13,6 @@ import { parseDecimalToRat, rat, cmp, div, sub, type Rat } from "@/lib/domain/de
 import { scoreValue, direction as guessDirection } from "@/lib/domain/scoring";
 import { parseNumber, formatDisplay } from "@/lib/domain/numberParser";
 import { repairNumberInput, fuzzyEntityMatches, type FuzzyCandidate } from "@/lib/domain/autocorrect";
-import { isPremiumGuest, archiveFloorDate } from "@/lib/service/premium";
 import { normalizeKey } from "@/lib/domain/text";
 import { utcToday, dailyFinishWindowEndIso, nextResetIso } from "@/lib/domain/calendar";
 import { now } from "@/lib/domain/clock";
@@ -24,7 +23,7 @@ import { buildCommunityPercentile } from "./stats";
 export type StartInput = { game: string; date?: string; mode?: "daily" | "archive" };
 export type StartResult =
   | { ok: true; state: AttemptState }
-  | { ok: false; code: "unavailable" | "not_found" | "forbidden" | "stale" | "premium_required"; message: string };
+  | { ok: false; code: "unavailable" | "not_found" | "forbidden" | "stale"; message: string };
 
 export type ResolveInput =
   | { attemptId: string; ordinal: number; requestId: string; pass: true }
@@ -97,21 +96,6 @@ export async function startOrResume(guestId: string, input: StartInput): Promise
   const puzzle = await getPuzzleByDate(game, date);
   if (!puzzle) {
     return { ok: false, code: "unavailable", message: "No puzzle is published for that date." };
-  }
-
-  // Freemium: archive replays of older dates require premium (server-enforced,
-  // not just UI). Resume of an existing attempt is always allowed.
-  if (date < today) {
-    const premium = await isPremiumGuest(guestId);
-    const floor = archiveFloorDate(today, premium);
-    const existing = await getAttemptFor(await getDb(), guestId, puzzle.id, "archive");
-    if (floor && date < floor && !existing) {
-      return {
-        ok: false,
-        code: "premium_required",
-        message: "This archive date is part of Premium. Redeem an upgrade code to unlock the full archive.",
-      };
-    }
   }
 
   const db = await getDb();
@@ -289,7 +273,8 @@ function toPromptPublic(ordinal: number, rev: PromptRevisionRow): PromptPublic {
     scope: rev.scope,
     unit: rev.unit,
     countMode: rev.count_mode,
-    hintAvailable: rev.hint != null,
+    // Q17: target matches never show a hint affordance.
+    hintAvailable: rev.hint != null && rev.round_type !== "target_match",
   };
 }
 
@@ -685,18 +670,22 @@ export async function buildRecap(
     if (!rev || !r.outcome) continue;
     rounds.push(await buildResolved(r, rev, puzzle, client));
   }
-  // Community percentile per scored numeric round (only when 50+ other guesses exist).
-  for (const r of rounds) {
-    if (r.outcome !== "scored" || r.roundType === "target_match") continue;
-    const roundRow = roundRows.find((x) => x.ordinal === r.ordinal);
-    if (roundRow?.error_factor) {
-      r.percentile = await buildCommunityPercentile(
-        roundRow.revision_id,
-        roundRow.error_factor,
-        attempt.id,
-        r.ordinal,
-        client,
-      );
+  // Q30: community percentile per scored numeric round, shown only on the
+  // owner's completed ranked daily result (never archive replays), and only
+  // when 50+ other completed ranked guesses exist.
+  if (attempt.mode === "daily" && attempt.state === "completed") {
+    for (const r of rounds) {
+      if (r.outcome !== "scored" || r.roundType === "target_match") continue;
+      const roundRow = roundRows.find((x) => x.ordinal === r.ordinal);
+      if (roundRow?.error_factor) {
+        r.percentile = await buildCommunityPercentile(
+          roundRow.revision_id,
+          roundRow.error_factor,
+          attempt.id,
+          r.ordinal,
+          client,
+        );
+      }
     }
   }
 
@@ -758,6 +747,17 @@ export async function getHint(guestId: string, attemptId: string, ordinal: numbe
   const row = rows[0];
   if (!row) return { ok: false, message: "Hint not available." };
   if (row.state !== "active") return { ok: false, message: "Hint not available." };
+  // Q17: hints exist only on numerical fact and calculation rounds — never on
+  // target matches, even if malformed content slipped one in.
+  const roundTypeRows = await q<{ round_type: string }>(
+    `select r.round_type from prompt_revisions r
+     join puzzles p on p.prompt_revision_ids[$3] = r.revision_id
+     where p.id = (select puzzle_id from attempts where id = $1)`,
+    [attemptId, guestId, ordinal],
+  );
+  if (roundTypeRows[0]?.round_type === "target_match") {
+    return { ok: false, message: "Target rounds don't have hints." };
+  }
   return { ok: true, hint: row.hint };
 }
 

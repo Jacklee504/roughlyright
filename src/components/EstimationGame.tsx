@@ -439,6 +439,16 @@ export default function EstimationGame({ mode, date }: Props) {
           <p className="prompt-text">{prompt.prompt}</p>
           {prompt.scope ? <p className="muted small q-scope">{prompt.scope}</p> : null}
 
+          {prompt.ordinal === 1 ? (
+            <details className="scoring-explainer muted small" style={{ margin: "6px 0 10px" }}>
+              <summary>How scoring works</summary>
+              <p className="muted small" style={{ marginTop: 6 }}>
+                Only your ratio of guess to truth matters: 2× too high loses exactly as much as 2× too low.
+                True answer 100? Guessing 50 scores the same as guessing 200.
+              </p>
+            </details>
+          ) : null}
+
           {prompt.roundType === "target_match" ? (
             <>
               <label htmlFor="guess">Your answer</label>
@@ -805,6 +815,22 @@ function RecapView({
         {notice ? <p role="status" className="muted">{notice}</p> : null}
         <p className="muted small">The shared text and link never include prompts, answers or your guesses.</p>
       </div>
+
+      <details className="card scoring-explainer" style={{ marginBottom: 14 }}>
+        <summary><strong>How scoring works</strong></summary>
+        <p className="muted" style={{ marginTop: 8 }}>
+          Each of the five rounds is worth up to 100 points. Only your <em>ratio</em> of guess to truth
+          matters — 2× too high loses exactly as much as 2× too low, so a reciprocal pair of misses scores
+          the same. Example: the true answer is 100. Guessing <strong>50</strong> scores the same as
+          guessing <strong>200</strong> — both are a factor of 2 off.
+        </p>
+        <p className="muted small" style={{ marginTop: 6 }}>
+          Marks: <span className="pill">Exact</span> spot-on or rounded right · <span className="pill">Close</span>{" "}
+          within the near band · <span className="pill">In range</span> inside a generous band ·{" "}
+          <span className="pill">Far</span> outside it. Passing keeps your streak but scores 0 for that round.
+          Percentiles, when shown, never change your points.
+        </p>
+      </details>
 
       <h2>Answer review</h2>
       {recap.rounds.map((r) => (

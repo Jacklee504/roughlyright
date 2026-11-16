@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getGuestId } from "@/lib/http/session";
-import { isPremiumGuest } from "@/lib/service/premium";
 import { computeStreaks } from "@/lib/service/stats";
 import { q } from "@/lib/db/client";
 import PixelSprite from "@/components/pixel/PixelSprite";
@@ -20,38 +19,6 @@ const MARK_COLORS: Record<string, string> = {
 
 export default async function InsightsPage() {
   const guestId = await getGuestId();
-  const premium = await isPremiumGuest(guestId);
-
-  if (!premium) {
-    return (
-      <main>
-        <div className="hero">
-          <PixelSprite sprite={SPARKLE} palette={PALETTES.ghost} size={40} className="hero-mascot" />
-          <span className="chip">Premium</span>
-          <h1>
-            Your <span className="grad-text">Insights</span>
-          </h1>
-          <p className="tagline muted">
-            Score history, mark distribution, category strengths and personal records.
-          </p>
-        </div>
-        <div className="card locked-card">
-          <h2>🔒 This dashboard is part of Premium</h2>
-          <ul className="insights-teaser">
-            <li>Every daily score on one chart — see your trend, not just today.</li>
-            <li>How your guesses land: Exact vs Close vs Far, all time.</li>
-            <li>Which categories you ace (and which guess-back).</li>
-            <li>Streak records and personal bests.</li>
-          </ul>
-          <div className="actions">
-            <Link className="primary btn" href="/estimation/upgrade">Unlock with Premium</Link>
-            <Link className="btn" href="/estimation">Back to the game</Link>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   if (!guestId) return null;
 
   const [history, marks, categories, streak] = await Promise.all([
@@ -95,7 +62,7 @@ export default async function InsightsPage() {
     <main>
       <div className="hero">
         <PixelSprite sprite={SPARKLE} palette={PALETTES.star} size={40} className="hero-mascot" />
-        <span className="chip">Premium</span>
+        <span className="chip">Your history</span>
         <h1>
           Your <span className="grad-text">Insights</span>
         </h1>
@@ -180,8 +147,7 @@ export default async function InsightsPage() {
       </section>
 
       <p className="muted small" style={{ textAlign: "center", marginTop: 14 }}>
-        <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={14} /> Premium feature —
-        thanks for supporting the game. <Link href="/estimation/upgrade">Manage</Link>
+        See how your estimates land over time — updated as you play.
       </p>
     </main>
   );
