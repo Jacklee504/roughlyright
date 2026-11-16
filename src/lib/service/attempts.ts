@@ -612,6 +612,9 @@ async function buildResolved(
   let closest: RoundResolved["closest"] = null;
   let targetDisplay: string | null = null;
   let benchmarkLabel: RoundResolved["reveal"]["benchmarkLabel"] = null;
+  // Q: Fermi-style own-data feedback — how many times off the truth you were.
+  // The player's own ratio only; share/comparison payloads never include it.
+  let errorFactor: string | null = null;
 
   if (!passed && !isTarget && scoring.type !== "target_match") {
     const target = targetValue(scoring)!;
@@ -623,6 +626,7 @@ async function buildResolved(
     dir = guessDirection(guessRat, target) === "high" ? "high" : "low";
     const abs = cmp(guessRat, target) > 0 ? sub(guessRat, target) : sub(target, guessRat);
     gap = { display: formatDisplay(stringifyRat(abs)), unit: rev.unit };
+    errorFactor = round.error_factor ?? null;
   }
   if (!passed && isTarget && scoring.type === "target_match") {
     const target = parseDecimalToRat(scoring.target)!;
@@ -633,6 +637,9 @@ async function buildResolved(
       const chosenRat = parseDecimalToRat(chosen.value)!;
       entity = { label: chosen.label, valueDisplay: formatDisplay(chosen.value) };
       dir = cmp(chosenRat, target) > 0 ? "higher than target" : "lower than target";
+      const r = div(chosenRat, target);
+      const ratio = cmp(chosenRat, target) > 0 ? r : div(target, chosenRat);
+      errorFactor = stringifyRat(ratio);
     }
     const { best } = bestMatches(target, entries);
     const shown = best.slice(0, 3);
@@ -662,6 +669,7 @@ async function buildResolved(
     mark,
     direction: dir,
     absoluteGap: gap,
+    errorFactor,
     closest,
     reveal: {
       benchmarkLabel,

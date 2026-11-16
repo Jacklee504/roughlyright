@@ -8,7 +8,10 @@ import { SIBLING_GAMES } from "@/lib/site";
 import ScoreRing from "@/components/ScoreRing";
 import PixelSprite from "@/components/pixel/PixelSprite";
 import PixelStars from "@/components/pixel/PixelStars";
-import { TROPHY, SPARKLE, PLANET, PALETTES } from "@/components/pixel/sprites";
+import PixelConfetti from "@/components/PixelConfetti";
+import PixelSky from "@/components/PixelSky";
+import AnimatedSprite from "@/components/pixel/AnimatedSprite";
+import { TROPHY, PLANET, PALETTES } from "@/components/pixel/sprites";
 
 type ApiResult = { ok: boolean; state?: AttemptState; code?: string; message?: string; suggestion?: string };
 
@@ -45,6 +48,14 @@ export function markClass(mark: string): string {
   return `mark mark-${mark.replace(/\s+/g, "-")}`;
 }
 
+/** Fermi-style "×1.45" label from the canonical error-factor decimal. */
+function factorLabel(f: string): string {
+  const n = Number(f);
+  if (!Number.isFinite(n) || n <= 0) return f;
+  const s = n >= 100 ? Math.round(n).toString() : n.toFixed(2).replace(/\.?0+$/, "");
+  return s;
+}
+
 function markChip(r: { points: number; mark: string }): string {
   return `${MARK_ICONS[r.mark] ?? ""} ${r.mark} · ${r.points}`;
 }
@@ -72,39 +83,6 @@ function useCountUp(target: number): number {
 }
 
 /** CSS confetti burst; pure decoration, disabled under reduced motion. */
-function Burst({ seed, count = 16 }: { seed: number; count?: number }) {
-  const parts = useMemo(
-    () =>
-      Array.from({ length: count }, (_, i) => {
-        const angle = (i / count) * Math.PI * 2 + (seed % 7) * 0.13;
-        const dist = 60 + ((seed * (i + 3)) % 55);
-        const colors = ["#6ea8ff", "#b48cff", "#5fe3a1", "#ffcf5c", "#ff7d8a"];
-        return {
-          tx: `${Math.cos(angle) * dist}px`,
-          ty: `${Math.sin(angle) * dist + 40}px`,
-          rot: `${(seed * (i + 1)) % 360}deg`,
-          delay: `${(i % 5) * 30}ms`,
-          color: colors[i % colors.length],
-        };
-      }),
-    [seed, count],
-  );
-  return (
-    <span className="burst" aria-hidden="true">
-      {parts.map((p, i) => {
-        const style = {
-          ["--tx"]: p.tx,
-          ["--ty"]: p.ty,
-          ["--rot"]: p.rot,
-          ["--delay"]: p.delay,
-          background: p.color,
-        } as CSSProperties;
-        return <i key={i} style={style} />;
-      })}
-    </span>
-  );
-}
-
 const CATEGORY_ICONS: Record<string, string> = {
   space: "🛰️",
   food: "🍞",
@@ -145,7 +123,6 @@ export default function EstimationGame({ mode, date }: Props) {
   const [comparison, setComparison] = useState(false);
   const [busy, setBusy] = useState(false);
   const [suggestion, setSuggestion] = useState<string | null>(null);
-  const [burstSeed, setBurstSeed] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   // Called unconditionally (hook order must be stable across phases).
   const hudScore = useCountUp(state?.score ?? 0);
@@ -263,7 +240,6 @@ export default function EstimationGame({ mode, date }: Props) {
         setState(data.state as AttemptState);
         const resolved = (data.state as AttemptState).resolved;
         if (resolved && (resolved.mark === "Exact" || resolved.mark === "Close")) {
-          setBurstSeed((s) => s + 1);
         }
       } else {
         setNotice(String(data.message ?? "Something went wrong — try again."));
@@ -335,6 +311,7 @@ export default function EstimationGame({ mode, date }: Props) {
   if (phase === "boot") {
     return (
       <main>
+        <PixelSky density={40} />
         <div className="hero">
           <div className="pixel-loader" aria-hidden="true"><i /><i /><i /></div>
           <p className="muted" role="status">Loading today&apos;s puzzle…</p>
@@ -398,6 +375,7 @@ export default function EstimationGame({ mode, date }: Props) {
 
   return (
     <main>
+      <PixelSky density={56} />
       <div className="hud" aria-live="polite">
         <RoundStepper ordinal={state.ordinal} resolved={!!resolved} />
         <span className="score-pill">{hudScore} pts</span>
@@ -409,9 +387,14 @@ export default function EstimationGame({ mode, date }: Props) {
             <span className={`stamp ${markClass(resolved.mark)}`}>
               {MARK_ICONS[resolved.mark] ?? ""} {resolved.mark}
             </span>
+            {resolved.errorFactor ? (
+              <span className={`xfactor ${resolved.direction === "high" || resolved.direction === "higher than target" ? "xf-high" : "xf-low"}`}>
+                {resolved.direction === "high" || resolved.direction === "higher than target" ? "▲" : "▼"} ×{factorLabel(resolved.errorFactor)}
+              </span>
+            ) : null}
             <span className="points-pop">+{resolved.points} pts</span>
           </div>
-          {resolved.mark === "Exact" || resolved.mark === "Close" ? <Burst seed={burstSeed} /> : null}
+          {resolved.mark === "Exact" || resolved.mark === "Close" ? <PixelConfetti count={72} /> : null}
           {resolved.outcome === "pass" ? (
             <p className="muted">You passed — here&apos;s the same explanation you would have seen.</p>
           ) : null}
@@ -738,16 +721,19 @@ function RecapView({
 
   return (
     <main>
+      <PixelSky density={72} />
       <div className="card result-hero" aria-live="polite">
         <PixelStars count={7} seed={2} />
-        {great ? <Burst seed={recap.total} count={20} /> : null}
+        {great ? <PixelConfetti count={90} duration={3} /> : null}
         <span className="chip">{recap.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
         <ScoreRing total={recap.total} max={recap.maxTotal} />
         <p className="verdict-row">
           {recap.total >= 350 ? (
-            <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={22} />
+            <span className="trophy-shine">
+              <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={22} />
+            </span>
           ) : (
-            <PixelSprite sprite={SPARKLE} palette={PALETTES.star} size={18} />
+            <AnimatedSprite name="sparkle" palette={PALETTES.star} size={18} />
           )}
           <span className="verdict-text">
             {recap.total >= 450

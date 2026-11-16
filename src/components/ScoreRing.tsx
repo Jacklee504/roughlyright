@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 /**
  * Animated score dial: gradient progress ring with the total centered inside.
- * The label is absolutely centered within the wrap (no negative-margin hacks),
- * and the ring animates from zero on mount.
+ * The ring sweeps from zero on mount and the number counts up to the total
+ * (both ease-out; the count-up is skipped entirely under reduced motion).
  */
 export default function ScoreRing({
   total,
@@ -17,10 +17,30 @@ export default function ScoreRing({
   size?: number;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [shown, setShown] = useState(0);
+  const rafRef = useRef(0);
+
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(total);
+      return;
+    }
+    const start = performance.now();
+    const dur = 1000;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      setShown(Math.round(total * eased));
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [total]);
 
   const frac = max > 0 ? Math.max(0, Math.min(1, total / max)) : 0;
   const r = 70;
@@ -58,7 +78,7 @@ export default function ScoreRing({
       </svg>
       <div className="ring-label" aria-hidden="true">
         <div>
-          <div className="total">{total}</div>
+          <div className="total">{shown}</div>
           <div className="denom">/ {max}</div>
         </div>
       </div>

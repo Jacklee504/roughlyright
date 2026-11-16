@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getGuestId } from "@/lib/http/session";
 import { utcToday } from "@/lib/domain/calendar";
 import { q } from "@/lib/db/client";
+import PixelSky from "@/components/PixelSky";
 import PixelSprite from "@/components/pixel/PixelSprite";
 import { PLANET, PALETTES } from "@/components/pixel/sprites";
 
@@ -30,6 +31,7 @@ export default async function ArchiveIndexPage() {
 
   return (
     <main>
+      <PixelSky density={56} />
       <div className="hero">
         <PixelSprite sprite={PLANET} palette={PALETTES.planet} size={38} className="hero-mascot" />
         <h1>

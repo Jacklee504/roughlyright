@@ -6,6 +6,7 @@ import { getSharePayload } from "@/lib/service/share";
 import { q } from "@/lib/db/client";
 import ScoreRing from "@/components/ScoreRing";
 import PixelSprite from "@/components/pixel/PixelSprite";
+import AnimatedSprite from "@/components/pixel/AnimatedSprite";
 import PixelStars from "@/components/pixel/PixelStars";
 import { TROPHY, SPARKLE, PALETTES } from "@/components/pixel/sprites";
 
@@ -70,9 +71,11 @@ export default async function ResultPage({ params }: { params: Promise<{ token: 
         <ScoreRing total={p.total} max={p.maxTotal} />
         <p className="verdict-row">
           {p.total >= 350 ? (
-            <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={20} />
+            <span className="trophy-shine">
+              <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={20} />
+            </span>
           ) : (
-            <PixelSprite sprite={SPARKLE} palette={PALETTES.star} size={16} />
+            <AnimatedSprite name="sparkle" palette={PALETTES.star} size={16} />
           )}
           <span className="verdict-text">
             {p.total >= 450

@@ -912,3 +912,125 @@ table.archive tbody tr:hover { background: var(--surface-2); }
   overflow: hidden;
 }
 .mark-fill { height: 100%; border-radius: 6px; }
+
+/* ==========================================================================
+   Pixel sky & canvas effects — the "care & canvas" layer.
+   A fixed low-res pixel canvas behind content (stars, aurora, rocket flybys)
+   and a one-shot confetti canvas inside the result hero.
+   ========================================================================== */
+
+.pixel-sky {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  image-rendering: pixelated;
+  opacity: 0.9;
+}
+
+/* Everything after the sky in a main lifts above it. */
+main > *:not(.pixel-sky) { position: relative; z-index: 1; }
+
+.pixel-confetti {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+/* ==========================================================================
+   Animated sprites — CSS frame cycling (see AnimatedSprite).
+   Frame 1 is in normal flow and sizes the box; the rest stack over it and
+   are shown/hidden by generated keyframes. One frame visible at a time.
+   ========================================================================== */
+
+.sprite-anim { position: relative; display: inline-block; line-height: 0; vertical-align: middle; }
+.sprite-anim-frame { position: absolute; inset: 0; opacity: 0; }
+.sprite-anim-frame:first-child { position: static; }
+
+/* ==========================================================================
+   Trophy shine — a diagonal light sweep over the trophy sprite.
+   ========================================================================== */
+
+.trophy-shine {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 0;
+  vertical-align: middle;
+}
+.trophy-shine::after {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.55) 46%, transparent 62%);
+  transform: translateX(-130%);
+  animation: trophyShine 3.4s ease-in-out 700ms infinite;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+@keyframes trophyShine {
+  0% { transform: translateX(-130%); }
+  38%, 100% { transform: translateX(130%); }
+}
+
+/* ==========================================================================
+   Fermi-style error-factor badge — "▲ ×1.45" beside the mark stamp.
+   ========================================================================== */
+
+.xfactor {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.98rem;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  animation: stamp 340ms cubic-bezier(0.2, 1.4, 0.4, 1) 70ms both;
+}
+.xfactor.xf-high { color: var(--bad); }
+.xfactor.xf-low { color: var(--accent); }
+
+/* ==========================================================================
+   Micro-interactions — mascots breathe, buttons press like pixel keys,
+   recap marks pop in one after another.
+   ========================================================================== */
+
+.hero-mascot {
+  animation: floatBob 4.2s ease-in-out infinite;
+  transition: filter 140ms ease;
+}
+.hero-mascot:hover { animation: mascotWiggle 520ms ease-in-out 2; filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 55%, transparent)); }
+@keyframes floatBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes mascotWiggle {
+  0%, 100% { rotate: 0deg; }
+  25% { rotate: -7deg; }
+  75% { rotate: 7deg; }
+}
+
+button:hover:not(:disabled), .btn:hover { transform: translateY(-1px); }
+button:active:not(:disabled), .btn:active { transform: translateY(1px) scale(0.98); }
+button.primary:active:not(:disabled) { transform: translateY(1px) scale(0.98); }
+
+.result-hero .marks .mark {
+  animation: rise 420ms cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+}
+.result-hero .marks .mark:nth-child(1) { animation-delay: 220ms; }
+.result-hero .marks .mark:nth-child(2) { animation-delay: 290ms; }
+.result-hero .marks .mark:nth-child(3) { animation-delay: 360ms; }
+.result-hero .marks .mark:nth-child(4) { animation-delay: 430ms; }
+.result-hero .marks .mark:nth-child(5) { animation-delay: 500ms; }
+
+/* Header/footer sit above the sky too (main content lifts via the rule above). */
+header.site, footer.site-footer { position: relative; z-index: 1; }

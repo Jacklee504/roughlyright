@@ -44,6 +44,8 @@ export type RoundResolved = {
   absoluteGap?: { display: string; unit: string } | null;
   /** Target rounds: co-best eligible dataset entries (up to 3 alphabetical + count). */
   closest?: { entries: ClosestMatch[]; moreCount: number } | null;
+  /** Own-data only (never shared): how many times off the truth, as a decimal string ("1.45"). */
+  errorFactor?: string | null;
   reveal: {
     benchmarkLabel: "Official figure" | "Worked estimate" | null;
     targetDisplay: string | null;

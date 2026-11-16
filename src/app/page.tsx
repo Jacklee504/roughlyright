@@ -4,6 +4,8 @@ import { getGameStatus } from "@/lib/service/status";
 import { SIBLING_GAMES } from "@/lib/site";
 import PixelSprite from "@/components/pixel/PixelSprite";
 import PixelStars from "@/components/pixel/PixelStars";
+import PixelSky from "@/components/PixelSky";
+import AnimatedSprite from "@/components/pixel/AnimatedSprite";
 import { ASTRONAUT, ROCKET, FLAME, TROPHY, SPARKLE, PALETTES } from "@/components/pixel/sprites";
 
 export const dynamic = "force-dynamic";
@@ -24,9 +26,10 @@ export default async function LandingPage() {
 
   return (
     <main>
+      <PixelSky density={72} />
       <section className="hero">
         <PixelStars count={9} />
-        <PixelSprite sprite={ASTRONAUT} palette={PALETTES.astronaut} size={46} className="hero-mascot" />
+        <AnimatedSprite name="astronaut" palette={PALETTES.astronaut} size={46} className="hero-mascot" />
         <span className="chip">Daily estimation</span>
         <h1>
           Roughly <span className="grad-text">Right</span>
@@ -41,7 +44,7 @@ export default async function LandingPage() {
           <span className="pill">🌅 Resets 00:00 UTC</span>
           {status.streak.current > 0 || status.streak.best > 0 ? (
             <span className="pill">
-              <PixelSprite sprite={FLAME} palette={PALETTES.flame} size={13} />
+              <AnimatedSprite name="flame" palette={PALETTES.flame} size={13} />
               {status.streak.current} streak · best {status.streak.best}
             </span>
           ) : null}
@@ -52,7 +55,7 @@ export default async function LandingPage() {
       <section className="card" aria-labelledby="estimation-heading">
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
           <span className="chip">
-            <PixelSprite sprite={ROCKET} palette={PALETTES.rocket} size={13} /> Daily
+            <AnimatedSprite name="rocket" palette={PALETTES.rocket} size={13} /> Daily
           </span>
           <h2 id="estimation-heading" style={{ margin: 0 }}>Estimation</h2>
         </div>
@@ -73,7 +76,7 @@ export default async function LandingPage() {
 
       <section className="feature-row" aria-label="How it works">
         <div className="feature">
-          <PixelSprite sprite={SPARKLE} palette={PALETTES.star} size={20} />
+          <AnimatedSprite name="sparkle" palette={PALETTES.star} size={20} />
           <strong>Guess</strong>
           <span>Type a number — suffixes like 5k are fine, typos get gently corrected.</span>
         </div>
@@ -83,7 +86,7 @@ export default async function LandingPage() {
           <span>Exact, Close, In range, Far — every round shows how your guess landed.</span>
         </div>
         <div className="feature">
-          <PixelSprite sprite={ROCKET} palette={PALETTES.rocket} size={20} />
+          <AnimatedSprite name="rocket" palette={PALETTES.rocket} size={20} />
           <strong>Compare</strong>
           <span>Share spoiler-free marks; per-question comparison for friends who played.</span>
         </div>
