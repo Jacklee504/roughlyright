@@ -48,6 +48,20 @@ export function markClass(mark: string): string {
   return `mark mark-${mark.replace(/\s+/g, "-")}`;
 }
 
+const MARK_EMOJI: Record<string, string> = {
+  Exact: "\u2b50",
+  Close: "\ud83d\udfe2",
+  "In range": "\ud83d\udfe1",
+  Far: "\ud83d\udd34",
+  Pass: "\u26aa",
+};
+
+/** Text share card: game, number, marks and total. Never prompts or answers. */
+function shareText(recap: NonNullable<AttemptState["recap"]>): string {
+  const marks = recap.rounds.map((r) => MARK_EMOJI[r.mark] ?? "\u26aa").join("");
+  return `Roughly Right \u2014 Estimation #${recap.displayNumber}\n${recap.total}/${recap.maxTotal} ${marks}`;
+}
+
 /** Fermi-style "×1.45" label from the canonical error-factor decimal. */
 function factorLabel(f: string): string {
   const n = Number(f);
@@ -553,6 +567,24 @@ export default function EstimationGame({ mode, date }: Props) {
                 />
                 <span className="unit-tag" aria-hidden="true">{prompt.unit}</span>
               </div>
+              <div className="suffix-row" aria-label="Quick number shortcuts">
+                {["k", "m", "b"].map((sfx) => (
+                  <button
+                    key={sfx}
+                    type="button"
+                    className="suffix-chip"
+                    onClick={() => {
+                      if (!/(\d|,)$/.test(input)) inputRef.current?.focus();
+                      setInput((v) => (/\d|,\s*$/.test(v) ? v.replace(/\s+$/, "") + sfx : v + "1" + sfx));
+                      inputRef.current?.focus();
+                    }}
+                    tabIndex={-1}
+                    aria-label={`Append ${sfx}`}
+                  >
+                    {sfx}
+                  </button>
+                ))}
+              </div>
               <p id="preview" className={`preview${preview && !preview.valid ? " invalid" : ""}`} aria-live="polite">
                 {preview?.valid ? "✓ " : preview && !preview.valid ? "⚠ " : ""}
                 {preview?.text ?? (prompt.countMode ? "Whole numbers only — suffixes like k are fine." : "Decimals and suffixes like k, m, b are fine.")}
@@ -741,6 +773,7 @@ function RecapView({
   const [resetIn, setResetIn] = useState("");
   const [reportFor, setReportFor] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
+  const [copiedText, setCopiedText] = useState(false);
 
   useEffect(() => {
     const tick = () => {
@@ -769,6 +802,12 @@ function RecapView({
         <PixelStars count={7} seed={2} />
         {great ? <PixelConfetti count={90} duration={3} /> : null}
         <span className="chip">{recap.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
+        {recap.streak && recap.streak.current > 0 ? (
+          <span className={`chip streak-chip${[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " milestone" : ""}`}>
+            <AnimatedSprite name="flame" palette={PALETTES.flame} size={13} />
+            {recap.streak.current}-day streak{[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " · milestone!" : ""}
+          </span>
+        ) : null}
         <ScoreRing total={recap.total} max={recap.maxTotal} />
         <p className="verdict-row">
           {recap.total >= 350 ? (
@@ -825,6 +864,20 @@ function RecapView({
             <p className="muted small">
               Link: <a href={shareUrl}>{shareUrl}</a>
             </p>
+            <button
+              className="quiet"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(shareText(recap));
+                  setCopiedText(true);
+                  setTimeout(() => setCopiedText(false), 1600);
+                } catch {
+                  setCopiedText(false);
+                }
+              }}
+            >
+              {copiedText ? "✓ Text copied" : "Copy text"}
+            </button>
             <button
               className="quiet"
               onClick={async () => {

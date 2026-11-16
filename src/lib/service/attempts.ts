@@ -18,7 +18,7 @@ import { utcToday, dailyFinishWindowEndIso, nextResetIso } from "@/lib/domain/ca
 import { now } from "@/lib/domain/clock";
 import type { AttemptState, PromptPublic, Recap, RoundResolved } from "@/lib/dto";
 import { getPuzzleByDate, getPromptRevisions, getPromptRevision, type PromptRevisionRow, type PuzzleRow } from "./puzzles";
-import { buildCommunityPercentile } from "./stats";
+import { buildCommunityPercentile, computeStreaks } from "./stats";
 
 export type StartInput = { game: string; date?: string; mode?: "daily" | "archive" };
 export type StartResult =
@@ -740,6 +740,9 @@ export async function buildRecap(
     rounds,
     closestRound,
     nextResetIso: nextResetIso(now()),
+    // Own-data momentum (PlayPlain energy): the daily streak this completion
+    // extended. Archive runs are unranked and never touch the streak.
+    streak: attempt.mode === "daily" ? await computeStreaks(puzzle.game_slug, attempt.guest_id, client) : null,
   };
 }
 

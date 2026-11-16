@@ -71,6 +71,8 @@ export type Recap = {
   rounds: RoundResolved[];
   closestRound: { ordinal: number; shortLabel: string } | null;
   nextResetIso: string;
+  /** Own-data motivation: daily streak at completion time (null for archive runs). */
+  streak: { current: number; best: number } | null;
 };
 
 export type AttemptState = {

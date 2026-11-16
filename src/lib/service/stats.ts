@@ -14,10 +14,17 @@ export async function recordEvent(game: string, event: string, detail: string | 
   );
 }
 
-export async function computeStreaks(gameSlug: string, guestId: string): Promise<{ current: number; best: number }> {
+export async function computeStreaks(gameSlug: string, guestId: string, client?: Queryable): Promise<{ current: number; best: number }> {
+  // When called inside a transaction (e.g. recap build), every query must go
+  // through the same client — PGlite has a single connection and a stray
+  // top-level query would deadlock it.
+  const run = async <T>(sql: string, params: unknown[]): Promise<T[]> => {
+    if (client) return (await client.query<T>(sql, params)).rows;
+    return q<T>(sql, params);
+  };
   const [releasedDates, completedRows] = await Promise.all([
-    getReleasedDates(gameSlug),
-    q<{ completion_date: string }>(
+    getReleasedDates(gameSlug, client),
+    run<{ completion_date: string }>(
       `select distinct completion_date::text as completion_date
        from attempts
        where guest_id = $1 and mode = 'daily' and state = 'completed' and completion_date is not null`,
