@@ -124,6 +124,7 @@ export default function EstimationGame({ mode, date }: Props) {
   const [busy, setBusy] = useState(false);
   const [suggestion, setSuggestion] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
   // Called unconditionally (hook order must be stable across phases).
   const hudScore = useCountUp(state?.score ?? 0);
 
@@ -152,6 +153,25 @@ export default function EstimationGame({ mode, date }: Props) {
       inputRef.current?.focus();
     }
   }, [state?.ordinal, state?.state, state?.resolved, input]);
+
+  // Seamless keyboard flow: once a round is resolved, Enter advances to the
+  // next round (or the recap) without reaching for the mouse. The handler
+  // stands down when focus is already on an actionable element (buttons and
+  // inputs handle Enter themselves), and while a request is in flight.
+  useEffect(() => {
+    if (!state?.resolved || !state.prompt) return;
+    nextRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Enter" || e.shiftKey) return;
+      const t = e.target as HTMLElement | null;
+      if (t?.closest('button, a, input, textarea, select, summary, [role="listbox"]')) return;
+      e.preventDefault();
+      next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state?.resolved, state?.prompt?.ordinal]);
 
   // Reset per-round UI state when the open round changes.
   useEffect(() => {
@@ -223,9 +243,25 @@ export default function EstimationGame({ mode, date }: Props) {
     return () => clearTimeout(t);
   }, [input, prompt, state]);
 
+  // Error juice: a quick horizontal shake on the input row (Web Animations
+  // API, so the input is never remounted and focus/suggestions survive).
+  const shakeRow = useCallback(() => {
+    inputRef.current?.parentElement?.animate(
+      [
+        { transform: "translateX(0)" },
+        { transform: "translateX(-6px)" },
+        { transform: "translateX(5px)" },
+        { transform: "translateX(-3px)" },
+        { transform: "translateX(0)" },
+      ],
+      { duration: 320, easing: "ease-in-out" },
+    );
+  }, []);
+
   const lock = useCallback(
     async (pass: boolean, overrideInput?: string) => {
       if (!state || !state.prompt) return;
+      if (busy) return;
       const value = overrideInput ?? input;
       setBusy(true);
       setSuggestion(null);
@@ -238,19 +274,17 @@ export default function EstimationGame({ mode, date }: Props) {
       setBusy(false);
       if (data.ok && data.state) {
         setState(data.state as AttemptState);
-        const resolved = (data.state as AttemptState).resolved;
-        if (resolved && (resolved.mark === "Exact" || resolved.mark === "Close")) {
-        }
       } else {
         setNotice(String(data.message ?? "Something went wrong — try again."));
         setSuggestion(typeof data.suggestion === "string" ? data.suggestion : null);
+        if (typeof data.code === "string" && data.code === "invalid_input") shakeRow();
       }
     },
-    [state, prompt, input],
+    [state, prompt, input, busy, shakeRow],
   );
 
   const next = useCallback(async () => {
-    if (!state) return;
+    if (!state || busy) return;
     setBusy(true);
     const { data } = await api("/api/estimation/advance", {
       attemptId: state.attemptId,
@@ -382,7 +416,7 @@ export default function EstimationGame({ mode, date }: Props) {
       </div>
 
       {resolved ? (
-        <section className="card fade-up" aria-live="polite">
+        <section key={`r${state.ordinal}`} className="card fade-up" aria-live="polite">
           <div className="stamp-row">
             <span className={`stamp ${markClass(resolved.mark)}`}>
               {MARK_ICONS[resolved.mark] ?? ""} {resolved.mark}
@@ -400,13 +434,14 @@ export default function EstimationGame({ mode, date }: Props) {
           ) : null}
           <RevealDetails r={resolved} />
           <div className="actions">
-            <button className="primary" onClick={next} disabled={busy}>
-              {state.ordinal === 5 ? "See results →" : "Next question →"}
+            <button ref={nextRef} className="primary" onClick={next} disabled={busy}>
+              {state.ordinal === 5 ? "See results" : "Next question"} <span aria-hidden="true">→</span>
+              <span className="kbd" aria-hidden="true">↵</span>
             </button>
           </div>
         </section>
       ) : prompt ? (
-        <section className="card question-card fade-up">
+        <section key={`q${state.ordinal}`} className="card question-card fade-up">
           <div className="q-head">
             {prompt.category ? (
               <>
@@ -441,7 +476,11 @@ export default function EstimationGame({ mode, date }: Props) {
                   ref={inputRef}
                   type="text"
                   autoComplete="off"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   inputMode="text"
+                  enterKeyHint="done"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => {
@@ -496,7 +535,11 @@ export default function EstimationGame({ mode, date }: Props) {
                   ref={inputRef}
                   type="text"
                   autoComplete="off"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   inputMode="decimal"
+                  enterKeyHint="go"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => {
@@ -539,7 +582,7 @@ export default function EstimationGame({ mode, date }: Props) {
 
           <div className="actions">
             <button className="primary" onClick={() => lock(false)} disabled={busy || input.trim().length === 0}>
-              Lock guess
+              Lock guess <span className="kbd" aria-hidden="true">↵</span>
             </button>
             <button onClick={() => lock(true)} disabled={busy}>Pass</button>
           </div>
