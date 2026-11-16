@@ -1,0 +1,173 @@
+{
+  "kind": "target_dataset",
+  "game": "estimation",
+  "id": "city-metro-pop",
+  "name": "Metro-area populations (millions)",
+  "unit": "million",
+  "revision": "2026-11-a",
+  "eligibleScope": null,
+  "entries": [
+    {
+      "id": "dhaka",
+      "label": "Dhaka",
+      "disambiguator": null,
+      "value": "23.9",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Dacca"
+      ]
+    },
+    {
+      "id": "sao-paulo",
+      "label": "São Paulo",
+      "disambiguator": null,
+      "value": "22.8",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Sao Paulo"
+      ]
+    },
+    {
+      "id": "mexico-city",
+      "label": "Mexico City",
+      "disambiguator": null,
+      "value": "22.5",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Ciudad de Mexico",
+        "CDMX"
+      ]
+    },
+    {
+      "id": "cairo",
+      "label": "Cairo",
+      "disambiguator": null,
+      "value": "22.2",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "beijing",
+      "label": "Beijing",
+      "disambiguator": null,
+      "value": "21.6",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Peking"
+      ]
+    },
+    {
+      "id": "mumbai",
+      "label": "Mumbai",
+      "disambiguator": null,
+      "value": "21.3",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Bombay"
+      ]
+    },
+    {
+      "id": "osaka",
+      "label": "Osaka",
+      "disambiguator": null,
+      "value": "18.9",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "chongqing",
+      "label": "Chongqing",
+      "disambiguator": null,
+      "value": "17.8",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Chungking"
+      ]
+    },
+    {
+      "id": "london",
+      "label": "London",
+      "disambiguator": null,
+      "value": "14.8",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Greater London"
+      ]
+    },
+    {
+      "id": "paris",
+      "label": "Paris",
+      "disambiguator": null,
+      "value": "13.2",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "los-angeles",
+      "label": "Los Angeles",
+      "disambiguator": null,
+      "value": "12.5",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "LA",
+        "L.A."
+      ]
+    },
+    {
+      "id": "kinshasa",
+      "label": "Kinshasa",
+      "disambiguator": null,
+      "value": "16.3",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-05",
+  "themeTag": "everyday arithmetic",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-bar",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "One bar is exactly how many pascals?",
+      "scope": null,
+      "unit": "Pa",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "100000",
+        "precision": 0,
+        "source": {
+          "title": "SI-accepted unit definition",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 100,000 Pa — one bar is 100,000 Pa by definition",
+        "sourceTitle": "SI-accepted unit definition"
+      }
+    },
+    {
+      "promptId": "streaming-gb-20",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "20 hours of HD streaming a month at about 3 GB per hour: how many gigabytes?",
+      "scope": null,
+      "unit": "GB",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "hours*gph",
+        "inputs": [
+          {
+            "name": "hours",
+            "value": "20",
+            "unit": "hours",
+            "assumption": "monthly viewing hours",
+            "source": null
+          },
+          {
+            "name": "gph",
+            "value": "3",
+            "unit": "GB/h",
+            "assumption": "HD streaming bitrate",
+            "source": null
+          }
+        ],
+        "outputUnit": "GB",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 20 hours × 3 GB/h.",
+          "Compute: 20 × 3 = 60",
+          "Worked estimate: 60 GB"
+        ]
+      },
+      "reveal": {
+        "explanation": "Data = viewing hours × data rate.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 20 hours × 3 GB/h.",
+          "Compute: 20 × 3 = 60",
+          "Worked estimate: 60 GB"
+        ]
+      }
+    },
+    {
+      "promptId": "photos-per-card-256",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 256 GB card filled with 8 MB RAW files: how many shots?",
+      "scope": null,
+      "unit": "photos",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "gb*1000/mb",
+        "inputs": [
+          {
+            "name": "gb",
+            "value": "256",
+            "unit": "GB",
+            "assumption": null,
+            "source": {
+              "title": "Card capacity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "mb",
+            "value": "8",
+            "unit": "MB",
+            "assumption": "average RAW file size",
+            "source": null
+          }
+        ],
+        "outputUnit": "photos",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: 256 GB × 1,000 gives megabytes; ÷ 8 MB per photo.",
+          "Compute: 256 × 1000 ÷ 8 = 32,000",
+          "Worked estimate: 32000 photos (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Count = capacity ÷ photo size.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 256 GB × 1,000 gives megabytes; ÷ 8 MB per photo.",
+          "Compute: 256 × 1000 ÷ 8 = 32,000",
+          "Worked estimate: 32000 photos (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "soil-litres-lawn",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "Spreading 10 cm of topsoil over a 10 m² patch: how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*depth*1000",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "10",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Patch size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "depth",
+            "value": "0.1",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Filling spec",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 10 m² × 0.1 m gives cubic metres; × 1,000 gives litres.",
+          "Compute: 10 × 0.1 × 1000 = 1,000",
+          "Worked estimate: 1000 L (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Litres = m² × m × 1,000.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 10 m² × 0.1 m gives cubic metres; × 1,000 gives litres.",
+          "Compute: 10 × 0.1 × 1000 = 1,000",
+          "Worked estimate: 1000 L (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-titan",
+      "roundType": "target_match",
+      "category": "space",
+      "prompt": "Which moon (by mean radius) is closest to 2,574.7 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "moons-radius",
+        "target": "2574.7"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible moon (by mean radius)s are shown.",
+        "comparison": "Mean radii for major moons of the Solar System.",
+        "sourceTitle": "Editorial moon-radius table compiled from public planetary data"
+      }
+    }
+  ]
+}

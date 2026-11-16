@@ -1,0 +1,206 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-26",
+  "themeTag": "fermi classics",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-verst",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One Russian verst is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "1066.8",
+        "precision": 1,
+        "source": {
+          "title": "Imperial Russian measure standard (1899)",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 1,066.8 m — the verst is 500 sazhen",
+        "sourceTitle": "Imperial Russian measure standard (1899)"
+      }
+    },
+    {
+      "promptId": "photos-per-card-64",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "How many 4 MB photos fit on a 64 GB memory card?",
+      "scope": null,
+      "unit": "photos",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "gb*1000/mb",
+        "inputs": [
+          {
+            "name": "gb",
+            "value": "64",
+            "unit": "GB",
+            "assumption": null,
+            "source": {
+              "title": "Card capacity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "mb",
+            "value": "4",
+            "unit": "MB",
+            "assumption": "average JPEG size",
+            "source": null
+          }
+        ],
+        "outputUnit": "photos",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: 64 GB × 1,000 gives megabytes; ÷ 4 MB per photo.",
+          "Compute: 64 × 1000 ÷ 4 = 16,000",
+          "Worked estimate: 16000 photos (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Count = capacity ÷ photo size.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 64 GB × 1,000 gives megabytes; ÷ 4 MB per photo.",
+          "Compute: 64 × 1000 ÷ 4 = 16,000",
+          "Worked estimate: 16000 photos (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "soil-litres-border",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "A 4 m² flower border topped up with 20 cm of compost — how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*depth*1000",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "4",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Border size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "depth",
+            "value": "0.2",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Filling spec",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 4 m² × 0.2 m gives cubic metres; × 1,000 gives litres.",
+          "Compute: 4 × 0.2 × 1000 = 800",
+          "Worked estimate: 800 L (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Litres = m² × m × 1,000.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 4 m² × 0.2 m gives cubic metres; × 1,000 gives litres.",
+          "Compute: 4 × 0.2 × 1000 = 800",
+          "Worked estimate: 800 L (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "streaming-gb-8",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A light viewer: 8 hours a month at 3 GB per hour. Monthly data?",
+      "scope": null,
+      "unit": "GB",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "hours*gph",
+        "inputs": [
+          {
+            "name": "hours",
+            "value": "8",
+            "unit": "hours",
+            "assumption": "monthly viewing hours",
+            "source": null
+          },
+          {
+            "name": "gph",
+            "value": "3",
+            "unit": "GB/h",
+            "assumption": "HD streaming bitrate",
+            "source": null
+          }
+        ],
+        "outputUnit": "GB",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 8 hours × 3 GB/h.",
+          "Compute: 8 × 3 = 24",
+          "Worked estimate: 24 GB"
+        ]
+      },
+      "reveal": {
+        "explanation": "Data = viewing hours × data rate.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 8 hours × 3 GB/h.",
+          "Compute: 8 × 3 = 24",
+          "Worked estimate: 24 GB"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-gasherbrum-i",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,080 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8080"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

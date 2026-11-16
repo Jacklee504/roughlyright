@@ -1,0 +1,215 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-19",
+  "themeTag": "fermi classics",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-yard",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One yard is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "0.9144",
+        "precision": 4,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 0.9144 m — the yard was redefined in terms of the metre in 1959",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "paper-stack-ream",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "How tall is a standard 500-sheet ream of 80 gsm office paper, in metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": {
+        "figure": {
+          "value": "0.1",
+          "unit": "mm"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "sheets*thickness/1000",
+        "inputs": [
+          {
+            "name": "sheets",
+            "value": "500",
+            "unit": "sheets",
+            "assumption": null,
+            "source": {
+              "title": "Standard ream definition",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "thickness",
+            "value": "0.1",
+            "unit": "mm",
+            "assumption": "80 gsm copy paper ≈ 0.1 mm per sheet",
+            "source": null
+          }
+        ],
+        "outputUnit": "m",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 500 sheets sheets, each 0.1 mm thick, stacked.",
+          "Compute: 500 × 0.1 ÷ 1000 = 0.05",
+          "Worked estimate: 0.05 m"
+        ]
+      },
+      "reveal": {
+        "explanation": "Height = sheets × per-sheet thickness.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 500 sheets sheets, each 0.1 mm thick, stacked.",
+          "Compute: 500 × 0.1 ÷ 1000 = 0.05",
+          "Worked estimate: 0.05 m"
+        ]
+      }
+    },
+    {
+      "promptId": "kmh-to-mph-200",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A sports car at 200 km/h — what's that in mph?",
+      "scope": null,
+      "unit": "mph",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "kmh*factor",
+        "inputs": [
+          {
+            "name": "kmh",
+            "value": "200",
+            "unit": "km/h",
+            "assumption": null,
+            "source": {
+              "title": "Given speed",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "factor",
+            "value": "0.621371",
+            "unit": "mi/km",
+            "assumption": null,
+            "source": {
+              "title": "Conversion factor (1 km = 0.621371 mi)",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "mph",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 200 km/h × 0.621371 mi/km.",
+          "Compute: 200 × 0.621371 = 124.2742",
+          "Worked estimate: 124.3 mph"
+        ]
+      },
+      "reveal": {
+        "explanation": "Miles per hour = km/h × 0.621371.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 200 km/h × 0.621371 mi/km.",
+          "Compute: 200 × 0.621371 = 124.2742",
+          "Worked estimate: 124.3 mph"
+        ]
+      }
+    },
+    {
+      "promptId": "typing-minutes-report",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 3,000-word report at 75 wpm: minutes needed?",
+      "scope": null,
+      "unit": "min",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "words/wpm",
+        "inputs": [
+          {
+            "name": "words",
+            "value": "3000",
+            "unit": "words",
+            "assumption": null,
+            "source": {
+              "title": "Document length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "wpm",
+            "value": "75",
+            "unit": "wpm",
+            "assumption": "typing speed",
+            "source": null
+          }
+        ],
+        "outputUnit": "min",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 3000 words ÷ 75 wpm.",
+          "Compute: 3000 ÷ 75 = 40",
+          "Worked estimate: 40 min"
+        ]
+      },
+      "reveal": {
+        "explanation": "Minutes = words ÷ typing speed.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 3000 words ÷ 75 wpm.",
+          "Compute: 3000 ÷ 75 = 40",
+          "Worked estimate: 40 min"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-lhotse",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,516 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8516"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

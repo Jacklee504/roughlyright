@@ -1,0 +1,207 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-06",
+  "themeTag": "unit conversions",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-calorie",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "One thermochemical calorie is exactly how many joules?",
+      "scope": null,
+      "unit": "J",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "4.184",
+        "precision": 3,
+        "source": {
+          "title": "NIST SP 811 (thermochemical calorie)",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 4.184 J — defined exactly as 4.184 J",
+        "sourceTitle": "NIST SP 811 (thermochemical calorie)"
+      }
+    },
+    {
+      "promptId": "battery-days-phone",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 4000 mAh phone battery drawing an average 200 mA: how many days per charge?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": {
+        "figure": {
+          "value": "200",
+          "unit": "mA"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "capacity/(draw*24)",
+        "inputs": [
+          {
+            "name": "capacity",
+            "value": "4000",
+            "unit": "mAh",
+            "assumption": null,
+            "source": {
+              "title": "Battery spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "draw",
+            "value": "200",
+            "unit": "mA",
+            "assumption": "average draw",
+            "source": null
+          }
+        ],
+        "outputUnit": "days",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 4000 mAh ÷ (200 mA × 24).",
+          "Compute: 4000 ÷ (200 × 24) = 0.833333",
+          "Worked estimate: 0.8 days"
+        ]
+      },
+      "reveal": {
+        "explanation": "Days = charge ÷ daily draw.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 4000 mAh ÷ (200 mA × 24).",
+          "Compute: 4000 ÷ (200 × 24) = 0.833333",
+          "Worked estimate: 0.8 days"
+        ]
+      }
+    },
+    {
+      "promptId": "fruit-crates-oranges",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "8.5 t of oranges go out in 17 kg crates — how many crates?",
+      "scope": null,
+      "unit": "crates",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "t*1000/kg",
+        "inputs": [
+          {
+            "name": "t",
+            "value": "8.5",
+            "unit": "t",
+            "assumption": null,
+            "source": {
+              "title": "Harvest figure",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "kg",
+            "value": "17",
+            "unit": "kg",
+            "assumption": "standard citrus crate",
+            "source": null
+          }
+        ],
+        "outputUnit": "crates",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 8.5 t × 1,000 gives kilograms; ÷ 17 kg per crate.",
+          "Compute: 8.5 × 1000 ÷ 17 = 500",
+          "Worked estimate: 500 crates"
+        ]
+      },
+      "reveal": {
+        "explanation": "Crates = tonnes × 1,000 ÷ crate mass.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 8.5 t × 1,000 gives kilograms; ÷ 17 kg per crate.",
+          "Compute: 8.5 × 1000 ÷ 17 = 500",
+          "Worked estimate: 500 crates"
+        ]
+      }
+    },
+    {
+      "promptId": "mow-time-field",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "A 1,200 m² field edge at 30 m² per minute: minutes to cut?",
+      "scope": null,
+      "unit": "min",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area/rate",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "1200",
+            "unit": "m²",
+            "assumption": "lawn size",
+            "source": null
+          },
+          {
+            "name": "rate",
+            "value": "30",
+            "unit": "m²/min",
+            "assumption": "mower pace",
+            "source": null
+          }
+        ],
+        "outputUnit": "min",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 1200 m² ÷ 30 m²/min.",
+          "Compute: 1200 ÷ 30 = 40",
+          "Worked estimate: 40 min"
+        ]
+      },
+      "reveal": {
+        "explanation": "Minutes = area ÷ mowing rate.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1200 m² ÷ 30 m²/min.",
+          "Compute: 1200 ÷ 30 = 40",
+          "Worked estimate: 40 min"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-callisto",
+      "roundType": "target_match",
+      "category": "space",
+      "prompt": "Which moon (by mean radius) is closest to 2,410.3 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "moons-radius",
+        "target": "2410.3"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible moon (by mean radius)s are shown.",
+        "comparison": "Mean radii for major moons of the Solar System.",
+        "sourceTitle": "Editorial moon-radius table compiled from public planetary data"
+      }
+    }
+  ]
+}

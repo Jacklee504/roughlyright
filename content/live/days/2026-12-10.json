@@ -1,0 +1,210 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-10",
+  "themeTag": "fermi classics",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-us-pint",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US liquid pint is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "0.473176473",
+        "precision": 9,
+        "source": {
+          "title": "US customary definition, NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 0.473176473 L — a pint is one eighth of a US gallon",
+        "sourceTitle": "US customary definition, NIST"
+      }
+    },
+    {
+      "promptId": "kg-to-lb-70",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 70 kg traveller's luggage limit — what is 70 kg in pounds?",
+      "scope": null,
+      "unit": "lb",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "kg*factor",
+        "inputs": [
+          {
+            "name": "kg",
+            "value": "70",
+            "unit": "kg",
+            "assumption": null,
+            "source": {
+              "title": "Given mass",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "factor",
+            "value": "2.20462",
+            "unit": "lb/kg",
+            "assumption": null,
+            "source": {
+              "title": "Conversion factor (1 lb = 0.45359237 kg exactly)",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "lb",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 70 kg × 2.20462 lb/kg.",
+          "Compute: 70 × 2.20462 = 154.3234",
+          "Worked estimate: 154.3 lb"
+        ]
+      },
+      "reveal": {
+        "explanation": "Pounds = kilograms × 2.20462.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 70 kg × 2.20462 lb/kg.",
+          "Compute: 70 × 2.20462 = 154.3234",
+          "Worked estimate: 154.3 lb"
+        ]
+      }
+    },
+    {
+      "promptId": "audiobook-hours-120000",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 120,000-word epic at 160 wpm narration — audio length in hours?",
+      "scope": null,
+      "unit": "hours",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "words/(wpm*60)",
+        "inputs": [
+          {
+            "name": "words",
+            "value": "120000",
+            "unit": "words",
+            "assumption": null,
+            "source": {
+              "title": "Book length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "wpm",
+            "value": "160",
+            "unit": "wpm",
+            "assumption": "narration pace",
+            "source": null
+          }
+        ],
+        "outputUnit": "hours",
+        "precision": 1,
+        "roundTo": 0.5,
+        "steps": [
+          "Model: 120000 words ÷ (160 wpm × 60).",
+          "Compute: 120000 ÷ (160 × 60) = 12.5",
+          "Worked estimate: 12.5 hours (nearest 0.5)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hours = words ÷ words per hour.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 120000 words ÷ (160 wpm × 60).",
+          "Compute: 120000 ÷ (160 × 60) = 12.5",
+          "Worked estimate: 12.5 hours (nearest 0.5)"
+        ]
+      }
+    },
+    {
+      "promptId": "tiles-wall-feature",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A 6.5 m² feature wall uses 45 cm × 25 cm tiles. Roughly how many?",
+      "scope": null,
+      "unit": "tiles",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area/tileArea",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "6.5",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Measured wall area",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "tileArea",
+            "value": "0.1125",
+            "unit": "m²",
+            "assumption": "0.45 m × 0.25 m tile",
+            "source": null
+          }
+        ],
+        "outputUnit": "tiles",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: Wall area 6.5 m² divided by each tile's 0.1125 m².",
+          "Compute: 6.5 ÷ 0.1125 = 57.777778",
+          "Worked estimate: 58 tiles (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Tile count = area ÷ tile area.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Wall area 6.5 m² divided by each tile's 0.1125 m².",
+          "Compute: 6.5 ÷ 0.1125 = 57.777778",
+          "Worked estimate: 58 tiles (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-japan",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which country (by population) is closest to 124 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "124"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible country (by population)s are shown.",
+        "comparison": "Population figures are recent estimates rounded to the nearest million.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

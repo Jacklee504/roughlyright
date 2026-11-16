@@ -1,0 +1,215 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-07",
+  "themeTag": "fermi classics",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-btu",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "One international-table BTU is exactly how many joules?",
+      "scope": null,
+      "unit": "J",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "1055.05585262",
+        "precision": 8,
+        "source": {
+          "title": "International Tables / ISO 31-4",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 1,055.05585262 J — the energy to raise 1 lb of water about 1 °F, now fixed by the 5th-steam-table conversion",
+        "sourceTitle": "International Tables / ISO 31-4"
+      }
+    },
+    {
+      "promptId": "light-seconds-moon",
+      "roundType": "calculation",
+      "category": "space",
+      "prompt": "How many seconds does light take to cross from the Moon to Earth (384,400 km)?",
+      "scope": null,
+      "unit": "s",
+      "countMode": false,
+      "hint": {
+        "figure": {
+          "value": "299792.458",
+          "unit": "km/s"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "km/ckms",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "384400",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Mean Earth–Moon distance (NASA)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "ckms",
+            "value": "299792.458",
+            "unit": "km/s",
+            "assumption": null,
+            "source": {
+              "title": "Speed of light (exact)",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "s",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 384400 km ÷ 299792.458 km/s.",
+          "Compute: 384400 ÷ 299792.458 = 1.28222",
+          "Worked estimate: 1.28 s"
+        ]
+      },
+      "reveal": {
+        "explanation": "Seconds = distance ÷ light speed.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 384400 km ÷ 299792.458 km/s.",
+          "Compute: 384400 ÷ 299792.458 = 1.28222",
+          "Worked estimate: 1.28 s"
+        ]
+      }
+    },
+    {
+      "promptId": "coffee-cups-500",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 500 g bag dosed at 18 g per cup — how many brews?",
+      "scope": null,
+      "unit": "cups",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "grams/dose",
+        "inputs": [
+          {
+            "name": "grams",
+            "value": "500",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Bag size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "dose",
+            "value": "18",
+            "unit": "g",
+            "assumption": "typical espresso dose",
+            "source": null
+          }
+        ],
+        "outputUnit": "cups",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 500 g of coffee ÷ 18 g per brew.",
+          "Compute: 500 ÷ 18 = 27.777778",
+          "Worked estimate: 28 cups (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cups = bag mass ÷ dose.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 500 g of coffee ÷ 18 g per brew.",
+          "Compute: 500 ÷ 18 = 27.777778",
+          "Worked estimate: 28 cups (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "seed-spacing-radish",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "An 8 m radish row sown every 8 cm: seed count?",
+      "scope": null,
+      "unit": "seeds",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "rowcm/spacing",
+        "inputs": [
+          {
+            "name": "rowcm",
+            "value": "800",
+            "unit": "cm",
+            "assumption": null,
+            "source": {
+              "title": "Row length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "spacing",
+            "value": "8",
+            "unit": "cm",
+            "assumption": "packet spacing",
+            "source": null
+          }
+        ],
+        "outputUnit": "seeds",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 800 cm ÷ 8 cm per seed.",
+          "Compute: 800 ÷ 8 = 100",
+          "Worked estimate: 100 seeds"
+        ]
+      },
+      "reveal": {
+        "explanation": "Seeds = row length ÷ spacing.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 800 cm ÷ 8 cm per seed.",
+          "Compute: 800 ÷ 8 = 100",
+          "Worked estimate: 100 seeds"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-arizona",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which US state (by land area) is closest to 295,234 km²?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km²",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "us-states-area",
+        "target": "295234"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible US state (by land area)s are shown.",
+        "comparison": "Land areas in square kilometres, water area excluded.",
+        "sourceTitle": "Editorial US-state area table compiled from census land-area data"
+      }
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-03",
+  "themeTag": "scale and distance",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-psi",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "One psi is exactly how many pascals?",
+      "scope": null,
+      "unit": "Pa",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "6894.757293168",
+        "precision": 9,
+        "source": {
+          "title": "NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 6,894.757293168 Pa — pound-force per square inch",
+        "sourceTitle": "NIST SP 811"
+      }
+    },
+    {
+      "promptId": "shower-year-8",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "8-minute showers, 9 L a minute, five times a week: litres used in a year?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "minutes*flow*perWeek*weeks",
+        "inputs": [
+          {
+            "name": "minutes",
+            "value": "8",
+            "unit": "min",
+            "assumption": null,
+            "source": {
+              "title": "Shower length assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "flow",
+            "value": "9",
+            "unit": "L/min",
+            "assumption": "showerhead flow",
+            "source": null
+          },
+          {
+            "name": "perWeek",
+            "value": "5",
+            "unit": "showers/week",
+            "assumption": null,
+            "source": {
+              "title": "Habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "52",
+            "unit": "weeks",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 8 min × 9 L/min × 5 showers/week × 52 weeks.",
+          "Compute: 8 × 9 × 5 × 52 = 18,720",
+          "Worked estimate: 18700 L (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Annual litres = minutes × flow × showers × weeks.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 8 min × 9 L/min × 5 showers/week × 52 weeks.",
+          "Compute: 8 × 9 × 5 × 52 = 18,720",
+          "Worked estimate: 18700 L (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "screen-pixels-phone",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A phone screen of 1179 × 2556 pixels — how many pixels is that?",
+      "scope": null,
+      "unit": "pixels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "width*height",
+        "inputs": [
+          {
+            "name": "width",
+            "value": "1179",
+            "unit": "px",
+            "assumption": null,
+            "source": {
+              "title": "Panel resolution spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "height",
+            "value": "2556",
+            "unit": "px",
+            "assumption": null,
+            "source": {
+              "title": "Panel resolution spec",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "pixels",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: Columns 1179 px × rows 2556 px.",
+          "Compute: 1179 × 2556 = 3,013,524",
+          "Worked estimate: 3014000 pixels (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Pixel count = width × height.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Columns 1179 px × rows 2556 px.",
+          "Compute: 1179 × 2556 = 3,013,524",
+          "Worked estimate: 3014000 pixels (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "solar-panels-cloudy",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "A cloudy climate: 3,000 kWh home, 0.35 kW panels at 1,100 kWh per kW. How many panels?",
+      "scope": null,
+      "unit": "panels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "homeKwh/(panelKw*yield)",
+        "inputs": [
+          {
+            "name": "homeKwh",
+            "value": "3000",
+            "unit": "kWh/yr",
+            "assumption": "household annual use",
+            "source": null
+          },
+          {
+            "name": "panelKw",
+            "value": "0.35",
+            "unit": "kW",
+            "assumption": "panel rating",
+            "source": null
+          },
+          {
+            "name": "yield",
+            "value": "1100",
+            "unit": "kWh/kW·yr",
+            "assumption": "regional annual yield",
+            "source": null
+          }
+        ],
+        "outputUnit": "panels",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 3000 kWh/yr ÷ (0.35 kW × 1100 kWh/kW·yr).",
+          "Compute: 3000 ÷ (0.35 × 1100) = 7.792208",
+          "Worked estimate: 8 panels (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Panel count = demand ÷ output per panel.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 3000 kWh/yr ÷ (0.35 kW × 1100 kWh/kW·yr).",
+          "Compute: 3000 ÷ (0.35 × 1100) = 7.792208",
+          "Worked estimate: 8 panels (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-chongqing",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which metro area (by population) is closest to 17.8 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "city-metro-pop",
+        "target": "17.8"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible metro area (by population)s are shown.",
+        "comparison": "Figures use wider metropolitan-area estimates, not city-proper counts.",
+        "sourceTitle": "Editorial metro-area table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

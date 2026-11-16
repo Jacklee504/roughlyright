@@ -1,0 +1,217 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-10",
+  "themeTag": "scale and distance",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-knot",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One knot is exactly how many kilometres per hour?",
+      "scope": null,
+      "unit": "km/h",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "1.852",
+        "precision": 3,
+        "source": {
+          "title": "CGPM 1935 / SI Brochure",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 1.852 km/h — one nautical mile per hour",
+        "sourceTitle": "CGPM 1935 / SI Brochure"
+      }
+    },
+    {
+      "promptId": "ink-pages-12",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 12 mL ink cartridge lays down about 0.06 mL per page: how many pages?",
+      "scope": null,
+      "unit": "pages",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "ml*1000/mpper",
+        "inputs": [
+          {
+            "name": "ml",
+            "value": "12",
+            "unit": "mL",
+            "assumption": null,
+            "source": {
+              "title": "Cartridge capacity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "mpper",
+            "value": "0.06",
+            "unit": "mL/page",
+            "assumption": "ink per page",
+            "source": null
+          }
+        ],
+        "outputUnit": "pages",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 12 mL × 1,000 ÷ 0.06 mL/page per page.",
+          "Compute: 12 × 1000 ÷ 0.06 = 200,000",
+          "Worked estimate: 200000 pages (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Pages = cartridge ÷ ink per page.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 12 mL × 1,000 ÷ 0.06 mL/page per page.",
+          "Compute: 12 × 1000 ÷ 0.06 = 200,000",
+          "Worked estimate: 200000 pages (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "glasses-year-8",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "The classic 'eight glasses a day': how many glasses per 365-day year?",
+      "scope": null,
+      "unit": "glasses",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "perday*days",
+        "inputs": [
+          {
+            "name": "perday",
+            "value": "8",
+            "unit": "glasses/day",
+            "assumption": null,
+            "source": {
+              "title": "Habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "365",
+            "unit": "days",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "glasses",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 8 glasses/day × 365 days.",
+          "Compute: 8 × 365 = 2,920",
+          "Worked estimate: 2920 glasses"
+        ]
+      },
+      "reveal": {
+        "explanation": "Annual count = daily rate × days.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 8 glasses/day × 365 days.",
+          "Compute: 8 × 365 = 2,920",
+          "Worked estimate: 2920 glasses"
+        ]
+      }
+    },
+    {
+      "promptId": "wage-hourly-65000",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A $65,000 wage over 52 weeks of 35 hours: hourly rate?",
+      "scope": null,
+      "unit": "USD/h",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "annual/(weeks*hours)",
+        "inputs": [
+          {
+            "name": "annual",
+            "value": "65000",
+            "unit": "USD/yr",
+            "assumption": null,
+            "source": {
+              "title": "Salary figure",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "52",
+            "unit": "weeks",
+            "assumption": "paid weeks",
+            "source": null
+          },
+          {
+            "name": "hours",
+            "value": "35",
+            "unit": "h/week",
+            "assumption": "scheduled week",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD/h",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 65000 USD/yr ÷ (52 weeks × 35 h/week).",
+          "Compute: 65000 ÷ (52 × 35) = 35.714286",
+          "Worked estimate: 35.71 USD/h"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hourly rate = salary ÷ hours worked.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 65000 USD/yr ÷ (52 weeks × 35 h/week).",
+          "Compute: 65000 ÷ (52 × 35) = 35.714286",
+          "Worked estimate: 35.71 USD/h"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-wyoming",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which US state (by land area) is closest to 253,335 km²?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km²",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "us-states-area",
+        "target": "253335"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible US state (by land area)s are shown.",
+        "comparison": "Land areas in square kilometres, water area excluded.",
+        "sourceTitle": "Editorial US-state area table compiled from census land-area data"
+      }
+    }
+  ]
+}

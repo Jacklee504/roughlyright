@@ -1,0 +1,218 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-06",
+  "themeTag": "scale and distance",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-us-gallon",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US gallon is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "3.785411784",
+        "precision": 9,
+        "source": {
+          "title": "US customary definition, NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 3.785411784 L — the US gallon is defined as exactly 231 cubic inches",
+        "sourceTitle": "US customary definition, NIST"
+      }
+    },
+    {
+      "promptId": "rule-72-6",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "Using the rule of 72, how many years does money growing at 6% a year take to double?",
+      "scope": null,
+      "unit": "years",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "k/rate",
+        "inputs": [
+          {
+            "name": "k",
+            "value": "72",
+            "unit": "%·yr",
+            "assumption": "rule-of-72 constant (100 × ln 2 ≈ 69.3, rounded up for mental math)",
+            "source": null
+          },
+          {
+            "name": "rate",
+            "value": "6",
+            "unit": "%/yr",
+            "assumption": null,
+            "source": {
+              "title": "Growth rate assumption",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "years",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: Rule of 72: 72 %·yr ÷ 6 %/yr.",
+          "Compute: 72 ÷ 6 = 12",
+          "Worked estimate: 12 years"
+        ]
+      },
+      "reveal": {
+        "explanation": "Doubling time ≈ 72 ÷ annual growth rate.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Rule of 72: 72 %·yr ÷ 6 %/yr.",
+          "Compute: 72 ÷ 6 = 12",
+          "Worked estimate: 12 years"
+        ]
+      }
+    },
+    {
+      "promptId": "pizza-slices-40",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 40 cm party pizza cut into ~100 cm² slices — how many?",
+      "scope": null,
+      "unit": "slices",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "pi*(d/2)*(d/2)/slice",
+        "inputs": [
+          {
+            "name": "pi",
+            "value": "3.14159",
+            "unit": "(dimensionless)",
+            "assumption": "π rounded to 3.14159",
+            "source": null
+          },
+          {
+            "name": "d",
+            "value": "40",
+            "unit": "cm",
+            "assumption": null,
+            "source": {
+              "title": "Pizza diameter",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "slice",
+            "value": "100",
+            "unit": "cm²",
+            "assumption": "slice area",
+            "source": null
+          }
+        ],
+        "outputUnit": "slices",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: Area π × 40 cm/2 squared, ÷ 100 cm² per slice.",
+          "Compute: 3.14159 × (40 ÷ 2) × (40 ÷ 2) ÷ 100 = 12.56636",
+          "Worked estimate: 13 slices (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Slices = pizza area ÷ slice area.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Area π × 40 cm/2 squared, ÷ 100 cm² per slice.",
+          "Compute: 3.14159 × (40 ÷ 2) × (40 ÷ 2) ÷ 100 = 12.56636",
+          "Worked estimate: 13 slices (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "marathon-steps-full",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "Full marathon, 42.195 km. With a relaxed 1.10 m stride, roughly how many steps does the distance take?",
+      "scope": null,
+      "unit": "steps",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "1.10",
+          "unit": "m"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "distance/stride",
+        "inputs": [
+          {
+            "name": "distance",
+            "value": "42195",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Official marathon distance (World Athletics)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "stride",
+            "value": "1.10",
+            "unit": "m",
+            "assumption": "relaxed running stride",
+            "source": null
+          }
+        ],
+        "outputUnit": "steps",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: Marathon distance 42195 m divided by strides of 1.10 m.",
+          "Compute: 42195 ÷ 1.10 = 38,359.090909",
+          "Worked estimate: 38360 steps (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Steps = distance ÷ stride length.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Marathon distance 42195 m divided by strides of 1.10 m.",
+          "Compute: 42195 ÷ 1.10 = 38,359.090909",
+          "Worked estimate: 38360 steps (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-congo",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 4,700 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "4700"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

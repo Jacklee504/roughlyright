@@ -1,0 +1,211 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-12",
+  "themeTag": "everyday arithmetic",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-gravity",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "Standard gravity (g₀) is exactly how many metres per second squared?",
+      "scope": null,
+      "unit": "m/s²",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "9.80665",
+        "precision": 5,
+        "source": {
+          "title": "CGPM 1901",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 9.80665 m/s² — adopted as an exact conventional value",
+        "sourceTitle": "CGPM 1901"
+      }
+    },
+    {
+      "promptId": "drops-barrel-barrel",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "One petroleum barrel is 158.987 L. At 0.05 mL a drop, roughly how many drops?",
+      "scope": null,
+      "unit": "drops",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "0.05",
+          "unit": "mL"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "litres*1000/drop",
+        "inputs": [
+          {
+            "name": "litres",
+            "value": "158.987",
+            "unit": "L",
+            "assumption": null,
+            "source": {
+              "title": "Petroleum barrel (42 US gal)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "drop",
+            "value": "0.05",
+            "unit": "mL",
+            "assumption": "drop volume",
+            "source": null
+          }
+        ],
+        "outputUnit": "drops",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: 158.987 L × 1,000 gives mL; ÷ 0.05 mL per drop.",
+          "Compute: 158.987 × 1000 ÷ 0.05 = 3,179,740",
+          "Worked estimate: 3180000 drops (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Drops = volume ÷ drop size.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 158.987 L × 1,000 gives mL; ÷ 0.05 mL per drop.",
+          "Compute: 158.987 × 1000 ÷ 0.05 = 3,179,740",
+          "Worked estimate: 3180000 drops (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "breaths-day-14",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "A rate of 14 breaths a minute — breaths per day?",
+      "scope": null,
+      "unit": "breaths",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "rate*minutes",
+        "inputs": [
+          {
+            "name": "rate",
+            "value": "14",
+            "unit": "breaths/min",
+            "assumption": "daytime average",
+            "source": null
+          },
+          {
+            "name": "minutes",
+            "value": "1440",
+            "unit": "min",
+            "assumption": null,
+            "source": {
+              "title": "Definition: a day has 1,440 minutes",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "breaths",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 14 breaths/min × the 1440 min minutes in a day.",
+          "Compute: 14 × 1440 = 20,160",
+          "Worked estimate: 20200 breaths (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Breaths = rate × minutes per day.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 14 breaths/min × the 1440 min minutes in a day.",
+          "Compute: 14 × 1440 = 20,160",
+          "Worked estimate: 20200 breaths (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "crowd-density-sparse",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A sparse 20,000 m² gathering at 1.2 people per m²: crowd estimate?",
+      "scope": null,
+      "unit": "people",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*density",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "20000",
+            "unit": "m²",
+            "assumption": "standing area",
+            "source": null
+          },
+          {
+            "name": "density",
+            "value": "1.2",
+            "unit": "people/m²",
+            "assumption": "sparse crowd density",
+            "source": null
+          }
+        ],
+        "outputUnit": "people",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 20000 m² × 1.2 people/m².",
+          "Compute: 20000 × 1.2 = 24,000",
+          "Worked estimate: 24000 people (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Crowd size = area × density.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 20000 m² × 1.2 people/m².",
+          "Compute: 20000 × 1.2 = 24,000",
+          "Worked estimate: 24000 people (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "df-radian",
+      "roundType": "direct_fact",
+      "category": "math",
+      "prompt": "One radian is exactly how many degrees?",
+      "scope": null,
+      "unit": "°",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "57.29577951308232",
+        "precision": 9,
+        "source": {
+          "title": "SI derived unit definition",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 57.29577951308232 ° — 180° divided by π",
+        "sourceTitle": "SI derived unit definition"
+      }
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-12",
+  "themeTag": "money and rates",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-legal-cup",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US legal cup (nutrition labelling) is exactly how many millilitres?",
+      "scope": null,
+      "unit": "mL",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "240",
+        "precision": 0,
+        "source": {
+          "title": "US FDA nutrition labelling regulation",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 240 mL — the FDA legal cup used on US nutrition labels",
+        "sourceTitle": "US FDA nutrition labelling regulation"
+      }
+    },
+    {
+      "promptId": "home-kwh-day-small-flat",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "A fridge (150 W, 24 h), a TV (100 W, 4 h) and lights (60 W, 5 h) run for a day. How many kWh?",
+      "scope": null,
+      "unit": "kWh",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "(fridgeW*fridgeH+tvW*tvH+lightW*lightH)/1000",
+        "inputs": [
+          {
+            "name": "fridgeW",
+            "value": "150",
+            "unit": "W",
+            "assumption": null,
+            "source": {
+              "title": "Appliance rating",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "fridgeH",
+            "value": "24",
+            "unit": "h",
+            "assumption": null,
+            "source": {
+              "title": "Hours run",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "tvW",
+            "value": "100",
+            "unit": "W",
+            "assumption": null,
+            "source": {
+              "title": "Appliance rating",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "tvH",
+            "value": "4",
+            "unit": "h",
+            "assumption": null,
+            "source": {
+              "title": "Hours run",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "lightW",
+            "value": "60",
+            "unit": "W",
+            "assumption": null,
+            "source": {
+              "title": "Appliance rating",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "lightH",
+            "value": "5",
+            "unit": "h",
+            "assumption": null,
+            "source": {
+              "title": "Hours run",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "kWh",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: Each appliance's watts × hours, added up, ÷ 1,000.",
+          "Compute: (150 × 24+100 × 4+60 × 5) ÷ 1000 = 4.3",
+          "Worked estimate: 4.3 kWh"
+        ]
+      },
+      "reveal": {
+        "explanation": "kWh = Σ(watts × hours) ÷ 1,000.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Each appliance's watts × hours, added up, ÷ 1,000.",
+          "Compute: (150 × 24+100 × 4+60 × 5) ÷ 1000 = 4.3",
+          "Worked estimate: 4.3 kWh"
+        ]
+      }
+    },
+    {
+      "promptId": "laundry-loads-14",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "Fourteen shirts a week, 12 to a load — annual loads?",
+      "scope": null,
+      "unit": "loads",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "shirts*weeks/perLoad",
+        "inputs": [
+          {
+            "name": "shirts",
+            "value": "14",
+            "unit": "shirts/week",
+            "assumption": null,
+            "source": {
+              "title": "Household assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "52",
+            "unit": "weeks",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "perLoad",
+            "value": "12",
+            "unit": "shirts/load",
+            "assumption": "machine capacity",
+            "source": null
+          }
+        ],
+        "outputUnit": "loads",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 14 shirts/week × 52 weeks ÷ 12 shirts/load.",
+          "Compute: 14 × 52 ÷ 12 = 60.666667",
+          "Worked estimate: 61 loads (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Loads = annual shirts ÷ capacity.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 14 shirts/week × 52 weeks ÷ 12 shirts/load.",
+          "Compute: 14 × 52 ÷ 12 = 60.666667",
+          "Worked estimate: 61 loads (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "roadtrip-cost-van",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A delivery van covers 1,200 km in a week, burning 9.5 L/100 km at $1.85/L. Fuel bill?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*l100/100*price",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "1200",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Weekly route distance",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "l100",
+            "value": "9.5",
+            "unit": "L/100km",
+            "assumption": "loaded van consumption",
+            "source": null
+          },
+          {
+            "name": "price",
+            "value": "1.85",
+            "unit": "USD/L",
+            "assumption": "local pump price",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 1200 km × 9.5 L/100km ÷ 100 gives litres; × 1.85 USD/L gives cost.",
+          "Compute: 1200 × 9.5 ÷ 100 × 1.85 = 210.9",
+          "Worked estimate: 210.9 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cost = distance × consumption ÷ 100 × price per litre.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1200 km × 9.5 L/100km ÷ 100 gives litres; × 1.85 USD/L gives cost.",
+          "Compute: 1200 × 9.5 ÷ 100 × 1.85 = 210.9",
+          "Worked estimate: 210.9 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-mexico",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which country (by population) is closest to 129 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "129"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible country (by population)s are shown.",
+        "comparison": "Population figures are recent estimates rounded to the nearest million.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

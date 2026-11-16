@@ -1,0 +1,221 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-11",
+  "themeTag": "orders of magnitude",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-light-speed",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "The speed of light in vacuum is exactly how many metres per second?",
+      "scope": null,
+      "unit": "m/s",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "299792458",
+        "precision": 0,
+        "source": {
+          "title": "SI definition of the metre",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 299,792,458 m/s — the metre is defined so that c is exactly this value",
+        "sourceTitle": "SI definition of the metre"
+      }
+    },
+    {
+      "promptId": "can-energy-100",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "Recycling 100 aluminium cans saves about 0.15 kWh each: how many kWh saved?",
+      "scope": null,
+      "unit": "kWh",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "cans*per",
+        "inputs": [
+          {
+            "name": "cans",
+            "value": "100",
+            "unit": "cans",
+            "assumption": null,
+            "source": {
+              "title": "Collection batch",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "per",
+            "value": "0.15",
+            "unit": "kWh",
+            "assumption": "energy saved per recycled can",
+            "source": null
+          }
+        ],
+        "outputUnit": "kWh",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 100 cans × 0.15 kWh.",
+          "Compute: 100 × 0.15 = 15",
+          "Worked estimate: 15 kWh"
+        ]
+      },
+      "reveal": {
+        "explanation": "Energy saved = cans × saving per can.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 100 cans × 0.15 kWh.",
+          "Compute: 100 × 0.15 = 15",
+          "Worked estimate: 15 kWh"
+        ]
+      }
+    },
+    {
+      "promptId": "heartbeats-year-72",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "A 72 bpm resting heart rate — beats per year, roughly?",
+      "scope": null,
+      "unit": "beats",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "bpm*minutes",
+        "inputs": [
+          {
+            "name": "bpm",
+            "value": "72",
+            "unit": "beats/min",
+            "assumption": null,
+            "source": {
+              "title": "Resting rate assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "minutes",
+            "value": "525600",
+            "unit": "min",
+            "assumption": "365-day year = 525,600 minutes",
+            "source": null
+          }
+        ],
+        "outputUnit": "beats",
+        "precision": 0,
+        "roundTo": 100000,
+        "steps": [
+          "Model: 72 beats/min × every one of the 525600 min minutes in the year.",
+          "Compute: 72 × 525600 = 37,843,200",
+          "Worked estimate: 37800000 beats (nearest 100,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Beats = rate × minutes in a year.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 72 beats/min × every one of the 525600 min minutes in the year.",
+          "Compute: 72 × 525600 = 37,843,200",
+          "Worked estimate: 37800000 beats (nearest 100,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "tip-split-2way",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A $56.30 bill, 15% tip, two people: what's each share?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "bill*(1+pct/100)/people",
+        "inputs": [
+          {
+            "name": "bill",
+            "value": "56.3",
+            "unit": "USD",
+            "assumption": null,
+            "source": {
+              "title": "Pre-tip bill",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "pct",
+            "value": "15",
+            "unit": "%",
+            "assumption": "customary tip",
+            "source": null
+          },
+          {
+            "name": "people",
+            "value": "2",
+            "unit": "people",
+            "assumption": null,
+            "source": {
+              "title": "Party size",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 56.3 USD × (1 + 15 %/100), ÷ 2 people.",
+          "Compute: 56.3 × (1+15 ÷ 100) ÷ 2 = 32.3725",
+          "Worked estimate: 32.37 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Each share = tipped total ÷ diners.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 56.3 USD × (1 + 15 %/100), ÷ 2 people.",
+          "Compute: 56.3 × (1+15 ÷ 100) ÷ 2 = 32.3725",
+          "Worked estimate: 32.37 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "df-parsec",
+      "roundType": "direct_fact",
+      "category": "space",
+      "prompt": "One parsec is exactly how many kilometres?",
+      "scope": null,
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "30856775814913.673",
+        "precision": 3,
+        "source": {
+          "title": "IAU 2015 definition",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 30,856,775,814,913.673 km — the distance with one arc-second parallax at 1 AU",
+        "sourceTitle": "IAU 2015 definition"
+      }
+    }
+  ]
+}

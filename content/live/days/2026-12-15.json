@@ -1,0 +1,209 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-15",
+  "themeTag": "everyday arithmetic",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-oil-barrel",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One petroleum barrel is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "158.987",
+        "precision": 3,
+        "source": {
+          "title": "US petroleum industry standard, NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 158.987 L — the oil barrel is 42 US gallons",
+        "sourceTitle": "US petroleum industry standard, NIST"
+      }
+    },
+    {
+      "promptId": "turbine-homes-small",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "A turbine making 6,000 MWh a year; homes use 10,000 kWh each. How many homes can it power?",
+      "scope": null,
+      "unit": "homes",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "turbineMwh*1000/homeKwh",
+        "inputs": [
+          {
+            "name": "turbineMwh",
+            "value": "6000",
+            "unit": "MWh/yr",
+            "assumption": "annual turbine output",
+            "source": null
+          },
+          {
+            "name": "homeKwh",
+            "value": "10000",
+            "unit": "kWh/yr",
+            "assumption": "annual household use",
+            "source": null
+          }
+        ],
+        "outputUnit": "homes",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 6000 MWh/yr × 1,000 gives kWh; ÷ 10000 kWh/yr per home.",
+          "Compute: 6000 × 1000 ÷ 10000 = 600",
+          "Worked estimate: 600 homes (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Homes = turbine energy ÷ household energy.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 6000 MWh/yr × 1,000 gives kWh; ÷ 10000 kWh/yr per home.",
+          "Compute: 6000 × 1000 ÷ 10000 = 600",
+          "Worked estimate: 600 homes (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "bottles-year-2",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "Two litres a day from 750 mL bottles — bottles per year?",
+      "scope": null,
+      "unit": "bottles",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "litres*days/bottleL",
+        "inputs": [
+          {
+            "name": "litres",
+            "value": "2",
+            "unit": "L/day",
+            "assumption": null,
+            "source": {
+              "title": "Habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "365",
+            "unit": "days",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "bottleL",
+            "value": "0.75",
+            "unit": "L",
+            "assumption": "750 mL bottle",
+            "source": null
+          }
+        ],
+        "outputUnit": "bottles",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 2 L/day × 365 days ÷ 0.75 L per bottle.",
+          "Compute: 2 × 365 ÷ 0.75 = 973.333333",
+          "Worked estimate: 973 bottles (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Bottles = annual litres ÷ bottle size.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 2 L/day × 365 days ÷ 0.75 L per bottle.",
+          "Compute: 2 × 365 ÷ 0.75 = 973.333333",
+          "Worked estimate: 973 bottles (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "download-seconds-backup",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "Backing up 250 GB over a 950 Mbps connection takes roughly how many seconds?",
+      "scope": null,
+      "unit": "s",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "gb*8000/mbps",
+        "inputs": [
+          {
+            "name": "gb",
+            "value": "250",
+            "unit": "GB",
+            "assumption": "backup size",
+            "source": null
+          },
+          {
+            "name": "mbps",
+            "value": "950",
+            "unit": "Mbps",
+            "assumption": "sustained connection speed",
+            "source": null
+          }
+        ],
+        "outputUnit": "s",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 250 GB × 8,000 gives megabits; ÷ 950 Mbps gives seconds.",
+          "Compute: 250 × 8000 ÷ 950 = 2,105.263158",
+          "Worked estimate: 2110 s (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Time = gigabytes × 8,000 ÷ megabits per second.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 250 GB × 8,000 gives megabits; ÷ 950 Mbps gives seconds.",
+          "Compute: 250 × 8000 ÷ 950 = 2,105.263158",
+          "Worked estimate: 2110 s (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-turkey",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which country (by population) is closest to 87 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "87"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible country (by population)s are shown.",
+        "comparison": "Population figures are recent estimates rounded to the nearest million.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

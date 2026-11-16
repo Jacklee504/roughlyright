@@ -1,0 +1,210 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-09",
+  "themeTag": "unit conversions",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-us-quart",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US liquid quart is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "0.946352946",
+        "precision": 9,
+        "source": {
+          "title": "US customary definition, NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 0.946352946 L — a quart is one quarter of a US gallon",
+        "sourceTitle": "US customary definition, NIST"
+      }
+    },
+    {
+      "promptId": "kmh-to-mph-100",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A train cruises at 100 km/h. What is that in mph?",
+      "scope": null,
+      "unit": "mph",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "kmh*factor",
+        "inputs": [
+          {
+            "name": "kmh",
+            "value": "100",
+            "unit": "km/h",
+            "assumption": null,
+            "source": {
+              "title": "Given speed",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "factor",
+            "value": "0.621371",
+            "unit": "mi/km",
+            "assumption": null,
+            "source": {
+              "title": "Conversion factor (1 km = 0.621371 mi)",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "mph",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 100 km/h × 0.621371 mi/km.",
+          "Compute: 100 × 0.621371 = 62.1371",
+          "Worked estimate: 62.1 mph"
+        ]
+      },
+      "reveal": {
+        "explanation": "Miles per hour = km/h × 0.621371.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 100 km/h × 0.621371 mi/km.",
+          "Compute: 100 × 0.621371 = 62.1371",
+          "Worked estimate: 62.1 mph"
+        ]
+      }
+    },
+    {
+      "promptId": "typing-minutes-letter",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 500-word letter pecked out at 40 wpm — how long?",
+      "scope": null,
+      "unit": "min",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "words/wpm",
+        "inputs": [
+          {
+            "name": "words",
+            "value": "500",
+            "unit": "words",
+            "assumption": null,
+            "source": {
+              "title": "Document length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "wpm",
+            "value": "40",
+            "unit": "wpm",
+            "assumption": "typing speed",
+            "source": null
+          }
+        ],
+        "outputUnit": "min",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 500 words ÷ 40 wpm.",
+          "Compute: 500 ÷ 40 = 12.5",
+          "Worked estimate: 12.5 min"
+        ]
+      },
+      "reveal": {
+        "explanation": "Minutes = words ÷ typing speed.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 500 words ÷ 40 wpm.",
+          "Compute: 500 ÷ 40 = 12.5",
+          "Worked estimate: 12.5 min"
+        ]
+      }
+    },
+    {
+      "promptId": "paper-stack-three-metre",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "How many 0.1 mm sheets make a stack exactly 3 m tall?",
+      "scope": null,
+      "unit": "sheets",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "height*1000/thickness",
+        "inputs": [
+          {
+            "name": "height",
+            "value": "3",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Given stack height",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "thickness",
+            "value": "0.1",
+            "unit": "mm",
+            "assumption": "80 gsm copy paper ≈ 0.1 mm per sheet",
+            "source": null
+          }
+        ],
+        "outputUnit": "sheets",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: Convert the 3 m stack to millimetres, then divide by sheet thickness 0.1 mm.",
+          "Compute: 3 × 1000 ÷ 0.1 = 30,000",
+          "Worked estimate: 30000 sheets (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Count = stack height ÷ sheet thickness.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Convert the 3 m stack to millimetres, then divide by sheet thickness 0.1 mm.",
+          "Compute: 3 × 1000 ÷ 0.1 = 30,000",
+          "Worked estimate: 30000 sheets (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-mekong",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 4,350 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "4350"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

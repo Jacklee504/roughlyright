@@ -1,0 +1,237 @@
+{
+  "kind": "target_dataset",
+  "game": "estimation",
+  "id": "rivers-length",
+  "name": "River system lengths",
+  "unit": "km",
+  "revision": "2026-11-a",
+  "eligibleScope": null,
+  "entries": [
+    {
+      "id": "nile",
+      "label": "Nile",
+      "disambiguator": null,
+      "value": "6650",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "River Nile"
+      ]
+    },
+    {
+      "id": "amazon",
+      "label": "Amazon",
+      "disambiguator": null,
+      "value": "6400",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Amazon River"
+      ]
+    },
+    {
+      "id": "yangtze",
+      "label": "Yangtze",
+      "disambiguator": null,
+      "value": "6300",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Chang Jiang"
+      ]
+    },
+    {
+      "id": "mississippi-missouri",
+      "label": "Mississippi–Missouri",
+      "disambiguator": null,
+      "value": "6275",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Mississippi",
+        "Missouri River"
+      ]
+    },
+    {
+      "id": "yenisei",
+      "label": "Yenisei",
+      "disambiguator": null,
+      "value": "5539",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Yenisey"
+      ]
+    },
+    {
+      "id": "yellow",
+      "label": "Yellow River",
+      "disambiguator": null,
+      "value": "5464",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Huang He"
+      ]
+    },
+    {
+      "id": "ob-irtysh",
+      "label": "Ob–Irtysh",
+      "disambiguator": null,
+      "value": "5410",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Ob",
+        "Irtysh"
+      ]
+    },
+    {
+      "id": "parana",
+      "label": "Paraná",
+      "disambiguator": null,
+      "value": "4880",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Parana River"
+      ]
+    },
+    {
+      "id": "congo",
+      "label": "Congo",
+      "disambiguator": null,
+      "value": "4700",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Zaire River"
+      ]
+    },
+    {
+      "id": "amur",
+      "label": "Amur",
+      "disambiguator": null,
+      "value": "4444",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Amur River"
+      ]
+    },
+    {
+      "id": "lena",
+      "label": "Lena",
+      "disambiguator": null,
+      "value": "4400",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Lena River"
+      ]
+    },
+    {
+      "id": "mekong",
+      "label": "Mekong",
+      "disambiguator": null,
+      "value": "4350",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Mekong River"
+      ]
+    },
+    {
+      "id": "volga",
+      "label": "Volga",
+      "disambiguator": null,
+      "value": "3530",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Volga River"
+      ]
+    },
+    {
+      "id": "indus",
+      "label": "Indus",
+      "disambiguator": null,
+      "value": "3180",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Indus River"
+      ]
+    },
+    {
+      "id": "danube",
+      "label": "Danube",
+      "disambiguator": null,
+      "value": "2860",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Danube River"
+      ]
+    },
+    {
+      "id": "ganges",
+      "label": "Ganges",
+      "disambiguator": null,
+      "value": "2525",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Ganga"
+      ]
+    }
+  ]
+}

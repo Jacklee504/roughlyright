@@ -1,0 +1,217 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-07",
+  "themeTag": "orders of magnitude",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-imperial-gallon",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One imperial gallon is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "4.54609",
+        "precision": 5,
+        "source": {
+          "title": "UK Weights and Measures Act 1985",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 4.54609 L — redefined in 1824 from 10 lb of water and fixed exactly in 1985",
+        "sourceTitle": "UK Weights and Measures Act 1985"
+      }
+    },
+    {
+      "promptId": "simple-interest-2000",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "$2,000 at 4% simple interest for 5 years grows to how much in total?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "principal*(1+rate*years/100)",
+        "inputs": [
+          {
+            "name": "principal",
+            "value": "2000",
+            "unit": "USD",
+            "assumption": null,
+            "source": {
+              "title": "Deposit size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "rate",
+            "value": "4",
+            "unit": "%/yr",
+            "assumption": null,
+            "source": {
+              "title": "Rate assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "years",
+            "value": "5",
+            "unit": "years",
+            "assumption": null,
+            "source": {
+              "title": "Term",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 2000 USD × (1 + 4 %/yr × 5 years ÷ 100).",
+          "Compute: 2000 × (1+4 × 5 ÷ 100) = 2,400",
+          "Worked estimate: 2400 USD (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Simple interest keeps the base fixed: total = principal × (1 + rate × years).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 2000 USD × (1 + 4 %/yr × 5 years ÷ 100).",
+          "Compute: 2000 × (1+4 × 5 ÷ 100) = 2,400",
+          "Worked estimate: 2400 USD (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "trip-days-1200",
+      "roundType": "calculation",
+      "category": "geography",
+      "prompt": "A 1,200 km coastal hop at 300 km/day — trip length in days?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km/dayKm",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "1200",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Route length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "dayKm",
+            "value": "300",
+            "unit": "km/day",
+            "assumption": "daily driving distance",
+            "source": null
+          }
+        ],
+        "outputUnit": "days",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 1200 km ÷ 300 km/day per day.",
+          "Compute: 1200 ÷ 300 = 4",
+          "Worked estimate: 4 days"
+        ]
+      },
+      "reveal": {
+        "explanation": "Days = distance ÷ daily distance.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1200 km ÷ 300 km/day per day.",
+          "Compute: 1200 ÷ 300 = 4",
+          "Worked estimate: 4 days"
+        ]
+      }
+    },
+    {
+      "promptId": "walk-big-coast-to-coast",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A coast-to-coast walk of about 5,000 km. With a 0.72 m stride, roughly how many steps?",
+      "scope": null,
+      "unit": "steps",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*1000/stride",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "5000",
+            "unit": "km",
+            "assumption": "representative coast-to-coast route length",
+            "source": null
+          },
+          {
+            "name": "stride",
+            "value": "0.72",
+            "unit": "m",
+            "assumption": "all-day hiking stride",
+            "source": null
+          }
+        ],
+        "outputUnit": "steps",
+        "precision": 0,
+        "roundTo": 10000,
+        "steps": [
+          "Model: Convert 5000 km to metres and divide by strides of 0.72 m.",
+          "Compute: 5000 × 1000 ÷ 0.72 = 6,944,444.444444",
+          "Worked estimate: 6940000 steps (nearest 10,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Steps = kilometres × 1,000 ÷ stride.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Convert 5000 km to metres and divide by strides of 0.72 m.",
+          "Compute: 5000 × 1000 ÷ 0.72 = 6,944,444.444444",
+          "Worked estimate: 6940000 steps (nearest 10,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-amur",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 4,444 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "4444"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

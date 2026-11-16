@@ -1,0 +1,210 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-28",
+  "themeTag": "orders of magnitude",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-long-ton",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One long ton is exactly how many kilograms?",
+      "scope": null,
+      "unit": "kg",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "1016.0469088",
+        "precision": 7,
+        "source": {
+          "title": "UK Weights and Measures Act 1985",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 1,016.0469088 kg — 2,240 pounds — the imperial ton",
+        "sourceTitle": "UK Weights and Measures Act 1985"
+      }
+    },
+    {
+      "promptId": "book-words-novel",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 320-page novel at about 300 words a page: roughly how many words?",
+      "scope": null,
+      "unit": "words",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "pages*wpp",
+        "inputs": [
+          {
+            "name": "pages",
+            "value": "320",
+            "unit": "pages",
+            "assumption": "book length",
+            "source": null
+          },
+          {
+            "name": "wpp",
+            "value": "300",
+            "unit": "words/page",
+            "assumption": "typical typeset page",
+            "source": null
+          }
+        ],
+        "outputUnit": "words",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: 320 pages × 300 words/page.",
+          "Compute: 320 × 300 = 96,000",
+          "Worked estimate: 96000 words (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Words = pages × words per page.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 320 pages × 300 words/page.",
+          "Compute: 320 × 300 = 96,000",
+          "Worked estimate: 96000 words (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "money-ton-hundreds",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A metric ton of $100 bills — how many bills, roughly?",
+      "scope": null,
+      "unit": "bills",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "grams/mass",
+        "inputs": [
+          {
+            "name": "grams",
+            "value": "1000000",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Definition: one metric ton is 1,000,000 g",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "mass",
+            "value": "1",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "US Treasury: every US note weighs about 1 g",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "bills",
+        "precision": 0,
+        "roundTo": 10000,
+        "steps": [
+          "Model: Total mass 1000000 g split into bills of 1 g each.",
+          "Compute: 1000000 ÷ 1 = 1,000,000",
+          "Worked estimate: 1000000 bills (nearest 10,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Count = total mass ÷ mass per bill.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Total mass 1000000 g split into bills of 1 g each.",
+          "Compute: 1000000 ÷ 1 = 1,000,000",
+          "Worked estimate: 1000000 bills (nearest 10,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "temp-swing-oven",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "An oven preheats from 160 °C to 200 °C. How many °F does the setting rise?",
+      "scope": null,
+      "unit": "°F",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "(hi-lo)*9/5",
+        "inputs": [
+          {
+            "name": "hi",
+            "value": "200",
+            "unit": "°C",
+            "assumption": null,
+            "source": {
+              "title": "Target temperature",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "lo",
+            "value": "160",
+            "unit": "°C",
+            "assumption": null,
+            "source": {
+              "title": "Start temperature",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "°F",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: Swing 200 °C − 160 °C, scaled × 9/5.",
+          "Compute: (200 − 160) × 9 ÷ 5 = 72",
+          "Worked estimate: 72 °F (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "A temperature *difference* scales by exactly 9/5; no 32 offset applies to changes.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Swing 200 °C − 160 °C, scaled × 9/5.",
+          "Compute: (200 − 160) × 9 ÷ 5 = 72",
+          "Worked estimate: 72 °F (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-sao-paulo",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which metro area (by population) is closest to 22.8 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "city-metro-pop",
+        "target": "22.8"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible metro area (by population)s are shown.",
+        "comparison": "Figures use wider metropolitan-area estimates, not city-proper counts.",
+        "sourceTitle": "Editorial metro-area table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

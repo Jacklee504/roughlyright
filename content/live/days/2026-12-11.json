@@ -1,0 +1,228 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-11",
+  "themeTag": "household math",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-us-fl-oz",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US fluid ounce is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "0.0295735295625",
+        "precision": 9,
+        "source": {
+          "title": "US customary definition, NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 0.0295735295625 L — a fluid ounce is 1/128 of a US gallon",
+        "sourceTitle": "US customary definition, NIST"
+      }
+    },
+    {
+      "promptId": "l-to-gal-10",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 10 L watering can holds how many US gallons?",
+      "scope": null,
+      "unit": "US gal",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "litres*factor",
+        "inputs": [
+          {
+            "name": "litres",
+            "value": "10",
+            "unit": "L",
+            "assumption": null,
+            "source": {
+              "title": "Container size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "factor",
+            "value": "0.264172",
+            "unit": "gal/L",
+            "assumption": "rounded conversion factor (1 L ≈ 0.264172 US gal)",
+            "source": null
+          }
+        ],
+        "outputUnit": "US gal",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 10 L × 0.264172 gal/L.",
+          "Compute: 10 × 0.264172 = 2.64172",
+          "Worked estimate: 2.6 US gal"
+        ]
+      },
+      "reveal": {
+        "explanation": "US gallons = litres × 0.264172.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 10 L × 0.264172 gal/L.",
+          "Compute: 10 × 0.264172 = 2.64172",
+          "Worked estimate: 2.6 US gal"
+        ]
+      }
+    },
+    {
+      "promptId": "fare-year-8",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "Eight $3 rides a week, every week of the year — annual spend?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "rides*weeks*fare",
+        "inputs": [
+          {
+            "name": "rides",
+            "value": "8",
+            "unit": "rides/week",
+            "assumption": null,
+            "source": {
+              "title": "Riding habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "52",
+            "unit": "weeks",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "fare",
+            "value": "3",
+            "unit": "USD",
+            "assumption": "single-ride fare",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 8 rides/week × 52 weeks × 3 USD.",
+          "Compute: 8 × 52 × 3 = 1,248",
+          "Worked estimate: 1248 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Annual cost = weekly rides × weeks × fare.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 8 rides/week × 52 weeks × 3 USD.",
+          "Compute: 8 × 52 × 3 = 1,248",
+          "Worked estimate: 1248 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "paint-litres-hallway",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "An 18 m² hallway gets a single coat from a high-opacity paint covering 12 m² per litre. How many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*coats/coverage",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "18",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Measured wall area",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "coats",
+            "value": "1",
+            "unit": "coat",
+            "assumption": null,
+            "source": {
+              "title": "Job spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "coverage",
+            "value": "12",
+            "unit": "m²/L",
+            "assumption": "high-opacity paint coverage",
+            "source": null
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 18 m² × 1 coat, then ÷ coverage of 12 m²/L.",
+          "Compute: 18 × 1 ÷ 12 = 1.5",
+          "Worked estimate: 1.5 L"
+        ]
+      },
+      "reveal": {
+        "explanation": "Paint = area × coats ÷ coverage per litre.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 18 m² × 1 coat, then ÷ coverage of 12 m²/L.",
+          "Compute: 18 × 1 ÷ 12 = 1.5",
+          "Worked estimate: 1.5 L"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-ethiopia",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which country (by population) is closest to 127 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "127"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible country (by population)s are shown.",
+        "comparison": "Population figures are recent estimates rounded to the nearest million.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-27",
+  "themeTag": "household math",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-li",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One modern Chinese li (市里) is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "500",
+        "precision": 0,
+        "source": {
+          "title": "Chinese standard SI-compatible unit",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 500 m — the modern li is defined as exactly half a kilometre",
+        "sourceTitle": "Chinese standard SI-compatible unit"
+      }
+    },
+    {
+      "promptId": "fruit-crates-apples",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "An orchard ships 12 t of apples in 20 kg crates. How many crates?",
+      "scope": null,
+      "unit": "crates",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "t*1000/kg",
+        "inputs": [
+          {
+            "name": "t",
+            "value": "12",
+            "unit": "t",
+            "assumption": null,
+            "source": {
+              "title": "Harvest figure",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "kg",
+            "value": "20",
+            "unit": "kg",
+            "assumption": "standard apple crate",
+            "source": null
+          }
+        ],
+        "outputUnit": "crates",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 12 t × 1,000 gives kilograms; ÷ 20 kg per crate.",
+          "Compute: 12 × 1000 ÷ 20 = 600",
+          "Worked estimate: 600 crates"
+        ]
+      },
+      "reveal": {
+        "explanation": "Crates = tonnes × 1,000 ÷ crate mass.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 12 t × 1,000 gives kilograms; ÷ 20 kg per crate.",
+          "Compute: 12 × 1000 ÷ 20 = 600",
+          "Worked estimate: 600 crates"
+        ]
+      }
+    },
+    {
+      "promptId": "mow-time-park",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "A 800 m² park strip cut at 25 m² per minute — how long?",
+      "scope": null,
+      "unit": "min",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area/rate",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "800",
+            "unit": "m²",
+            "assumption": "lawn size",
+            "source": null
+          },
+          {
+            "name": "rate",
+            "value": "25",
+            "unit": "m²/min",
+            "assumption": "mower pace",
+            "source": null
+          }
+        ],
+        "outputUnit": "min",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 800 m² ÷ 25 m²/min.",
+          "Compute: 800 ÷ 25 = 32",
+          "Worked estimate: 32 min"
+        ]
+      },
+      "reveal": {
+        "explanation": "Minutes = area ÷ mowing rate.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 800 m² ÷ 25 m²/min.",
+          "Compute: 800 ÷ 25 = 32",
+          "Worked estimate: 32 min"
+        ]
+      }
+    },
+    {
+      "promptId": "battery-days-tablet",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 5000 mAh tablet at an average 100 mA: days between charges?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "capacity/(draw*24)",
+        "inputs": [
+          {
+            "name": "capacity",
+            "value": "5000",
+            "unit": "mAh",
+            "assumption": null,
+            "source": {
+              "title": "Battery spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "draw",
+            "value": "100",
+            "unit": "mA",
+            "assumption": "average draw",
+            "source": null
+          }
+        ],
+        "outputUnit": "days",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 5000 mAh ÷ (100 mA × 24).",
+          "Compute: 5000 ÷ (100 × 24) = 2.083333",
+          "Worked estimate: 2.1 days"
+        ]
+      },
+      "reveal": {
+        "explanation": "Days = charge ÷ daily draw.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 5000 mAh ÷ (100 mA × 24).",
+          "Compute: 5000 ÷ (100 × 24) = 2.083333",
+          "Worked estimate: 2.1 days"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-broad-peak",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,051 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8051"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

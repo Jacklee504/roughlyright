@@ -1,0 +1,272 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-01",
+  "themeTag": "household math",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-pound-force",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "One pound-force is exactly how many newtons?",
+      "scope": null,
+      "unit": "N",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "4.4482216152605",
+        "precision": 9,
+        "source": {
+          "title": "NIST SP 811 (pound × 9.80665)",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 4.4482216152605 N — one pound times standard gravity",
+        "sourceTitle": "NIST SP 811 (pound × 9.80665)"
+      }
+    },
+    {
+      "promptId": "laundry-loads-7",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "A household dirties 7 shirts a week; the machine takes 10. How many loads a year?",
+      "scope": null,
+      "unit": "loads",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "shirts*weeks/perLoad",
+        "inputs": [
+          {
+            "name": "shirts",
+            "value": "7",
+            "unit": "shirts/week",
+            "assumption": null,
+            "source": {
+              "title": "Household assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "52",
+            "unit": "weeks",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "perLoad",
+            "value": "10",
+            "unit": "shirts/load",
+            "assumption": "machine capacity",
+            "source": null
+          }
+        ],
+        "outputUnit": "loads",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 7 shirts/week × 52 weeks ÷ 10 shirts/load.",
+          "Compute: 7 × 52 ÷ 10 = 36.4",
+          "Worked estimate: 36 loads (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Loads = annual shirts ÷ capacity.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 7 shirts/week × 52 weeks ÷ 10 shirts/load.",
+          "Compute: 7 × 52 ÷ 10 = 36.4",
+          "Worked estimate: 36 loads (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "roadtrip-cost-commute",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A 40 km-each-way commute, 230 working days a year, at 7.2 L/100 km and $1.65/L. Annual fuel cost?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*l100/100*price",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "9200",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "2 × 40 km × 230 days, rounded",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "l100",
+            "value": "7.2",
+            "unit": "L/100km",
+            "assumption": "stop-start commute consumption",
+            "source": null
+          },
+          {
+            "name": "price",
+            "value": "1.65",
+            "unit": "USD/L",
+            "assumption": "local pump price",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 9200 km × 7.2 L/100km ÷ 100 gives litres; × 1.65 USD/L gives cost.",
+          "Compute: 9200 × 7.2 ÷ 100 × 1.65 = 1,092.96",
+          "Worked estimate: 1090 USD (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cost = distance × consumption ÷ 100 × price per litre.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 9200 km × 7.2 L/100km ÷ 100 gives litres; × 1.65 USD/L gives cost.",
+          "Compute: 9200 × 7.2 ÷ 100 × 1.65 = 1,092.96",
+          "Worked estimate: 1090 USD (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "home-kwh-day-efficient",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "An efficient flat: fridge 120 W always on, TV 80 W for 3 h, lights 100 W for 7 h. kWh per day?",
+      "scope": null,
+      "unit": "kWh",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "(fridgeW*fridgeH+tvW*tvH+lightW*lightH)/1000",
+        "inputs": [
+          {
+            "name": "fridgeW",
+            "value": "120",
+            "unit": "W",
+            "assumption": null,
+            "source": {
+              "title": "Appliance rating",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "fridgeH",
+            "value": "24",
+            "unit": "h",
+            "assumption": null,
+            "source": {
+              "title": "Hours run",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "tvW",
+            "value": "80",
+            "unit": "W",
+            "assumption": null,
+            "source": {
+              "title": "Appliance rating",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "tvH",
+            "value": "3",
+            "unit": "h",
+            "assumption": null,
+            "source": {
+              "title": "Hours run",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "lightW",
+            "value": "100",
+            "unit": "W",
+            "assumption": null,
+            "source": {
+              "title": "Appliance rating",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "lightH",
+            "value": "7",
+            "unit": "h",
+            "assumption": null,
+            "source": {
+              "title": "Hours run",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "kWh",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: Each appliance's watts × hours, added up, ÷ 1,000.",
+          "Compute: (120 × 24+80 × 3+100 × 7) ÷ 1000 = 3.82",
+          "Worked estimate: 3.82 kWh"
+        ]
+      },
+      "reveal": {
+        "explanation": "kWh = Σ(watts × hours) ÷ 1,000.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Each appliance's watts × hours, added up, ÷ 1,000.",
+          "Compute: (120 × 24+80 × 3+100 × 7) ÷ 1000 = 3.82",
+          "Worked estimate: 3.82 kWh"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-mumbai",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which metro area (by population) is closest to 21.3 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "city-metro-pop",
+        "target": "21.3"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible metro area (by population)s are shown.",
+        "comparison": "Figures use wider metropolitan-area estimates, not city-proper counts.",
+        "sourceTitle": "Editorial metro-area table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

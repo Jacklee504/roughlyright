@@ -1,0 +1,235 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-14",
+  "themeTag": "orders of magnitude",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-teaspoon",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US teaspoon (legal measure) is exactly how many millilitres?",
+      "scope": null,
+      "unit": "mL",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "5",
+        "precision": 0,
+        "source": {
+          "title": "US FDA nutrition labelling regulation",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 5 mL — the legal teaspoon, exactly 5 mL",
+        "sourceTitle": "US FDA nutrition labelling regulation"
+      }
+    },
+    {
+      "promptId": "solar-panels-moderate",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "A home using 4,000 kWh a year, 0.45 kW panels yielding 1,200 kWh per kW yearly: how many panels?",
+      "scope": null,
+      "unit": "panels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "homeKwh/(panelKw*yield)",
+        "inputs": [
+          {
+            "name": "homeKwh",
+            "value": "4000",
+            "unit": "kWh/yr",
+            "assumption": "household annual use",
+            "source": null
+          },
+          {
+            "name": "panelKw",
+            "value": "0.45",
+            "unit": "kW",
+            "assumption": "panel rating",
+            "source": null
+          },
+          {
+            "name": "yield",
+            "value": "1200",
+            "unit": "kWh/kW·yr",
+            "assumption": "regional annual yield",
+            "source": null
+          }
+        ],
+        "outputUnit": "panels",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 4000 kWh/yr ÷ (0.45 kW × 1200 kWh/kW·yr).",
+          "Compute: 4000 ÷ (0.45 × 1200) = 7.407407",
+          "Worked estimate: 7 panels (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Panel count = demand ÷ output per panel.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 4000 kWh/yr ÷ (0.45 kW × 1200 kWh/kW·yr).",
+          "Compute: 4000 ÷ (0.45 × 1200) = 7.407407",
+          "Worked estimate: 7 panels (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "shower-year-12",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "Long 12-minute showers at 8 L/min, daily (7 a week) — how many litres a year?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "minutes*flow*perWeek*weeks",
+        "inputs": [
+          {
+            "name": "minutes",
+            "value": "12",
+            "unit": "min",
+            "assumption": null,
+            "source": {
+              "title": "Shower length assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "flow",
+            "value": "8",
+            "unit": "L/min",
+            "assumption": "showerhead flow",
+            "source": null
+          },
+          {
+            "name": "perWeek",
+            "value": "7",
+            "unit": "showers/week",
+            "assumption": null,
+            "source": {
+              "title": "Habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "52",
+            "unit": "weeks",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 12 min × 8 L/min × 7 showers/week × 52 weeks.",
+          "Compute: 12 × 8 × 7 × 52 = 34,944",
+          "Worked estimate: 34900 L (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Annual litres = minutes × flow × showers × weeks.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 12 min × 8 L/min × 7 showers/week × 52 weeks.",
+          "Compute: 12 × 8 × 7 × 52 = 34,944",
+          "Worked estimate: 34900 L (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "screen-pixels-laptop",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A laptop panel runs 2560 × 1600. Total pixels?",
+      "scope": null,
+      "unit": "pixels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "width*height",
+        "inputs": [
+          {
+            "name": "width",
+            "value": "2560",
+            "unit": "px",
+            "assumption": null,
+            "source": {
+              "title": "Panel resolution spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "height",
+            "value": "1600",
+            "unit": "px",
+            "assumption": null,
+            "source": {
+              "title": "Panel resolution spec",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "pixels",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: Columns 2560 px × rows 1600 px.",
+          "Compute: 2560 × 1600 = 4,096,000",
+          "Worked estimate: 4096000 pixels"
+        ]
+      },
+      "reveal": {
+        "explanation": "Pixel count = width × height.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Columns 2560 px × rows 1600 px.",
+          "Compute: 2560 × 1600 = 4,096,000",
+          "Worked estimate: 4096000 pixels"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-thailand",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which country (by population) is closest to 72 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "72"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible country (by population)s are shown.",
+        "comparison": "Population figures are recent estimates rounded to the nearest million.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

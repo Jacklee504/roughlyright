@@ -1,0 +1,312 @@
+{
+  "kind": "target_dataset",
+  "game": "estimation",
+  "id": "countries-pop-millions",
+  "name": "Country populations (millions)",
+  "unit": "million",
+  "revision": "2026-11-a",
+  "eligibleScope": null,
+  "entries": [
+    {
+      "id": "india",
+      "label": "India",
+      "disambiguator": null,
+      "value": "1451",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "china",
+      "label": "China",
+      "disambiguator": null,
+      "value": "1416",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "united-states",
+      "label": "United States",
+      "disambiguator": null,
+      "value": "342",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "USA",
+        "United States of America"
+      ]
+    },
+    {
+      "id": "indonesia",
+      "label": "Indonesia",
+      "disambiguator": null,
+      "value": "283",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "pakistan",
+      "label": "Pakistan",
+      "disambiguator": null,
+      "value": "245",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "nigeria",
+      "label": "Nigeria",
+      "disambiguator": null,
+      "value": "229",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "brazil",
+      "label": "Brazil",
+      "disambiguator": null,
+      "value": "217",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "russia",
+      "label": "Russia",
+      "disambiguator": null,
+      "value": "144",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "mexico",
+      "label": "Mexico",
+      "disambiguator": null,
+      "value": "129",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "ethiopia",
+      "label": "Ethiopia",
+      "disambiguator": null,
+      "value": "127",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "japan",
+      "label": "Japan",
+      "disambiguator": null,
+      "value": "124",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "philippines",
+      "label": "Philippines",
+      "disambiguator": null,
+      "value": "116",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "dr-congo",
+      "label": "DR Congo",
+      "disambiguator": null,
+      "value": "106",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Democratic Republic of the Congo",
+        "Congo-Kinshasa"
+      ]
+    },
+    {
+      "id": "vietnam",
+      "label": "Vietnam",
+      "disambiguator": null,
+      "value": "100",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Viet Nam"
+      ]
+    },
+    {
+      "id": "turkey",
+      "label": "Turkey",
+      "disambiguator": null,
+      "value": "87",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Türkiye"
+      ]
+    },
+    {
+      "id": "germany",
+      "label": "Germany",
+      "disambiguator": null,
+      "value": "84",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "thailand",
+      "label": "Thailand",
+      "disambiguator": null,
+      "value": "72",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "united-kingdom",
+      "label": "United Kingdom",
+      "disambiguator": null,
+      "value": "68",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "UK",
+        "Great Britain"
+      ]
+    },
+    {
+      "id": "france",
+      "label": "France",
+      "disambiguator": null,
+      "value": "66",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "italy",
+      "label": "Italy",
+      "disambiguator": null,
+      "value": "59",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "kenya",
+      "label": "Kenya",
+      "disambiguator": null,
+      "value": "55",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "colombia",
+      "label": "Colombia",
+      "disambiguator": null,
+      "value": "52",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "spain",
+      "label": "Spain",
+      "disambiguator": null,
+      "value": "48",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "argentina",
+      "label": "Argentina",
+      "disambiguator": null,
+      "value": "46",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    }
+  ]
+}

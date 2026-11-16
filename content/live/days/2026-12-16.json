@@ -1,0 +1,206 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-16",
+  "themeTag": "unit conversions",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-cubic-foot",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One cubic foot is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "28.316846592",
+        "precision": 9,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 28.316846592 L — a foot squared three ways",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "soil-litres-bed",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "A 2 m² raised bed gets 15 cm of new soil. How many litres is that?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*depth*1000",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "2",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Bed size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "depth",
+            "value": "0.15",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Filling spec",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 2 m² × 0.15 m gives cubic metres; × 1,000 gives litres.",
+          "Compute: 2 × 0.15 × 1000 = 300",
+          "Worked estimate: 300 L (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Litres = m² × m × 1,000.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 2 m² × 0.15 m gives cubic metres; × 1,000 gives litres.",
+          "Compute: 2 × 0.15 × 1000 = 300",
+          "Worked estimate: 300 L (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "streaming-gb-45",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 45-hour month of box-set binging at 3 GB/h — data used?",
+      "scope": null,
+      "unit": "GB",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "hours*gph",
+        "inputs": [
+          {
+            "name": "hours",
+            "value": "45",
+            "unit": "hours",
+            "assumption": "monthly viewing hours",
+            "source": null
+          },
+          {
+            "name": "gph",
+            "value": "3",
+            "unit": "GB/h",
+            "assumption": "HD streaming bitrate",
+            "source": null
+          }
+        ],
+        "outputUnit": "GB",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 45 hours × 3 GB/h.",
+          "Compute: 45 × 3 = 135",
+          "Worked estimate: 135 GB"
+        ]
+      },
+      "reveal": {
+        "explanation": "Data = viewing hours × data rate.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 45 hours × 3 GB/h.",
+          "Compute: 45 × 3 = 135",
+          "Worked estimate: 135 GB"
+        ]
+      }
+    },
+    {
+      "promptId": "photos-per-card-128",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "How many 12 MB photos fit on a 128 GB card?",
+      "scope": null,
+      "unit": "photos",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "gb*1000/mb",
+        "inputs": [
+          {
+            "name": "gb",
+            "value": "128",
+            "unit": "GB",
+            "assumption": null,
+            "source": {
+              "title": "Card capacity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "mb",
+            "value": "12",
+            "unit": "MB",
+            "assumption": "average JPEG size",
+            "source": null
+          }
+        ],
+        "outputUnit": "photos",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 128 GB × 1,000 gives megabytes; ÷ 12 MB per photo.",
+          "Compute: 128 × 1000 ÷ 12 = 10,666.666667",
+          "Worked estimate: 10700 photos (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Count = capacity ÷ photo size.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 128 GB × 1,000 gives megabytes; ÷ 12 MB per photo.",
+          "Compute: 128 × 1000 ÷ 12 = 10,666.666667",
+          "Worked estimate: 10700 photos (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-vietnam",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which country (by population) is closest to 100 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "100"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible country (by population)s are shown.",
+        "comparison": "Population figures are recent estimates rounded to the nearest million.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

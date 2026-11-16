@@ -1,0 +1,209 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-04",
+  "themeTag": "orders of magnitude",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-atmosphere",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "One standard atmosphere is exactly how many pascals?",
+      "scope": null,
+      "unit": "Pa",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "101325",
+        "precision": 0,
+        "source": {
+          "title": "CGPM 1954 standard atmosphere",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 101,325 Pa — fixed exactly in 1954",
+        "sourceTitle": "CGPM 1954 standard atmosphere"
+      }
+    },
+    {
+      "promptId": "bottles-year-1.5",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "Drinking 1.5 L of bottled water a day: how many 0.75 L bottles a year?",
+      "scope": null,
+      "unit": "bottles",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "litres*days/bottleL",
+        "inputs": [
+          {
+            "name": "litres",
+            "value": "1.5",
+            "unit": "L/day",
+            "assumption": null,
+            "source": {
+              "title": "Habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "365",
+            "unit": "days",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "bottleL",
+            "value": "0.75",
+            "unit": "L",
+            "assumption": "750 mL bottle",
+            "source": null
+          }
+        ],
+        "outputUnit": "bottles",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 1.5 L/day × 365 days ÷ 0.75 L per bottle.",
+          "Compute: 1.5 × 365 ÷ 0.75 = 730",
+          "Worked estimate: 730 bottles (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Bottles = annual litres ÷ bottle size.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1.5 L/day × 365 days ÷ 0.75 L per bottle.",
+          "Compute: 1.5 × 365 ÷ 0.75 = 730",
+          "Worked estimate: 730 bottles (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "download-seconds-movie",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 4.5 GB movie over a 50 Mbps link — how many seconds to download?",
+      "scope": null,
+      "unit": "s",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "gb*8000/mbps",
+        "inputs": [
+          {
+            "name": "gb",
+            "value": "4.5",
+            "unit": "GB",
+            "assumption": "movie file size",
+            "source": null
+          },
+          {
+            "name": "mbps",
+            "value": "50",
+            "unit": "Mbps",
+            "assumption": "sustained connection speed",
+            "source": null
+          }
+        ],
+        "outputUnit": "s",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 4.5 GB × 8,000 gives megabits; ÷ 50 Mbps gives seconds.",
+          "Compute: 4.5 × 8000 ÷ 50 = 720",
+          "Worked estimate: 720 s"
+        ]
+      },
+      "reveal": {
+        "explanation": "Time = gigabytes × 8,000 ÷ megabits per second.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 4.5 GB × 8,000 gives megabits; ÷ 50 Mbps gives seconds.",
+          "Compute: 4.5 × 8000 ÷ 50 = 720",
+          "Worked estimate: 720 s"
+        ]
+      }
+    },
+    {
+      "promptId": "turbine-homes-offshore",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "An offshore turbine produces 45,000 MWh a year against 12,000 kWh homes. How many homes?",
+      "scope": null,
+      "unit": "homes",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "turbineMwh*1000/homeKwh",
+        "inputs": [
+          {
+            "name": "turbineMwh",
+            "value": "45000",
+            "unit": "MWh/yr",
+            "assumption": "annual turbine output",
+            "source": null
+          },
+          {
+            "name": "homeKwh",
+            "value": "12000",
+            "unit": "kWh/yr",
+            "assumption": "annual household use",
+            "source": null
+          }
+        ],
+        "outputUnit": "homes",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 45000 MWh/yr × 1,000 gives kWh; ÷ 12000 kWh/yr per home.",
+          "Compute: 45000 × 1000 ÷ 12000 = 3,750",
+          "Worked estimate: 3750 homes (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Homes = turbine energy ÷ household energy.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 45000 MWh/yr × 1,000 gives kWh; ÷ 12000 kWh/yr per home.",
+          "Compute: 45000 × 1000 ÷ 12000 = 3,750",
+          "Worked estimate: 3750 homes (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-ganymede",
+      "roundType": "target_match",
+      "category": "space",
+      "prompt": "Which moon (by mean radius) is closest to 2,634.1 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "moons-radius",
+        "target": "2634.1"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible moon (by mean radius)s are shown.",
+        "comparison": "Mean radii for major moons of the Solar System.",
+        "sourceTitle": "Editorial moon-radius table compiled from public planetary data"
+      }
+    }
+  ]
+}

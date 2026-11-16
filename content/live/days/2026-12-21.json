@@ -1,0 +1,217 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-21",
+  "themeTag": "orders of magnitude",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-hogshead",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US hogshead is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "238.480942392",
+        "precision": 9,
+        "source": {
+          "title": "US customary wine measure, NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 238.480942392 L — a hogshead is 63 US gallons",
+        "sourceTitle": "US customary wine measure, NIST"
+      }
+    },
+    {
+      "promptId": "wage-hourly-52000",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A $52,000 salary over 50 weeks of 40 hours: what hourly rate?",
+      "scope": null,
+      "unit": "USD/h",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "annual/(weeks*hours)",
+        "inputs": [
+          {
+            "name": "annual",
+            "value": "52000",
+            "unit": "USD/yr",
+            "assumption": null,
+            "source": {
+              "title": "Salary figure",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "50",
+            "unit": "weeks",
+            "assumption": "paid weeks",
+            "source": null
+          },
+          {
+            "name": "hours",
+            "value": "40",
+            "unit": "h/week",
+            "assumption": "scheduled week",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD/h",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 52000 USD/yr ÷ (50 weeks × 40 h/week).",
+          "Compute: 52000 ÷ (50 × 40) = 26",
+          "Worked estimate: 26 USD/h"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hourly rate = salary ÷ hours worked.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 52000 USD/yr ÷ (50 weeks × 40 h/week).",
+          "Compute: 52000 ÷ (50 × 40) = 26",
+          "Worked estimate: 26 USD/h"
+        ]
+      }
+    },
+    {
+      "promptId": "ink-pages-30",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 30 mL cartridge using 0.075 mL a page — page count?",
+      "scope": null,
+      "unit": "pages",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "ml*1000/mpper",
+        "inputs": [
+          {
+            "name": "ml",
+            "value": "30",
+            "unit": "mL",
+            "assumption": null,
+            "source": {
+              "title": "Cartridge capacity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "mpper",
+            "value": "0.075",
+            "unit": "mL/page",
+            "assumption": "ink per page",
+            "source": null
+          }
+        ],
+        "outputUnit": "pages",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 30 mL × 1,000 ÷ 0.075 mL/page per page.",
+          "Compute: 30 × 1000 ÷ 0.075 = 400,000",
+          "Worked estimate: 400000 pages"
+        ]
+      },
+      "reveal": {
+        "explanation": "Pages = cartridge ÷ ink per page.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 30 mL × 1,000 ÷ 0.075 mL/page per page.",
+          "Compute: 30 × 1000 ÷ 0.075 = 400,000",
+          "Worked estimate: 400000 pages"
+        ]
+      }
+    },
+    {
+      "promptId": "glasses-year-10",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "Ten glasses a day for a year — how many glasses is that?",
+      "scope": null,
+      "unit": "glasses",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "perday*days",
+        "inputs": [
+          {
+            "name": "perday",
+            "value": "10",
+            "unit": "glasses/day",
+            "assumption": null,
+            "source": {
+              "title": "Habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "365",
+            "unit": "days",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "glasses",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 10 glasses/day × 365 days.",
+          "Compute: 10 × 365 = 3,650",
+          "Worked estimate: 3650 glasses"
+        ]
+      },
+      "reveal": {
+        "explanation": "Annual count = daily rate × days.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 10 glasses/day × 365 days.",
+          "Compute: 10 × 365 = 3,650",
+          "Worked estimate: 3650 glasses"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-ping-an",
+      "roundType": "target_match",
+      "category": "engineering",
+      "prompt": "Which building (by architectural top height) is closest to 599.1 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "tallest-buildings",
+        "target": "599.1"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible building (by architectural top height)s are shown.",
+        "comparison": "Heights are architectural tops as tracked by the standard tall-building rankings.",
+        "sourceTitle": "Editorial tall-building table compiled from public height rankings"
+      }
+    }
+  ]
+}

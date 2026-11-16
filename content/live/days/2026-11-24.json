@@ -1,0 +1,235 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-24",
+  "themeTag": "everyday arithmetic",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-league",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One (land) league is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "4828.032",
+        "precision": 3,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 4,828.032 m — a league is 3 statute miles",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "screen-pixels-monitor",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "How many pixels light up a 4K monitor (3840 × 2160)?",
+      "scope": null,
+      "unit": "pixels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "width*height",
+        "inputs": [
+          {
+            "name": "width",
+            "value": "3840",
+            "unit": "px",
+            "assumption": null,
+            "source": {
+              "title": "UHD-1 panel resolution",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "height",
+            "value": "2160",
+            "unit": "px",
+            "assumption": null,
+            "source": {
+              "title": "UHD-1 panel resolution",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "pixels",
+        "precision": 0,
+        "roundTo": 10000,
+        "steps": [
+          "Model: Columns 3840 px × rows 2160 px.",
+          "Compute: 3840 × 2160 = 8,294,400",
+          "Worked estimate: 8290000 pixels (nearest 10,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Pixel count = width × height.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Columns 3840 px × rows 2160 px.",
+          "Compute: 3840 × 2160 = 8,294,400",
+          "Worked estimate: 8290000 pixels (nearest 10,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "solar-panels-sunny",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "A 6,000 kWh home in a sunny region: 0.5 kW panels yield 1,400 kWh/kW a year. Panel count?",
+      "scope": null,
+      "unit": "panels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "homeKwh/(panelKw*yield)",
+        "inputs": [
+          {
+            "name": "homeKwh",
+            "value": "6000",
+            "unit": "kWh/yr",
+            "assumption": "household annual use",
+            "source": null
+          },
+          {
+            "name": "panelKw",
+            "value": "0.5",
+            "unit": "kW",
+            "assumption": "panel rating",
+            "source": null
+          },
+          {
+            "name": "yield",
+            "value": "1400",
+            "unit": "kWh/kW·yr",
+            "assumption": "regional annual yield",
+            "source": null
+          }
+        ],
+        "outputUnit": "panels",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 6000 kWh/yr ÷ (0.5 kW × 1400 kWh/kW·yr).",
+          "Compute: 6000 ÷ (0.5 × 1400) = 8.571429",
+          "Worked estimate: 9 panels (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Panel count = demand ÷ output per panel.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 6000 kWh/yr ÷ (0.5 kW × 1400 kWh/kW·yr).",
+          "Compute: 6000 ÷ (0.5 × 1400) = 8.571429",
+          "Worked estimate: 9 panels (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "shower-year-5",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "Quick 5-minute showers at 6 L/min, six a week: annual water use?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "minutes*flow*perWeek*weeks",
+        "inputs": [
+          {
+            "name": "minutes",
+            "value": "5",
+            "unit": "min",
+            "assumption": null,
+            "source": {
+              "title": "Shower length assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "flow",
+            "value": "6",
+            "unit": "L/min",
+            "assumption": "showerhead flow",
+            "source": null
+          },
+          {
+            "name": "perWeek",
+            "value": "6",
+            "unit": "showers/week",
+            "assumption": null,
+            "source": {
+              "title": "Habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "52",
+            "unit": "weeks",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 5 min × 6 L/min × 6 showers/week × 52 weeks.",
+          "Compute: 5 × 6 × 6 × 52 = 9,360",
+          "Worked estimate: 9360 L"
+        ]
+      },
+      "reveal": {
+        "explanation": "Annual litres = minutes × flow × showers × weeks.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 5 min × 6 L/min × 6 showers/week × 52 weeks.",
+          "Compute: 5 × 6 × 6 × 52 = 9,360",
+          "Worked estimate: 9360 L"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-nanga-parbat",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,126 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8126"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

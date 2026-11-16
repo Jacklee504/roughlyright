@@ -1,0 +1,202 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-23",
+  "themeTag": "unit conversions",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-gallon-legal",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US gallon is exactly how many cubic inches?",
+      "scope": null,
+      "unit": "in³",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "231",
+        "precision": 0,
+        "source": {
+          "title": "US law, codified in NIST handbooks",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 231 in³ — fixed at 231 in³ by US law in 1866",
+        "sourceTitle": "US law, codified in NIST handbooks"
+      }
+    },
+    {
+      "promptId": "crowd-density-festival",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A festival crowd fills 5,000 m² at a loose 2.5 people per m². How many people?",
+      "scope": null,
+      "unit": "people",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*density",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "5000",
+            "unit": "m²",
+            "assumption": "standing area",
+            "source": null
+          },
+          {
+            "name": "density",
+            "value": "2.5",
+            "unit": "people/m²",
+            "assumption": "loose crowd density",
+            "source": null
+          }
+        ],
+        "outputUnit": "people",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 5000 m² × 2.5 people/m².",
+          "Compute: 5000 × 2.5 = 12,500",
+          "Worked estimate: 12500 people (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Crowd size = area × density.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 5000 m² × 2.5 people/m².",
+          "Compute: 5000 × 2.5 = 12,500",
+          "Worked estimate: 12500 people (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "drops-barrel-half",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "Half a barrel (79.4935 L) dripped at 0.05 mL a drop — how many drops?",
+      "scope": null,
+      "unit": "drops",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "litres*1000/drop",
+        "inputs": [
+          {
+            "name": "litres",
+            "value": "79.4935",
+            "unit": "L",
+            "assumption": null,
+            "source": {
+              "title": "Half a petroleum barrel",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "drop",
+            "value": "0.05",
+            "unit": "mL",
+            "assumption": "drop volume",
+            "source": null
+          }
+        ],
+        "outputUnit": "drops",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: 79.4935 L × 1,000 gives mL; ÷ 0.05 mL per drop.",
+          "Compute: 79.4935 × 1000 ÷ 0.05 = 1,589,870",
+          "Worked estimate: 1590000 drops (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Drops = volume ÷ drop size.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 79.4935 L × 1,000 gives mL; ÷ 0.05 mL per drop.",
+          "Compute: 79.4935 × 1000 ÷ 0.05 = 1,589,870",
+          "Worked estimate: 1590000 drops (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "breaths-day-16",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "16 breaths per minute: how many breaths does a day hold?",
+      "scope": null,
+      "unit": "breaths",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "rate*minutes",
+        "inputs": [
+          {
+            "name": "rate",
+            "value": "16",
+            "unit": "breaths/min",
+            "assumption": "daytime average",
+            "source": null
+          },
+          {
+            "name": "minutes",
+            "value": "1440",
+            "unit": "min",
+            "assumption": null,
+            "source": {
+              "title": "Definition: a day has 1,440 minutes",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "breaths",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 16 breaths/min × the 1440 min minutes in a day.",
+          "Compute: 16 × 1440 = 23,040",
+          "Worked estimate: 23000 breaths (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Breaths = rate × minutes per day.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 16 breaths/min × the 1440 min minutes in a day.",
+          "Compute: 16 × 1440 = 23,040",
+          "Worked estimate: 23000 breaths (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-one-wtc",
+      "roundType": "target_match",
+      "category": "engineering",
+      "prompt": "Which building (by architectural top height) is closest to 541.3 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "tallest-buildings",
+        "target": "541.3"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible building (by architectural top height)s are shown.",
+        "comparison": "Heights are architectural tops as tracked by the standard tall-building rankings.",
+        "sourceTitle": "Editorial tall-building table compiled from public height rankings"
+      }
+    }
+  ]
+}

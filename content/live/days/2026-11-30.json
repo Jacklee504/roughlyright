@@ -1,0 +1,225 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-30",
+  "themeTag": "orders of magnitude",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-yards-per-mile",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One statute mile is exactly how many yards?",
+      "scope": null,
+      "unit": "yd",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "1760",
+        "precision": 0,
+        "source": {
+          "title": "Statute mile definition, UK Weights and Measures Act 1985",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 1,760 yd — the mile is 1,760 yards by definition",
+        "sourceTitle": "Statute mile definition, UK Weights and Measures Act 1985"
+      }
+    },
+    {
+      "promptId": "rice-grains-serving",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 75 g serving of medium-grain rice, about 50 grains per gram: roughly how many grains on the plate?",
+      "scope": null,
+      "unit": "grains",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "50",
+          "unit": "grains/g"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "grams*gpg",
+        "inputs": [
+          {
+            "name": "grams",
+            "value": "75",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Serving size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "gpg",
+            "value": "50",
+            "unit": "grains/g",
+            "assumption": "medium-grain rice ≈ 50 grains per gram",
+            "source": null
+          }
+        ],
+        "outputUnit": "grains",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 75 g × 50 grains/g.",
+          "Compute: 75 × 50 = 3,750",
+          "Worked estimate: 3750 grains"
+        ]
+      },
+      "reveal": {
+        "explanation": "Grains = mass × grains per gram.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 75 g × 50 grains/g.",
+          "Compute: 75 × 50 = 3,750",
+          "Worked estimate: 3750 grains"
+        ]
+      }
+    },
+    {
+      "promptId": "meeting-cost-workshop",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A 2-hour workshop with 12 people at $60/hour: total cost?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "people*hours*rate",
+        "inputs": [
+          {
+            "name": "people",
+            "value": "12",
+            "unit": "people",
+            "assumption": null,
+            "source": {
+              "title": "Invite list",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "hours",
+            "value": "2",
+            "unit": "hours",
+            "assumption": null,
+            "source": {
+              "title": "Meeting length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "rate",
+            "value": "60",
+            "unit": "USD/h",
+            "assumption": "loaded hourly cost",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 12 people × 2 hours × 60 USD/h.",
+          "Compute: 12 × 2 × 60 = 1,440",
+          "Worked estimate: 1440 USD (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cost = attendees × hours × hourly cost.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 12 people × 2 hours × 60 USD/h.",
+          "Compute: 12 × 2 × 60 = 1,440",
+          "Worked estimate: 1440 USD (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "tire-rotations-truck",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A truck tyre 0.7 m across rolls 80,000 km: rotation count?",
+      "scope": null,
+      "unit": "rotations",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*1000/(pi*d)",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "80000",
+            "unit": "km",
+            "assumption": "tyre life distance",
+            "source": null
+          },
+          {
+            "name": "pi",
+            "value": "3.14159",
+            "unit": "(dimensionless)",
+            "assumption": "π rounded to 3.14159",
+            "source": null
+          },
+          {
+            "name": "d",
+            "value": "0.7",
+            "unit": "m",
+            "assumption": "tyre outer diameter",
+            "source": null
+          }
+        ],
+        "outputUnit": "rotations",
+        "precision": 0,
+        "roundTo": 100000,
+        "steps": [
+          "Model: 80000 km × 1,000 ÷ circumference (π × 0.7 m).",
+          "Compute: 80000 × 1000 ÷ (3.14159 × 0.7) = 36,378,303.434157",
+          "Worked estimate: 36400000 rotations (nearest 100,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Rotations = distance ÷ circumference.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 80000 km × 1,000 ÷ circumference (π × 0.7 m).",
+          "Compute: 80000 × 1000 ÷ (3.14159 × 0.7) = 36,378,303.434157",
+          "Worked estimate: 36400000 rotations (nearest 100,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-yangtze",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 6,300 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "6300"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

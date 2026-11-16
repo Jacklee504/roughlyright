@@ -1,0 +1,244 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-04",
+  "themeTag": "household math",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-square-mile",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One square mile is exactly how many square metres?",
+      "scope": null,
+      "unit": "m²",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "2589988.110336",
+        "precision": 6,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 2,589,988.110336 m² — 5,280 ft squared",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "stairs-everest-25",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "Climbing a 25-storey tower (3 m per storey): how many climbs equal Everest's 8,849 m?",
+      "scope": null,
+      "unit": "climbs",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "3.0",
+          "unit": "m"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "height/(floors*storey)",
+        "inputs": [
+          {
+            "name": "height",
+            "value": "8849",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Mount Everest elevation (2020 survey)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "floors",
+            "value": "25",
+            "unit": "floors",
+            "assumption": null,
+            "source": {
+              "title": "Building spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "storey",
+            "value": "3.0",
+            "unit": "m",
+            "assumption": "3 m per storey",
+            "source": null
+          }
+        ],
+        "outputUnit": "climbs",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: Everest's 8849 m ÷ one climb of 25 floors × 3.0 m.",
+          "Compute: 8849 ÷ (25 × 3.0) = 117.986667",
+          "Worked estimate: 118 climbs (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Climbs = mountain height ÷ climb height.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Everest's 8849 m ÷ one climb of 25 floors × 3.0 m.",
+          "Compute: 8849 ÷ (25 × 3.0) = 117.986667",
+          "Worked estimate: 118 climbs (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "stadium-cups-arena",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 20,000-seat arena, 3 rounds of 330 mL per person: how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "attendees*cups*ml/1000",
+        "inputs": [
+          {
+            "name": "attendees",
+            "value": "20000",
+            "unit": "people",
+            "assumption": null,
+            "source": {
+              "title": "Attendance figure",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "cups",
+            "value": "3",
+            "unit": "cups/person",
+            "assumption": "drinks per person",
+            "source": null
+          },
+          {
+            "name": "ml",
+            "value": "330",
+            "unit": "mL",
+            "assumption": "cup size",
+            "source": null
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 20000 people × 3 cups/person × 330 mL, ÷ 1,000 to litres.",
+          "Compute: 20000 × 3 × 330 ÷ 1000 = 19,800",
+          "Worked estimate: 19800 L (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Litres = attendees × cups × cup size ÷ 1,000.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 20000 people × 3 cups/person × 330 mL, ÷ 1,000 to litres.",
+          "Compute: 20000 × 3 × 330 ÷ 1000 = 19,800",
+          "Worked estimate: 19800 L (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "deck-boards-10",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A 10 m² balcony deck using 2.4 m × 0.145 m boards: how many?",
+      "scope": null,
+      "unit": "boards",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area/(len*width)",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "10",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Deck plan area",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "len",
+            "value": "2.4",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Board length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "width",
+            "value": "0.145",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Board width",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "boards",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 10 m² ÷ (one board's 2.4 m × 0.145 m).",
+          "Compute: 10 ÷ (2.4 × 0.145) = 28.735632",
+          "Worked estimate: 29 boards (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Boards = deck area ÷ board area.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 10 m² ÷ (one board's 2.4 m × 0.145 m).",
+          "Compute: 10 ÷ (2.4 × 0.145) = 28.735632",
+          "Worked estimate: 29 boards (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-ob-irtysh",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 5,410 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "5410"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

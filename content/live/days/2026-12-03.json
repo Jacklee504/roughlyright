@@ -1,0 +1,202 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-03",
+  "themeTag": "fermi classics",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-square-foot",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One square foot is exactly how many square metres?",
+      "scope": null,
+      "unit": "m²",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "0.09290304",
+        "precision": 8,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 0.09290304 m² — one foot squared, with the foot exactly 0.3048 m",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "breaths-day-12",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "Someone breathes about 12 times a minute. How many breaths per day?",
+      "scope": null,
+      "unit": "breaths",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "rate*minutes",
+        "inputs": [
+          {
+            "name": "rate",
+            "value": "12",
+            "unit": "breaths/min",
+            "assumption": "daytime average",
+            "source": null
+          },
+          {
+            "name": "minutes",
+            "value": "1440",
+            "unit": "min",
+            "assumption": null,
+            "source": {
+              "title": "Definition: a day has 1,440 minutes",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "breaths",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 12 breaths/min × the 1440 min minutes in a day.",
+          "Compute: 12 × 1440 = 17,280",
+          "Worked estimate: 17300 breaths (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Breaths = rate × minutes per day.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 12 breaths/min × the 1440 min minutes in a day.",
+          "Compute: 12 × 1440 = 17,280",
+          "Worked estimate: 17300 breaths (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "crowd-density-packed",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A packed front section of 800 m² at 4 people per m² — how many people?",
+      "scope": null,
+      "unit": "people",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*density",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "800",
+            "unit": "m²",
+            "assumption": "standing area",
+            "source": null
+          },
+          {
+            "name": "density",
+            "value": "4",
+            "unit": "people/m²",
+            "assumption": "packed crowd density",
+            "source": null
+          }
+        ],
+        "outputUnit": "people",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 800 m² × 4 people/m².",
+          "Compute: 800 × 4 = 3,200",
+          "Worked estimate: 3200 people"
+        ]
+      },
+      "reveal": {
+        "explanation": "Crowd size = area × density.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 800 m² × 4 people/m².",
+          "Compute: 800 × 4 = 3,200",
+          "Worked estimate: 3200 people"
+        ]
+      }
+    },
+    {
+      "promptId": "drops-barrel-jerry",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 10 L jerry can leaking one 0.05 mL drop at a time: how many drops to empty?",
+      "scope": null,
+      "unit": "drops",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "litres*1000/drop",
+        "inputs": [
+          {
+            "name": "litres",
+            "value": "10",
+            "unit": "L",
+            "assumption": null,
+            "source": {
+              "title": "Can size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "drop",
+            "value": "0.05",
+            "unit": "mL",
+            "assumption": "drop volume",
+            "source": null
+          }
+        ],
+        "outputUnit": "drops",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: 10 L × 1,000 gives mL; ÷ 0.05 mL per drop.",
+          "Compute: 10 × 1000 ÷ 0.05 = 200,000",
+          "Worked estimate: 200000 drops (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Drops = volume ÷ drop size.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 10 L × 1,000 gives mL; ÷ 0.05 mL per drop.",
+          "Compute: 10 × 1000 ÷ 0.05 = 200,000",
+          "Worked estimate: 200000 drops (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-yellow",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 5,464 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "5464"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

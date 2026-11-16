@@ -1,0 +1,217 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-02",
+  "themeTag": "unit conversions",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-hectare",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One hectare is exactly how many square metres?",
+      "scope": null,
+      "unit": "m²",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "10000",
+        "precision": 0,
+        "source": {
+          "title": "SI-accepted unit definition",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 10,000 m² — a hectare is 100 m × 100 m by definition",
+        "sourceTitle": "SI-accepted unit definition"
+      }
+    },
+    {
+      "promptId": "heartbeats-year-60",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "A resting heart rate of 60 bpm: roughly how many beats in a 365-day year?",
+      "scope": null,
+      "unit": "beats",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "bpm*minutes",
+        "inputs": [
+          {
+            "name": "bpm",
+            "value": "60",
+            "unit": "beats/min",
+            "assumption": null,
+            "source": {
+              "title": "Resting rate assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "minutes",
+            "value": "525600",
+            "unit": "min",
+            "assumption": "365-day year = 525,600 minutes",
+            "source": null
+          }
+        ],
+        "outputUnit": "beats",
+        "precision": 0,
+        "roundTo": 100000,
+        "steps": [
+          "Model: 60 beats/min × every one of the 525600 min minutes in the year.",
+          "Compute: 60 × 525600 = 31,536,000",
+          "Worked estimate: 31500000 beats (nearest 100,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Beats = rate × minutes in a year.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 60 beats/min × every one of the 525600 min minutes in the year.",
+          "Compute: 60 × 525600 = 31,536,000",
+          "Worked estimate: 31500000 beats (nearest 100,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "tip-split-5way",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A $130 dinner with an 18% tip split five ways — each person pays what?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "bill*(1+pct/100)/people",
+        "inputs": [
+          {
+            "name": "bill",
+            "value": "130",
+            "unit": "USD",
+            "assumption": null,
+            "source": {
+              "title": "Pre-tip bill",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "pct",
+            "value": "18",
+            "unit": "%",
+            "assumption": "customary tip",
+            "source": null
+          },
+          {
+            "name": "people",
+            "value": "5",
+            "unit": "people",
+            "assumption": null,
+            "source": {
+              "title": "Party size",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 130 USD × (1 + 18 %/100), ÷ 5 people.",
+          "Compute: 130 × (1+18 ÷ 100) ÷ 5 = 30.68",
+          "Worked estimate: 30.68 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Each share = tipped total ÷ diners.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 130 USD × (1 + 18 %/100), ÷ 5 people.",
+          "Compute: 130 × (1+18 ÷ 100) ÷ 5 = 30.68",
+          "Worked estimate: 30.68 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "can-energy-60",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "Sixty cans recycled, 0.15 kWh saved each: how many kWh?",
+      "scope": null,
+      "unit": "kWh",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "cans*per",
+        "inputs": [
+          {
+            "name": "cans",
+            "value": "60",
+            "unit": "cans",
+            "assumption": null,
+            "source": {
+              "title": "Collection batch",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "per",
+            "value": "0.15",
+            "unit": "kWh",
+            "assumption": "energy saved per recycled can",
+            "source": null
+          }
+        ],
+        "outputUnit": "kWh",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 60 cans × 0.15 kWh.",
+          "Compute: 60 × 0.15 = 9",
+          "Worked estimate: 9 kWh"
+        ]
+      },
+      "reveal": {
+        "explanation": "Energy saved = cans × saving per can.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 60 cans × 0.15 kWh.",
+          "Compute: 60 × 0.15 = 9",
+          "Worked estimate: 9 kWh"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-yenisei",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 5,539 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "5539"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

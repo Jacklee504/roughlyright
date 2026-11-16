@@ -1,0 +1,218 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-08",
+  "themeTag": "household math",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-kwh",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "One kilowatt-hour is exactly how many joules?",
+      "scope": null,
+      "unit": "J",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "3600000",
+        "precision": 0,
+        "source": {
+          "title": "SI definition",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 3,600,000 J — 1,000 watts for 3,600 seconds",
+        "sourceTitle": "SI definition"
+      }
+    },
+    {
+      "promptId": "sound-seconds-3km",
+      "roundType": "calculation",
+      "category": "physics",
+      "prompt": "Lightning flashes 3 km away: how many seconds until the thunder arrives?",
+      "scope": null,
+      "unit": "s",
+      "countMode": false,
+      "hint": {
+        "figure": {
+          "value": "343",
+          "unit": "m/s"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*1000/speed",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "3",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Distance to strike",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "speed",
+            "value": "343",
+            "unit": "m/s",
+            "assumption": "sound speed at ~20 °C",
+            "source": null
+          }
+        ],
+        "outputUnit": "s",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 3 km × 1,000 ÷ 343 m/s.",
+          "Compute: 3 × 1000 ÷ 343 = 8.746356",
+          "Worked estimate: 9 s (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Seconds = distance ÷ sound speed.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 3 km × 1,000 ÷ 343 m/s.",
+          "Compute: 3 × 1000 ÷ 343 = 8.746356",
+          "Worked estimate: 9 s (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "sugar-cubes-can",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 330 mL can of cola with 10.6 g/100 mL of sugar: how many 4 g cubes?",
+      "scope": null,
+      "unit": "cubes",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "ml*g100/100/cube",
+        "inputs": [
+          {
+            "name": "ml",
+            "value": "330",
+            "unit": "mL",
+            "assumption": null,
+            "source": {
+              "title": "Can size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "g100",
+            "value": "10.6",
+            "unit": "g/100mL",
+            "assumption": "label sugar content",
+            "source": null
+          },
+          {
+            "name": "cube",
+            "value": "4",
+            "unit": "g",
+            "assumption": "one sugar cube ≈ 4 g",
+            "source": null
+          }
+        ],
+        "outputUnit": "cubes",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 330 mL × 10.6 g/100mL ÷ 100 gives sugar grams; ÷ 4 g per cube.",
+          "Compute: 330 × 10.6 ÷ 100 ÷ 4 = 8.745",
+          "Worked estimate: 9 cubes (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cubes = sugar grams ÷ grams per cube.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 330 mL × 10.6 g/100mL ÷ 100 gives sugar grams; ÷ 4 g per cube.",
+          "Compute: 330 × 10.6 ÷ 100 ÷ 4 = 8.745",
+          "Worked estimate: 9 cubes (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "commute-hours-60",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "An hour each way, 220 working days — how many hours of commuting a year?",
+      "scope": null,
+      "unit": "hours",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "minutes*2*days/60",
+        "inputs": [
+          {
+            "name": "minutes",
+            "value": "60",
+            "unit": "min/trip",
+            "assumption": null,
+            "source": {
+              "title": "Commute assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "220",
+            "unit": "days",
+            "assumption": "working days per year",
+            "source": null
+          }
+        ],
+        "outputUnit": "hours",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 60 min/trip × 2 × 220 days, ÷ 60 to hours.",
+          "Compute: 60 × 2 × 220 ÷ 60 = 440",
+          "Worked estimate: 440 hours"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hours = minutes × 2 × days ÷ 60.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 60 min/trip × 2 × 220 days, ÷ 60 to hours.",
+          "Compute: 60 × 2 × 220 ÷ 60 = 440",
+          "Worked estimate: 440 hours"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-nevada",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which US state (by land area) is closest to 286,380 km²?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km²",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "us-states-area",
+        "target": "286380"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible US state (by land area)s are shown.",
+        "comparison": "Land areas in square kilometres, water area excluded.",
+        "sourceTitle": "Editorial US-state area table compiled from census land-area data"
+      }
+    }
+  ]
+}

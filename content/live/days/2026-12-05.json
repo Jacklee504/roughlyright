@@ -1,0 +1,217 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-05",
+  "themeTag": "money and rates",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-square-yard",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One square yard is exactly how many square metres?",
+      "scope": null,
+      "unit": "m²",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "0.83612736",
+        "precision": 8,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 0.83612736 m² — one yard squared",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "laps-pool-1500",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "The 1,500 m 'mile' swim in a 25 m pool: how many 50 m laps (there and back)?",
+      "scope": null,
+      "unit": "laps",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "meters/(length*2)",
+        "inputs": [
+          {
+            "name": "meters",
+            "value": "1500",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Official race distance (World Aquatics)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "length",
+            "value": "25",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Standard short-course pool length",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "laps",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 1500 m ÷ a lap of 25 m × 2.",
+          "Compute: 1500 ÷ (25 × 2) = 30",
+          "Worked estimate: 30 laps"
+        ]
+      },
+      "reveal": {
+        "explanation": "Laps = distance ÷ (2 × pool length).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1500 m ÷ a lap of 25 m × 2.",
+          "Compute: 1500 ÷ (25 × 2) = 30",
+          "Worked estimate: 30 laps"
+        ]
+      }
+    },
+    {
+      "promptId": "kernels-buckets-three",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "Three 100 g bags of kernels, 0.15 g each — roughly how many kernels?",
+      "scope": null,
+      "unit": "kernels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "bags*grams/gper",
+        "inputs": [
+          {
+            "name": "bags",
+            "value": "3",
+            "unit": "bag",
+            "assumption": null,
+            "source": {
+              "title": "Given quantity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "grams",
+            "value": "100",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Bag size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "gper",
+            "value": "0.15",
+            "unit": "g",
+            "assumption": "kernel mass",
+            "source": null
+          }
+        ],
+        "outputUnit": "kernels",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 3 bag × 100 g ÷ 0.15 g per kernel.",
+          "Compute: 3 × 100 ÷ 0.15 = 2,000",
+          "Worked estimate: 2000 kernels (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Kernels = popped-corn mass ÷ kernel mass.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 3 bag × 100 g ÷ 0.15 g per kernel.",
+          "Compute: 3 × 100 ÷ 0.15 = 2,000",
+          "Worked estimate: 2000 kernels (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "bricks-wall-bbq",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A 5 m² BBQ base at 65 bricks/m²: how many bricks to buy?",
+      "scope": null,
+      "unit": "bricks",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*perM2",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "5",
+            "unit": "m²",
+            "assumption": "wall face area",
+            "source": null
+          },
+          {
+            "name": "perM2",
+            "value": "65",
+            "unit": "bricks/m²",
+            "assumption": "paver-style brick with mortar joints",
+            "source": null
+          }
+        ],
+        "outputUnit": "bricks",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 5 m² × 65 bricks/m².",
+          "Compute: 5 × 65 = 325",
+          "Worked estimate: 325 bricks"
+        ]
+      },
+      "reveal": {
+        "explanation": "Bricks = area × bricks per square metre.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 5 m² × 65 bricks/m².",
+          "Compute: 5 × 65 = 325",
+          "Worked estimate: 325 bricks"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-parana",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 4,880 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "4880"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

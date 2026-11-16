@@ -1,0 +1,213 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-29",
+  "themeTag": "scale and distance",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-feet-per-mile",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One statute mile is exactly how many feet?",
+      "scope": null,
+      "unit": "ft",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "5280",
+        "precision": 0,
+        "source": {
+          "title": "Statute mile definition, UK Weights and Measures Act 1985",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 5,280 ft — the mile is 8 furlongs of 660 ft each",
+        "sourceTitle": "Statute mile definition, UK Weights and Measures Act 1985"
+      }
+    },
+    {
+      "promptId": "sugar-cubes-bottle",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 500 mL cola at 10.6 g sugar per 100 mL — how many 4 g sugar cubes is that?",
+      "scope": null,
+      "unit": "cubes",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "ml*g100/100/cube",
+        "inputs": [
+          {
+            "name": "ml",
+            "value": "500",
+            "unit": "mL",
+            "assumption": null,
+            "source": {
+              "title": "Bottle size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "g100",
+            "value": "10.6",
+            "unit": "g/100mL",
+            "assumption": "label sugar content",
+            "source": null
+          },
+          {
+            "name": "cube",
+            "value": "4",
+            "unit": "g",
+            "assumption": "one sugar cube ≈ 4 g",
+            "source": null
+          }
+        ],
+        "outputUnit": "cubes",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 500 mL × 10.6 g/100mL ÷ 100 gives sugar grams; ÷ 4 g per cube.",
+          "Compute: 500 × 10.6 ÷ 100 ÷ 4 = 13.25",
+          "Worked estimate: 13 cubes (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cubes = sugar grams ÷ grams per cube.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 500 mL × 10.6 g/100mL ÷ 100 gives sugar grams; ÷ 4 g per cube.",
+          "Compute: 500 × 10.6 ÷ 100 ÷ 4 = 13.25",
+          "Worked estimate: 13 cubes (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "commute-hours-30",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "A 30-minute each-way ride across 240 working days: annual transit hours?",
+      "scope": null,
+      "unit": "hours",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "minutes*2*days/60",
+        "inputs": [
+          {
+            "name": "minutes",
+            "value": "30",
+            "unit": "min/trip",
+            "assumption": null,
+            "source": {
+              "title": "Commute assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "240",
+            "unit": "days",
+            "assumption": "working days per year",
+            "source": null
+          }
+        ],
+        "outputUnit": "hours",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 30 min/trip × 2 × 240 days, ÷ 60 to hours.",
+          "Compute: 30 × 2 × 240 ÷ 60 = 240",
+          "Worked estimate: 240 hours"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hours = minutes × 2 × days ÷ 60.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 30 min/trip × 2 × 240 days, ÷ 60 to hours.",
+          "Compute: 30 × 2 × 240 ÷ 60 = 240",
+          "Worked estimate: 240 hours"
+        ]
+      }
+    },
+    {
+      "promptId": "sound-seconds-1.2km",
+      "roundType": "calculation",
+      "category": "physics",
+      "prompt": "A firework 1.2 km off — how many seconds before the bang?",
+      "scope": null,
+      "unit": "s",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*1000/speed",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "1.2",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Distance to burst",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "speed",
+            "value": "343",
+            "unit": "m/s",
+            "assumption": "sound speed at ~20 °C",
+            "source": null
+          }
+        ],
+        "outputUnit": "s",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 1.2 km × 1,000 ÷ 343 m/s.",
+          "Compute: 1.2 × 1000 ÷ 343 = 3.498542",
+          "Worked estimate: 3 s (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Seconds = distance ÷ sound speed.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1.2 km × 1,000 ÷ 343 m/s.",
+          "Compute: 1.2 × 1000 ÷ 343 = 3.498542",
+          "Worked estimate: 3 s (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-amazon",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 6,400 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "6400"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

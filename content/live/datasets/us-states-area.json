@@ -1,0 +1,131 @@
+{
+  "kind": "target_dataset",
+  "game": "estimation",
+  "id": "us-states-area",
+  "name": "US state land areas",
+  "unit": "km²",
+  "revision": "2026-11-a",
+  "eligibleScope": null,
+  "entries": [
+    {
+      "id": "arizona",
+      "label": "Arizona",
+      "disambiguator": null,
+      "value": "295234",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "nevada",
+      "label": "Nevada",
+      "disambiguator": null,
+      "value": "286380",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "colorado",
+      "label": "Colorado",
+      "disambiguator": null,
+      "value": "269601",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "wyoming",
+      "label": "Wyoming",
+      "disambiguator": null,
+      "value": "253335",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "oregon",
+      "label": "Oregon",
+      "disambiguator": null,
+      "value": "249033",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "kansas",
+      "label": "Kansas",
+      "disambiguator": null,
+      "value": "213106",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "utah",
+      "label": "Utah",
+      "disambiguator": null,
+      "value": "212818",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "minnesota",
+      "label": "Minnesota",
+      "disambiguator": null,
+      "value": "206232",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "florida",
+      "label": "Florida",
+      "disambiguator": null,
+      "value": "170312",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "wisconsin",
+      "label": "Wisconsin",
+      "disambiguator": null,
+      "value": "169640",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    }
+  ]
+}

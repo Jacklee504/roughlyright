@@ -1,0 +1,217 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-25",
+  "themeTag": "household math",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-ounce",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One avoirdupois ounce is exactly how many grams?",
+      "scope": null,
+      "unit": "g",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "28.349523125",
+        "precision": 9,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 28.349523125 g — one sixteenth of a pound",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "kernels-buckets-one",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 120 g bag of kernels pops into how many kernels, at about 0.15 g each?",
+      "scope": null,
+      "unit": "kernels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "bags*grams/gper",
+        "inputs": [
+          {
+            "name": "bags",
+            "value": "1",
+            "unit": "bag",
+            "assumption": null,
+            "source": {
+              "title": "Given quantity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "grams",
+            "value": "120",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Bag size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "gper",
+            "value": "0.15",
+            "unit": "g",
+            "assumption": "kernel mass",
+            "source": null
+          }
+        ],
+        "outputUnit": "kernels",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 1 bag × 120 g ÷ 0.15 g per kernel.",
+          "Compute: 1 × 120 ÷ 0.15 = 800",
+          "Worked estimate: 800 kernels (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Kernels = popped-corn mass ÷ kernel mass.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1 bag × 120 g ÷ 0.15 g per kernel.",
+          "Compute: 1 × 120 ÷ 0.15 = 800",
+          "Worked estimate: 800 kernels (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "bricks-wall-facade",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A 30 m² house facade at 55 bricks/m² — brick count?",
+      "scope": null,
+      "unit": "bricks",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*perM2",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "30",
+            "unit": "m²",
+            "assumption": "wall face area",
+            "source": null
+          },
+          {
+            "name": "perM2",
+            "value": "55",
+            "unit": "bricks/m²",
+            "assumption": "standard brick with mortar joints",
+            "source": null
+          }
+        ],
+        "outputUnit": "bricks",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 30 m² × 55 bricks/m².",
+          "Compute: 30 × 55 = 1,650",
+          "Worked estimate: 1650 bricks"
+        ]
+      },
+      "reveal": {
+        "explanation": "Bricks = area × bricks per square metre.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 30 m² × 55 bricks/m².",
+          "Compute: 30 × 55 = 1,650",
+          "Worked estimate: 1650 bricks"
+        ]
+      }
+    },
+    {
+      "promptId": "laps-pool-5000",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 5 km open-water session swum as pool training: how many 50 m laps in a 25 m pool?",
+      "scope": null,
+      "unit": "laps",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "meters/(length*2)",
+        "inputs": [
+          {
+            "name": "meters",
+            "value": "5000",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Session distance",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "length",
+            "value": "25",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Standard short-course pool length",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "laps",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 5000 m ÷ a lap of 25 m × 2.",
+          "Compute: 5000 ÷ (25 × 2) = 100",
+          "Worked estimate: 100 laps"
+        ]
+      },
+      "reveal": {
+        "explanation": "Laps = distance ÷ (2 × pool length).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 5000 m ÷ a lap of 25 m × 2.",
+          "Compute: 5000 ÷ (25 × 2) = 100",
+          "Worked estimate: 100 laps"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-citic",
+      "roundType": "target_match",
+      "category": "engineering",
+      "prompt": "Which building (by architectural top height) is closest to 527.7 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "tallest-buildings",
+        "target": "527.7"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible building (by architectural top height)s are shown.",
+        "comparison": "Heights are architectural tops as tracked by the standard tall-building rankings.",
+        "sourceTitle": "Editorial tall-building table compiled from public height rankings"
+      }
+    }
+  ]
+}

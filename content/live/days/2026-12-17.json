@@ -1,0 +1,202 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-17",
+  "themeTag": "fermi classics",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-cubic-yard",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One cubic yard is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "764.554857984",
+        "precision": 9,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 764.554857984 L — the concrete and mulch unit",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "mow-time-small",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "Mowing a 300 m² lawn at a steady 20 m² per minute: how many minutes?",
+      "scope": null,
+      "unit": "min",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area/rate",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "300",
+            "unit": "m²",
+            "assumption": "lawn size",
+            "source": null
+          },
+          {
+            "name": "rate",
+            "value": "20",
+            "unit": "m²/min",
+            "assumption": "mower pace",
+            "source": null
+          }
+        ],
+        "outputUnit": "min",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 300 m² ÷ 20 m²/min.",
+          "Compute: 300 ÷ 20 = 15",
+          "Worked estimate: 15 min"
+        ]
+      },
+      "reveal": {
+        "explanation": "Minutes = area ÷ mowing rate.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 300 m² ÷ 20 m²/min.",
+          "Compute: 300 ÷ 20 = 15",
+          "Worked estimate: 15 min"
+        ]
+      }
+    },
+    {
+      "promptId": "battery-days-watch",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 3000 mAh power bank feeding a 125 mA device: days of runtime?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "capacity/(draw*24)",
+        "inputs": [
+          {
+            "name": "capacity",
+            "value": "3000",
+            "unit": "mAh",
+            "assumption": null,
+            "source": {
+              "title": "Battery spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "draw",
+            "value": "125",
+            "unit": "mA",
+            "assumption": "average draw",
+            "source": null
+          }
+        ],
+        "outputUnit": "days",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 3000 mAh ÷ (125 mA × 24).",
+          "Compute: 3000 ÷ (125 × 24) = 1",
+          "Worked estimate: 1 days"
+        ]
+      },
+      "reveal": {
+        "explanation": "Days = charge ÷ daily draw.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 3000 mAh ÷ (125 mA × 24).",
+          "Compute: 3000 ÷ (125 × 24) = 1",
+          "Worked estimate: 1 days"
+        ]
+      }
+    },
+    {
+      "promptId": "fruit-crates-potatoes",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 40 t potato harvest is packed in 25 kg sacks. How many sacks?",
+      "scope": null,
+      "unit": "sacks",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "t*1000/kg",
+        "inputs": [
+          {
+            "name": "t",
+            "value": "40",
+            "unit": "t",
+            "assumption": null,
+            "source": {
+              "title": "Harvest figure",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "kg",
+            "value": "25",
+            "unit": "kg",
+            "assumption": "standard potato sack",
+            "source": null
+          }
+        ],
+        "outputUnit": "sacks",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 40 t × 1,000 gives kilograms; ÷ 25 kg per sack.",
+          "Compute: 40 × 1000 ÷ 25 = 1,600",
+          "Worked estimate: 1600 sacks"
+        ]
+      },
+      "reveal": {
+        "explanation": "Sacks = tonnes × 1,000 ÷ sack mass.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 40 t × 1,000 gives kilograms; ÷ 25 kg per sack.",
+          "Compute: 40 × 1000 ÷ 25 = 1,600",
+          "Worked estimate: 1600 sacks"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-dr-congo",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which country (by population) is closest to 106 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "106"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible country (by population)s are shown.",
+        "comparison": "Population figures are recent estimates rounded to the nearest million.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-22",
+  "themeTag": "scale and distance",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-rod",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One surveyor's rod (perch) is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "5.0292",
+        "precision": 4,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 5.0292 m — a rod is 5½ yards, 25 links",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "roadtrip-cost-roadtrip",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "An 850 km road trip at 6.5 L/100 km with fuel at $1.75/L. What does the fuel cost?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*l100/100*price",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "850",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Route distance",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "l100",
+            "value": "6.5",
+            "unit": "L/100km",
+            "assumption": "mixed-driving fuel consumption",
+            "source": null
+          },
+          {
+            "name": "price",
+            "value": "1.75",
+            "unit": "USD/L",
+            "assumption": "local pump price",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 850 km × 6.5 L/100km ÷ 100 gives litres; × 1.75 USD/L gives cost.",
+          "Compute: 850 × 6.5 ÷ 100 × 1.75 = 96.6875",
+          "Worked estimate: 96.69 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cost = distance × consumption ÷ 100 × price per litre.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 850 km × 6.5 L/100km ÷ 100 gives litres; × 1.75 USD/L gives cost.",
+          "Compute: 850 × 6.5 ÷ 100 × 1.75 = 96.6875",
+          "Worked estimate: 96.69 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "home-kwh-day-family",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "Family evening: fridge 200 W all day, TV 120 W for 5 h, lights 90 W for 6 h. Daily kWh?",
+      "scope": null,
+      "unit": "kWh",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "(fridgeW*fridgeH+tvW*tvH+lightW*lightH)/1000",
+        "inputs": [
+          {
+            "name": "fridgeW",
+            "value": "200",
+            "unit": "W",
+            "assumption": null,
+            "source": {
+              "title": "Appliance rating",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "fridgeH",
+            "value": "24",
+            "unit": "h",
+            "assumption": null,
+            "source": {
+              "title": "Hours run",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "tvW",
+            "value": "120",
+            "unit": "W",
+            "assumption": null,
+            "source": {
+              "title": "Appliance rating",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "tvH",
+            "value": "5",
+            "unit": "h",
+            "assumption": null,
+            "source": {
+              "title": "Hours run",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "lightW",
+            "value": "90",
+            "unit": "W",
+            "assumption": null,
+            "source": {
+              "title": "Appliance rating",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "lightH",
+            "value": "6",
+            "unit": "h",
+            "assumption": null,
+            "source": {
+              "title": "Hours run",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "kWh",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: Each appliance's watts × hours, added up, ÷ 1,000.",
+          "Compute: (200 × 24+120 × 5+90 × 6) ÷ 1000 = 5.94",
+          "Worked estimate: 5.94 kWh"
+        ]
+      },
+      "reveal": {
+        "explanation": "kWh = Σ(watts × hours) ÷ 1,000.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Each appliance's watts × hours, added up, ÷ 1,000.",
+          "Compute: (200 × 24+120 × 5+90 × 6) ÷ 1000 = 5.94",
+          "Worked estimate: 5.94 kWh"
+        ]
+      }
+    },
+    {
+      "promptId": "laundry-loads-5",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "Five shirts a week washed ten at a time: loads per year?",
+      "scope": null,
+      "unit": "loads",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "shirts*weeks/perLoad",
+        "inputs": [
+          {
+            "name": "shirts",
+            "value": "5",
+            "unit": "shirts/week",
+            "assumption": null,
+            "source": {
+              "title": "Household assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "52",
+            "unit": "weeks",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "perLoad",
+            "value": "10",
+            "unit": "shirts/load",
+            "assumption": "machine capacity",
+            "source": null
+          }
+        ],
+        "outputUnit": "loads",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 5 shirts/week × 52 weeks ÷ 10 shirts/load.",
+          "Compute: 5 × 52 ÷ 10 = 26",
+          "Worked estimate: 26 loads"
+        ]
+      },
+      "reveal": {
+        "explanation": "Loads = annual shirts ÷ capacity.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 5 shirts/week × 52 weeks ÷ 10 shirts/load.",
+          "Compute: 5 × 52 ÷ 10 = 26",
+          "Worked estimate: 26 loads"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-dhaulagiri",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,167 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8167"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-25",
+  "themeTag": "unit conversions",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-nautical-mile",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One international nautical mile is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "1852",
+        "precision": 0,
+        "source": {
+          "title": "CGPM 1929 / NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 1,852 m — one arc-minute of a great circle was rounded to exactly 1,852 m in 1929",
+        "sourceTitle": "CGPM 1929 / NIST"
+      }
+    },
+    {
+      "promptId": "download-seconds-game",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "Downloading an 80 GB game over a 300 Mbps connection: roughly how many seconds?",
+      "scope": null,
+      "unit": "s",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "gb*8000/mbps",
+        "inputs": [
+          {
+            "name": "gb",
+            "value": "80",
+            "unit": "GB",
+            "assumption": "game download size",
+            "source": null
+          },
+          {
+            "name": "mbps",
+            "value": "300",
+            "unit": "Mbps",
+            "assumption": "sustained connection speed",
+            "source": null
+          }
+        ],
+        "outputUnit": "s",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 80 GB × 8,000 gives megabits; ÷ 300 Mbps gives seconds.",
+          "Compute: 80 × 8000 ÷ 300 = 2,133.333333",
+          "Worked estimate: 2130 s (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Time = gigabytes × 8,000 ÷ megabits per second (8 bits per byte, 1,000 MB per GB).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 80 GB × 8,000 gives megabits; ÷ 300 Mbps gives seconds.",
+          "Compute: 80 × 8000 ÷ 300 = 2,133.333333",
+          "Worked estimate: 2130 s (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "turbine-homes-large",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "An 8,000 MWh turbine and 9,000 kWh homes: how many homes powered?",
+      "scope": null,
+      "unit": "homes",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "turbineMwh*1000/homeKwh",
+        "inputs": [
+          {
+            "name": "turbineMwh",
+            "value": "8000",
+            "unit": "MWh/yr",
+            "assumption": "annual turbine output",
+            "source": null
+          },
+          {
+            "name": "homeKwh",
+            "value": "9000",
+            "unit": "kWh/yr",
+            "assumption": "annual household use",
+            "source": null
+          }
+        ],
+        "outputUnit": "homes",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: 8000 MWh/yr × 1,000 gives kWh; ÷ 9000 kWh/yr per home.",
+          "Compute: 8000 × 1000 ÷ 9000 = 888.888889",
+          "Worked estimate: 890 homes (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Homes = turbine energy ÷ household energy.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 8000 MWh/yr × 1,000 gives kWh; ÷ 9000 kWh/yr per home.",
+          "Compute: 8000 × 1000 ÷ 9000 = 888.888889",
+          "Worked estimate: 890 homes (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "bottles-year-1",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A litre a day in 750 mL bottles: how many bottles a year?",
+      "scope": null,
+      "unit": "bottles",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "litres*days/bottleL",
+        "inputs": [
+          {
+            "name": "litres",
+            "value": "1",
+            "unit": "L/day",
+            "assumption": null,
+            "source": {
+              "title": "Habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "365",
+            "unit": "days",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "bottleL",
+            "value": "0.75",
+            "unit": "L",
+            "assumption": "750 mL bottle",
+            "source": null
+          }
+        ],
+        "outputUnit": "bottles",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 1 L/day × 365 days ÷ 0.75 L per bottle.",
+          "Compute: 1 × 365 ÷ 0.75 = 486.666667",
+          "Worked estimate: 487 bottles (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Bottles = annual litres ÷ bottle size.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1 L/day × 365 days ÷ 0.75 L per bottle.",
+          "Compute: 1 × 365 ÷ 0.75 = 486.666667",
+          "Worked estimate: 487 bottles (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-annapurna",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,091 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8091"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

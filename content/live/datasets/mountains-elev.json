@@ -1,0 +1,218 @@
+{
+  "kind": "target_dataset",
+  "game": "estimation",
+  "id": "mountains-elev",
+  "name": "Mountain summit elevations",
+  "unit": "m",
+  "revision": "2026-11-a",
+  "eligibleScope": null,
+  "entries": [
+    {
+      "id": "everest",
+      "label": "Mount Everest",
+      "disambiguator": null,
+      "value": "8849",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Chomolungma",
+        "Sagarmatha"
+      ]
+    },
+    {
+      "id": "k2",
+      "label": "K2",
+      "disambiguator": null,
+      "value": "8611",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Mount Godwin Austen"
+      ]
+    },
+    {
+      "id": "kangchenjunga",
+      "label": "Kangchenjunga",
+      "disambiguator": null,
+      "value": "8586",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "lhotse",
+      "label": "Lhotse",
+      "disambiguator": null,
+      "value": "8516",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "makalu",
+      "label": "Makalu",
+      "disambiguator": null,
+      "value": "8485",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "cho-oyu",
+      "label": "Cho Oyu",
+      "disambiguator": null,
+      "value": "8188",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "dhaulagiri",
+      "label": "Dhaulagiri I",
+      "disambiguator": null,
+      "value": "8167",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "manaslu",
+      "label": "Manaslu",
+      "disambiguator": null,
+      "value": "8163",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "nanga-parbat",
+      "label": "Nanga Parbat",
+      "disambiguator": null,
+      "value": "8126",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Diamer"
+      ]
+    },
+    {
+      "id": "annapurna",
+      "label": "Annapurna I",
+      "disambiguator": null,
+      "value": "8091",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "gasherbrum-i",
+      "label": "Gasherbrum I",
+      "disambiguator": null,
+      "value": "8080",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Hidden Peak"
+      ]
+    },
+    {
+      "id": "broad-peak",
+      "label": "Broad Peak",
+      "disambiguator": null,
+      "value": "8051",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "denali",
+      "label": "Denali",
+      "disambiguator": null,
+      "value": "6190",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Mount McKinley"
+      ]
+    },
+    {
+      "id": "kilimanjaro",
+      "label": "Mount Kilimanjaro",
+      "disambiguator": null,
+      "value": "5895",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "mont-blanc",
+      "label": "Mont Blanc",
+      "disambiguator": null,
+      "value": "4808",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Monte Bianco"
+      ]
+    },
+    {
+      "id": "matterhorn",
+      "label": "Matterhorn",
+      "disambiguator": null,
+      "value": "4478",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Monte Cervino"
+      ]
+    }
+  ]
+}

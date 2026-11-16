@@ -1,0 +1,217 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-01",
+  "themeTag": "everyday arithmetic",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-acre",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One acre is exactly how many square metres?",
+      "scope": null,
+      "unit": "m²",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "4046.8564224",
+        "precision": 7,
+        "source": {
+          "title": "UK Weights and Measures Act 1985",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 4,046.8564224 m² — an acre is one chain by one furlong",
+        "sourceTitle": "UK Weights and Measures Act 1985"
+      }
+    },
+    {
+      "promptId": "glasses-year-6",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "Six glasses of water a day: how many glasses is that over a 365-day year?",
+      "scope": null,
+      "unit": "glasses",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "perday*days",
+        "inputs": [
+          {
+            "name": "perday",
+            "value": "6",
+            "unit": "glasses/day",
+            "assumption": null,
+            "source": {
+              "title": "Habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "365",
+            "unit": "days",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "glasses",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 6 glasses/day × 365 days.",
+          "Compute: 6 × 365 = 2,190",
+          "Worked estimate: 2190 glasses"
+        ]
+      },
+      "reveal": {
+        "explanation": "Annual count = daily rate × days.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 6 glasses/day × 365 days.",
+          "Compute: 6 × 365 = 2,190",
+          "Worked estimate: 2190 glasses"
+        ]
+      }
+    },
+    {
+      "promptId": "wage-hourly-78000",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "$78,000 across 48 weeks of 37.5 hours — what's the hourly rate?",
+      "scope": null,
+      "unit": "USD/h",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "annual/(weeks*hours)",
+        "inputs": [
+          {
+            "name": "annual",
+            "value": "78000",
+            "unit": "USD/yr",
+            "assumption": null,
+            "source": {
+              "title": "Salary figure",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "48",
+            "unit": "weeks",
+            "assumption": "paid weeks",
+            "source": null
+          },
+          {
+            "name": "hours",
+            "value": "37.5",
+            "unit": "h/week",
+            "assumption": "scheduled week",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD/h",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 78000 USD/yr ÷ (48 weeks × 37.5 h/week).",
+          "Compute: 78000 ÷ (48 × 37.5) = 43.333333",
+          "Worked estimate: 43.33 USD/h"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hourly rate = salary ÷ hours worked.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 78000 USD/yr ÷ (48 weeks × 37.5 h/week).",
+          "Compute: 78000 ÷ (48 × 37.5) = 43.333333",
+          "Worked estimate: 43.33 USD/h"
+        ]
+      }
+    },
+    {
+      "promptId": "ink-pages-70",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 70 mL high-yield cartridge at 0.1 mL per page: how many pages?",
+      "scope": null,
+      "unit": "pages",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "ml*1000/mpper",
+        "inputs": [
+          {
+            "name": "ml",
+            "value": "70",
+            "unit": "mL",
+            "assumption": null,
+            "source": {
+              "title": "Cartridge capacity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "mpper",
+            "value": "0.1",
+            "unit": "mL/page",
+            "assumption": "ink per page",
+            "source": null
+          }
+        ],
+        "outputUnit": "pages",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 70 mL × 1,000 ÷ 0.1 mL/page per page.",
+          "Compute: 70 × 1000 ÷ 0.1 = 700,000",
+          "Worked estimate: 700000 pages"
+        ]
+      },
+      "reveal": {
+        "explanation": "Pages = cartridge ÷ ink per page.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 70 mL × 1,000 ÷ 0.1 mL/page per page.",
+          "Compute: 70 × 1000 ÷ 0.1 = 700,000",
+          "Worked estimate: 700000 pages"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-mississippi-missouri",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 6,275 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "6275"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

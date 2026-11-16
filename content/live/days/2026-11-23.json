@@ -1,0 +1,209 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-23",
+  "themeTag": "orders of magnitude",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-fathom",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One fathom is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "1.8288",
+        "precision": 4,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 1.8288 m — a fathom is 6 feet, a sailor's arm span for depth sounding",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "ev-charge-home",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A 60 kWh EV battery on a 7.2 kW home wallbox: how many hours for a full charge?",
+      "scope": null,
+      "unit": "hours",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "battery/charger",
+        "inputs": [
+          {
+            "name": "battery",
+            "value": "60",
+            "unit": "kWh",
+            "assumption": "usable pack capacity",
+            "source": null
+          },
+          {
+            "name": "charger",
+            "value": "7.2",
+            "unit": "kW",
+            "assumption": "sustained wallbox output",
+            "source": null
+          }
+        ],
+        "outputUnit": "hours",
+        "precision": 1,
+        "roundTo": 0.5,
+        "steps": [
+          "Model: Pack energy 60 kWh ÷ charging power 7.2 kW.",
+          "Compute: 60 ÷ 7.2 = 8.333333",
+          "Worked estimate: 8.5 hours (nearest 0.5)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hours = energy ÷ power (ignoring taper).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Pack energy 60 kWh ÷ charging power 7.2 kW.",
+          "Compute: 60 ÷ 7.2 = 8.333333",
+          "Worked estimate: 8.5 hours (nearest 0.5)"
+        ]
+      }
+    },
+    {
+      "promptId": "ev-home-cost-full",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "A full 60 kWh charge at $0.22/kWh — what does it cost?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "kwh*rate",
+        "inputs": [
+          {
+            "name": "kwh",
+            "value": "60",
+            "unit": "kWh",
+            "assumption": "energy delivered",
+            "source": null
+          },
+          {
+            "name": "rate",
+            "value": "0.22",
+            "unit": "USD/kWh",
+            "assumption": "home tariff",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 60 kWh × 0.22 USD/kWh.",
+          "Compute: 60 × 0.22 = 13.2",
+          "Worked estimate: 13.2 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cost = energy × tariff.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 60 kWh × 0.22 USD/kWh.",
+          "Compute: 60 × 0.22 = 13.2",
+          "Worked estimate: 13.2 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "toothpaste-days-120",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "A 120 mL tube with 1.5 mL per brush, twice a day: days of use?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "tube/(strip*perDay)",
+        "inputs": [
+          {
+            "name": "tube",
+            "value": "120",
+            "unit": "mL",
+            "assumption": null,
+            "source": {
+              "title": "Tube size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "strip",
+            "value": "1.5",
+            "unit": "mL",
+            "assumption": "generous strip",
+            "source": null
+          },
+          {
+            "name": "perDay",
+            "value": "2",
+            "unit": "brushes/day",
+            "assumption": null,
+            "source": {
+              "title": "Brushing habit assumption",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "days",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 120 mL ÷ (1.5 mL × 2 brushes/day).",
+          "Compute: 120 ÷ (1.5 × 2) = 40",
+          "Worked estimate: 40 days"
+        ]
+      },
+      "reveal": {
+        "explanation": "Days = tube ÷ daily use.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 120 mL ÷ (1.5 mL × 2 brushes/day).",
+          "Compute: 120 ÷ (1.5 × 2) = 40",
+          "Worked estimate: 40 days"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-manaslu",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,163 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8163"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

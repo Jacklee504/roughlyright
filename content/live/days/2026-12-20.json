@@ -1,0 +1,220 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-20",
+  "themeTag": "scale and distance",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-tun",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One wine tun is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "953.923769568",
+        "precision": 9,
+        "source": {
+          "title": "US customary wine measure, NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 953.923769568 L — a tun is 252 US gallons, the old cask of tonnage fame",
+        "sourceTitle": "US customary wine measure, NIST"
+      }
+    },
+    {
+      "promptId": "meeting-cost-standup",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "Eight people in a 1.5-hour meeting, each costing the company $45/hour. What did it cost?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "people*hours*rate",
+        "inputs": [
+          {
+            "name": "people",
+            "value": "8",
+            "unit": "people",
+            "assumption": null,
+            "source": {
+              "title": "Invite list",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "hours",
+            "value": "1.5",
+            "unit": "hours",
+            "assumption": null,
+            "source": {
+              "title": "Meeting length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "rate",
+            "value": "45",
+            "unit": "USD/h",
+            "assumption": "loaded hourly cost",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 8 people × 1.5 hours × 45 USD/h.",
+          "Compute: 8 × 1.5 × 45 = 540",
+          "Worked estimate: 540 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cost = attendees × hours × hourly cost.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 8 people × 1.5 hours × 45 USD/h.",
+          "Compute: 8 × 1.5 × 45 = 540",
+          "Worked estimate: 540 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "tire-rotations-van",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A van tyre 0.55 m in diameter covers 20,000 km — how many turns?",
+      "scope": null,
+      "unit": "rotations",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*1000/(pi*d)",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "20000",
+            "unit": "km",
+            "assumption": "tyre life distance",
+            "source": null
+          },
+          {
+            "name": "pi",
+            "value": "3.14159",
+            "unit": "(dimensionless)",
+            "assumption": "π rounded to 3.14159",
+            "source": null
+          },
+          {
+            "name": "d",
+            "value": "0.55",
+            "unit": "m",
+            "assumption": "tyre outer diameter",
+            "source": null
+          }
+        ],
+        "outputUnit": "rotations",
+        "precision": 0,
+        "roundTo": 100000,
+        "steps": [
+          "Model: 20000 km × 1,000 ÷ circumference (π × 0.55 m).",
+          "Compute: 20000 × 1000 ÷ (3.14159 × 0.55) = 11,574,914.72905",
+          "Worked estimate: 11600000 rotations (nearest 100,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Rotations = distance ÷ circumference.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 20000 km × 1,000 ÷ circumference (π × 0.55 m).",
+          "Compute: 20000 × 1000 ÷ (3.14159 × 0.55) = 11,574,914.72905",
+          "Worked estimate: 11600000 rotations (nearest 100,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "rice-grains-sack",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 5 kg sack of the same rice: roughly how many grains?",
+      "scope": null,
+      "unit": "grains",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "grams*gpg",
+        "inputs": [
+          {
+            "name": "grams",
+            "value": "5000",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Sack size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "gpg",
+            "value": "50",
+            "unit": "grains/g",
+            "assumption": "medium-grain rice ≈ 50 grains per gram",
+            "source": null
+          }
+        ],
+        "outputUnit": "grains",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: 5000 g × 50 grains/g.",
+          "Compute: 5000 × 50 = 250,000",
+          "Worked estimate: 250000 grains (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Grains = mass × grains per gram.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 5000 g × 50 grains/g.",
+          "Compute: 5000 × 50 = 250,000",
+          "Worked estimate: 250000 grains (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-makkah-clock",
+      "roundType": "target_match",
+      "category": "engineering",
+      "prompt": "Which building (by architectural top height) is closest to 601 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "tallest-buildings",
+        "target": "601"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible building (by architectural top height)s are shown.",
+        "comparison": "Heights are architectural tops as tracked by the standard tall-building rankings.",
+        "sourceTitle": "Editorial tall-building table compiled from public height rankings"
+      }
+    }
+  ]
+}

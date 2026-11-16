@@ -1,0 +1,243 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-13",
+  "themeTag": "unit conversions",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-au",
+      "roundType": "direct_fact",
+      "category": "space",
+      "prompt": "One astronomical unit is exactly how many kilometres?",
+      "scope": null,
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "149597870.7",
+        "precision": 1,
+        "source": {
+          "title": "IAU 2012 definition",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 149,597,870.7 km — the mean Earth–Sun distance, fixed exactly in 2012",
+        "sourceTitle": "IAU 2012 definition"
+      }
+    },
+    {
+      "promptId": "deck-boards-15",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A 15 m² deck built from 3.6 m × 0.14 m boards: how many boards?",
+      "scope": null,
+      "unit": "boards",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area/(len*width)",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "15",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Deck plan area",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "len",
+            "value": "3.6",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Board length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "width",
+            "value": "0.14",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Board width",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "boards",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 15 m² ÷ (one board's 3.6 m × 0.14 m).",
+          "Compute: 15 ÷ (3.6 × 0.14) = 29.761905",
+          "Worked estimate: 30 boards (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Boards = deck area ÷ board area.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 15 m² ÷ (one board's 3.6 m × 0.14 m).",
+          "Compute: 15 ÷ (3.6 × 0.14) = 29.761905",
+          "Worked estimate: 30 boards (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "stairs-everest-12",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "How many times up a 12-storey building (3 m a storey) equals Everest's height?",
+      "scope": null,
+      "unit": "climbs",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "height/(floors*storey)",
+        "inputs": [
+          {
+            "name": "height",
+            "value": "8849",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Mount Everest elevation (2020 survey)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "floors",
+            "value": "12",
+            "unit": "floors",
+            "assumption": null,
+            "source": {
+              "title": "Building spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "storey",
+            "value": "3.0",
+            "unit": "m",
+            "assumption": "3 m per storey",
+            "source": null
+          }
+        ],
+        "outputUnit": "climbs",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: Everest's 8849 m ÷ one climb of 12 floors × 3.0 m.",
+          "Compute: 8849 ÷ (12 × 3.0) = 245.805556",
+          "Worked estimate: 246 climbs (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Climbs = mountain height ÷ climb height.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Everest's 8849 m ÷ one climb of 12 floors × 3.0 m.",
+          "Compute: 8849 ÷ (12 × 3.0) = 245.805556",
+          "Worked estimate: 246 climbs (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "stadium-cups-theatre",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "An 8,000-strong theatre crowd, 2 cups of 250 mL each — litres served?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "attendees*cups*ml/1000",
+        "inputs": [
+          {
+            "name": "attendees",
+            "value": "8000",
+            "unit": "people",
+            "assumption": null,
+            "source": {
+              "title": "Attendance figure",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "cups",
+            "value": "2",
+            "unit": "cups/person",
+            "assumption": "drinks per person",
+            "source": null
+          },
+          {
+            "name": "ml",
+            "value": "250",
+            "unit": "mL",
+            "assumption": "cup size",
+            "source": null
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 8000 people × 2 cups/person × 250 mL, ÷ 1,000 to litres.",
+          "Compute: 8000 × 2 × 250 ÷ 1000 = 4,000",
+          "Worked estimate: 4000 L"
+        ]
+      },
+      "reveal": {
+        "explanation": "Litres = attendees × cups × cup size ÷ 1,000.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 8000 people × 2 cups/person × 250 mL, ÷ 1,000 to litres.",
+          "Compute: 8000 × 2 × 250 ÷ 1000 = 4,000",
+          "Worked estimate: 4000 L"
+        ]
+      }
+    },
+    {
+      "promptId": "df-fortnight",
+      "roundType": "direct_fact",
+      "category": "time",
+      "prompt": "One fortnight is exactly how many days?",
+      "scope": null,
+      "unit": "days",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "14",
+        "precision": 0,
+        "source": {
+          "title": "English customary time unit",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 14 days — fourteen nights — 'fourteen-night'",
+        "sourceTitle": "English customary time unit"
+      }
+    }
+  ]
+}

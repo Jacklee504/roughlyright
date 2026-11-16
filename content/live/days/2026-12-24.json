@@ -1,0 +1,239 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-24",
+  "themeTag": "fermi classics",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-pound",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One avoirdupois pound is exactly how many grams?",
+      "scope": null,
+      "unit": "g",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "453.59237",
+        "precision": 7,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 453.59237 g — the pound has been exactly this many grams since 1959",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "stadium-cups-big",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "50,000 spectators each buy 2 cups of 500 mL: how many litres get poured?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "attendees*cups*ml/1000",
+        "inputs": [
+          {
+            "name": "attendees",
+            "value": "50000",
+            "unit": "people",
+            "assumption": null,
+            "source": {
+              "title": "Attendance figure",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "cups",
+            "value": "2",
+            "unit": "cups/person",
+            "assumption": "drinks per person",
+            "source": null
+          },
+          {
+            "name": "ml",
+            "value": "500",
+            "unit": "mL",
+            "assumption": "cup size",
+            "source": null
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: 50000 people × 2 cups/person × 500 mL, ÷ 1,000 to litres.",
+          "Compute: 50000 × 2 × 500 ÷ 1000 = 50,000",
+          "Worked estimate: 50000 L (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Litres = attendees × cups × cup size ÷ 1,000.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 50000 people × 2 cups/person × 500 mL, ÷ 1,000 to litres.",
+          "Compute: 50000 × 2 × 500 ÷ 1000 = 50,000",
+          "Worked estimate: 50000 L (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "deck-boards-24",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A 24 m² platform of 4 m × 0.12 m boards — board count?",
+      "scope": null,
+      "unit": "boards",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area/(len*width)",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "24",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Deck plan area",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "len",
+            "value": "4",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Board length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "width",
+            "value": "0.12",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Board width",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "boards",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 24 m² ÷ (one board's 4 m × 0.12 m).",
+          "Compute: 24 ÷ (4 × 0.12) = 50",
+          "Worked estimate: 50 boards"
+        ]
+      },
+      "reveal": {
+        "explanation": "Boards = deck area ÷ board area.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 24 m² ÷ (one board's 4 m × 0.12 m).",
+          "Compute: 24 ÷ (4 × 0.12) = 50",
+          "Worked estimate: 50 boards"
+        ]
+      }
+    },
+    {
+      "promptId": "stairs-everest-8",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "An 8-storey stairwell, 3 m per storey: how many climbs to match Everest?",
+      "scope": null,
+      "unit": "climbs",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "height/(floors*storey)",
+        "inputs": [
+          {
+            "name": "height",
+            "value": "8849",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Mount Everest elevation (2020 survey)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "floors",
+            "value": "8",
+            "unit": "floors",
+            "assumption": null,
+            "source": {
+              "title": "Building spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "storey",
+            "value": "3.0",
+            "unit": "m",
+            "assumption": "3 m per storey",
+            "source": null
+          }
+        ],
+        "outputUnit": "climbs",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: Everest's 8849 m ÷ one climb of 8 floors × 3.0 m.",
+          "Compute: 8849 ÷ (8 × 3.0) = 368.708333",
+          "Worked estimate: 369 climbs (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Climbs = mountain height ÷ climb height.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Everest's 8849 m ÷ one climb of 8 floors × 3.0 m.",
+          "Compute: 8849 ÷ (8 × 3.0) = 368.708333",
+          "Worked estimate: 369 climbs (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-chow-tai-fook",
+      "roundType": "target_match",
+      "category": "engineering",
+      "prompt": "Which building (by architectural top height) is closest to 530 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "tallest-buildings",
+        "target": "530"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible building (by architectural top height)s are shown.",
+        "comparison": "Heights are architectural tops as tracked by the standard tall-building rankings.",
+        "sourceTitle": "Editorial tall-building table compiled from public height rankings"
+      }
+    }
+  ]
+}

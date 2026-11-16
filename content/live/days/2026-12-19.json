@@ -1,0 +1,213 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-19",
+  "themeTag": "money and rates",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-cord",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One cord of firewood is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "3624.556363776",
+        "precision": 9,
+        "source": {
+          "title": "US customary definition (128 ft³)",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 3,624.556363776 L — a cord is a stack of 128 cubic feet",
+        "sourceTitle": "US customary definition (128 ft³)"
+      }
+    },
+    {
+      "promptId": "commute-hours-45",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "A 45-minute trip each way, 230 working days: how many hours a year in transit?",
+      "scope": null,
+      "unit": "hours",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "minutes*2*days/60",
+        "inputs": [
+          {
+            "name": "minutes",
+            "value": "45",
+            "unit": "min/trip",
+            "assumption": null,
+            "source": {
+              "title": "Commute assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "230",
+            "unit": "days",
+            "assumption": "working days per year",
+            "source": null
+          }
+        ],
+        "outputUnit": "hours",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 45 min/trip × 2 × 230 days, ÷ 60 to hours.",
+          "Compute: 45 × 2 × 230 ÷ 60 = 345",
+          "Worked estimate: 345 hours"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hours = minutes × 2 × days ÷ 60.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 45 min/trip × 2 × 230 days, ÷ 60 to hours.",
+          "Compute: 45 × 2 × 230 ÷ 60 = 345",
+          "Worked estimate: 345 hours"
+        ]
+      }
+    },
+    {
+      "promptId": "sound-seconds-15km",
+      "roundType": "calculation",
+      "category": "physics",
+      "prompt": "Thunder from 15 km away takes how many seconds to reach you?",
+      "scope": null,
+      "unit": "s",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*1000/speed",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "15",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Distance to strike",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "speed",
+            "value": "343",
+            "unit": "m/s",
+            "assumption": "sound speed at ~20 °C",
+            "source": null
+          }
+        ],
+        "outputUnit": "s",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 15 km × 1,000 ÷ 343 m/s.",
+          "Compute: 15 × 1000 ÷ 343 = 43.731778",
+          "Worked estimate: 44 s (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Seconds = distance ÷ sound speed.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 15 km × 1,000 ÷ 343 m/s.",
+          "Compute: 15 × 1000 ÷ 343 = 43.731778",
+          "Worked estimate: 44 s (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "sugar-cubes-sports",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 600 mL sports drink with 6 g sugar per 100 mL — how many 4 g cubes?",
+      "scope": null,
+      "unit": "cubes",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "ml*g100/100/cube",
+        "inputs": [
+          {
+            "name": "ml",
+            "value": "600",
+            "unit": "mL",
+            "assumption": null,
+            "source": {
+              "title": "Bottle size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "g100",
+            "value": "6",
+            "unit": "g/100mL",
+            "assumption": "label sugar content",
+            "source": null
+          },
+          {
+            "name": "cube",
+            "value": "4",
+            "unit": "g",
+            "assumption": "one sugar cube ≈ 4 g",
+            "source": null
+          }
+        ],
+        "outputUnit": "cubes",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 600 mL × 6 g/100mL ÷ 100 gives sugar grams; ÷ 4 g per cube.",
+          "Compute: 600 × 6 ÷ 100 ÷ 4 = 9",
+          "Worked estimate: 9 cubes (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cubes = sugar grams ÷ grams per cube.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 600 mL × 6 g/100mL ÷ 100 gives sugar grams; ÷ 4 g per cube.",
+          "Compute: 600 × 6 ÷ 100 ÷ 4 = 9",
+          "Worked estimate: 9 cubes (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-shanghai-tower",
+      "roundType": "target_match",
+      "category": "engineering",
+      "prompt": "Which building (by architectural top height) is closest to 632 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "tallest-buildings",
+        "target": "632"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible building (by architectural top height)s are shown.",
+        "comparison": "Heights are architectural tops as tracked by the standard tall-building rankings.",
+        "sourceTitle": "Editorial tall-building table compiled from public height rankings"
+      }
+    }
+  ]
+}

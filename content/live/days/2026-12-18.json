@@ -1,0 +1,210 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-18",
+  "themeTag": "household math",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-bushel",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US bushel is exactly how many litres?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "35.23907016688",
+        "precision": 9,
+        "source": {
+          "title": "US customary dry measure, NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 35.23907016688 L — a dry bushel is 2,150.42 cubic inches",
+        "sourceTitle": "US customary dry measure, NIST"
+      }
+    },
+    {
+      "promptId": "seed-spacing-carrots",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "A 6 m row of carrots, one seed every 10 cm: how many seeds?",
+      "scope": null,
+      "unit": "seeds",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "rowcm/spacing",
+        "inputs": [
+          {
+            "name": "rowcm",
+            "value": "600",
+            "unit": "cm",
+            "assumption": null,
+            "source": {
+              "title": "Row length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "spacing",
+            "value": "10",
+            "unit": "cm",
+            "assumption": "packet spacing",
+            "source": null
+          }
+        ],
+        "outputUnit": "seeds",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 600 cm ÷ 10 cm per seed.",
+          "Compute: 600 ÷ 10 = 60",
+          "Worked estimate: 60 seeds"
+        ]
+      },
+      "reveal": {
+        "explanation": "Seeds = row length ÷ spacing.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 600 cm ÷ 10 cm per seed.",
+          "Compute: 600 ÷ 10 = 60",
+          "Worked estimate: 60 seeds"
+        ]
+      }
+    },
+    {
+      "promptId": "light-seconds-geo",
+      "roundType": "calculation",
+      "category": "space",
+      "prompt": "Light to a geostationary satellite 35,786 km up: how many seconds?",
+      "scope": null,
+      "unit": "s",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km/ckms",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "35786",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Geostationary orbit altitude",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "ckms",
+            "value": "299792.458",
+            "unit": "km/s",
+            "assumption": null,
+            "source": {
+              "title": "Speed of light (exact)",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "s",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 35786 km ÷ 299792.458 km/s.",
+          "Compute: 35786 ÷ 299792.458 = 0.119369",
+          "Worked estimate: 0.12 s"
+        ]
+      },
+      "reveal": {
+        "explanation": "Seconds = distance ÷ light speed.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 35786 km ÷ 299792.458 km/s.",
+          "Compute: 35786 ÷ 299792.458 = 0.119369",
+          "Worked estimate: 0.12 s"
+        ]
+      }
+    },
+    {
+      "promptId": "coffee-cups-1000",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 1 kg bulk bag at 20 g per cup: how many cups?",
+      "scope": null,
+      "unit": "cups",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "grams/dose",
+        "inputs": [
+          {
+            "name": "grams",
+            "value": "1000",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Bag size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "dose",
+            "value": "20",
+            "unit": "g",
+            "assumption": "typical French-press dose",
+            "source": null
+          }
+        ],
+        "outputUnit": "cups",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 1000 g of coffee ÷ 20 g per brew.",
+          "Compute: 1000 ÷ 20 = 50",
+          "Worked estimate: 50 cups"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cups = bag mass ÷ dose.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1000 g of coffee ÷ 20 g per brew.",
+          "Compute: 1000 ÷ 20 = 50",
+          "Worked estimate: 50 cups"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-philippines",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which country (by population) is closest to 116 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "116"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible country (by population)s are shown.",
+        "comparison": "Population figures are recent estimates rounded to the nearest million.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

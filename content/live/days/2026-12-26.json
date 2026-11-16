@@ -1,0 +1,218 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-26",
+  "themeTag": "money and rates",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-troy-ounce",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One troy ounce is exactly how many grams?",
+      "scope": null,
+      "unit": "g",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "31.1034768",
+        "precision": 7,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 31.1034768 g — the precious-metals ounce, 480 grains",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "pizza-slices-32",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 32 cm pizza cut into slices of about 80 cm² each: how many slices, roughly?",
+      "scope": null,
+      "unit": "slices",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "3.14159",
+          "unit": ""
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "pi*(d/2)*(d/2)/slice",
+        "inputs": [
+          {
+            "name": "pi",
+            "value": "3.14159",
+            "unit": "(dimensionless)",
+            "assumption": "π rounded to 3.14159",
+            "source": null
+          },
+          {
+            "name": "d",
+            "value": "32",
+            "unit": "cm",
+            "assumption": null,
+            "source": {
+              "title": "Pizza diameter",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "slice",
+            "value": "80",
+            "unit": "cm²",
+            "assumption": "slice area",
+            "source": null
+          }
+        ],
+        "outputUnit": "slices",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: Area π × 32 cm/2 squared, ÷ 80 cm² per slice.",
+          "Compute: 3.14159 × (32 ÷ 2) × (32 ÷ 2) ÷ 80 = 10.053088",
+          "Worked estimate: 10 slices (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Slices = pizza area ÷ slice area.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Area π × 32 cm/2 squared, ÷ 80 cm² per slice.",
+          "Compute: 3.14159 × (32 ÷ 2) × (32 ÷ 2) ÷ 80 = 10.053088",
+          "Worked estimate: 10 slices (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "marathon-steps-half",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "Half-marathon, 21.0975 km. At an average 0.75 m stride, how many steps in total?",
+      "scope": null,
+      "unit": "steps",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "distance/stride",
+        "inputs": [
+          {
+            "name": "distance",
+            "value": "21097.5",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Official race distance (World Athletics)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "stride",
+            "value": "0.75",
+            "unit": "m",
+            "assumption": "average easy-pace stride",
+            "source": null
+          }
+        ],
+        "outputUnit": "steps",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: Half-marathon distance 21097.5 m divided into strides of 0.75 m.",
+          "Compute: 21097.5 ÷ 0.75 = 28,130",
+          "Worked estimate: 28130 steps (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Steps = distance ÷ stride length.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Half-marathon distance 21097.5 m divided into strides of 0.75 m.",
+          "Compute: 21097.5 ÷ 0.75 = 28,130",
+          "Worked estimate: 28130 steps (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "rule-72-9",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A fund growing at 9% a year: by the rule of 72, when does it double?",
+      "scope": null,
+      "unit": "years",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "k/rate",
+        "inputs": [
+          {
+            "name": "k",
+            "value": "72",
+            "unit": "%·yr",
+            "assumption": "rule-of-72 constant (100 × ln 2 ≈ 69.3, rounded up for mental math)",
+            "source": null
+          },
+          {
+            "name": "rate",
+            "value": "9",
+            "unit": "%/yr",
+            "assumption": null,
+            "source": {
+              "title": "Growth rate assumption",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "years",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: Rule of 72: 72 %·yr ÷ 9 %/yr.",
+          "Compute: 72 ÷ 9 = 8",
+          "Worked estimate: 8 years"
+        ]
+      },
+      "reveal": {
+        "explanation": "Doubling time ≈ 72 ÷ annual growth rate.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Rule of 72: 72 %·yr ÷ 9 %/yr.",
+          "Compute: 72 ÷ 9 = 8",
+          "Worked estimate: 8 years"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-taipei-101",
+      "roundType": "target_match",
+      "category": "engineering",
+      "prompt": "Which building (by architectural top height) is closest to 508 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "tallest-buildings",
+        "target": "508"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible building (by architectural top height)s are shown.",
+        "comparison": "Heights are architectural tops as tracked by the standard tall-building rankings.",
+        "sourceTitle": "Editorial tall-building table compiled from public height rankings"
+      }
+    }
+  ]
+}

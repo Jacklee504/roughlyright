@@ -1,0 +1,210 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-29",
+  "themeTag": "everyday arithmetic",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-short-ton",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One short ton is exactly how many kilograms?",
+      "scope": null,
+      "unit": "kg",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "907.18474",
+        "precision": 5,
+        "source": {
+          "title": "US customary definition, NIST",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 907.18474 kg — 2,000 pounds — the US ton",
+        "sourceTitle": "US customary definition, NIST"
+      }
+    },
+    {
+      "promptId": "typing-minutes-essay",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "Typing a 1,200-word essay at 60 words a minute: how many minutes?",
+      "scope": null,
+      "unit": "min",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "words/wpm",
+        "inputs": [
+          {
+            "name": "words",
+            "value": "1200",
+            "unit": "words",
+            "assumption": null,
+            "source": {
+              "title": "Document length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "wpm",
+            "value": "60",
+            "unit": "wpm",
+            "assumption": "typing speed",
+            "source": null
+          }
+        ],
+        "outputUnit": "min",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 1200 words ÷ 60 wpm.",
+          "Compute: 1200 ÷ 60 = 20",
+          "Worked estimate: 20 min"
+        ]
+      },
+      "reveal": {
+        "explanation": "Minutes = words ÷ typing speed.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1200 words ÷ 60 wpm.",
+          "Compute: 1200 ÷ 60 = 20",
+          "Worked estimate: 20 min"
+        ]
+      }
+    },
+    {
+      "promptId": "paper-stack-million",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A print shop stacks one million sheets of 0.1 mm paper. How high, in metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "sheets*thickness/1000",
+        "inputs": [
+          {
+            "name": "sheets",
+            "value": "1000000",
+            "unit": "sheets",
+            "assumption": null,
+            "source": {
+              "title": "Given order size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "thickness",
+            "value": "0.1",
+            "unit": "mm",
+            "assumption": "80 gsm copy paper ≈ 0.1 mm per sheet",
+            "source": null
+          }
+        ],
+        "outputUnit": "m",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 1000000 sheets sheets × 0.1 mm each, converted to metres.",
+          "Compute: 1000000 × 0.1 ÷ 1000 = 100",
+          "Worked estimate: 100 m"
+        ]
+      },
+      "reveal": {
+        "explanation": "Height = sheets × thickness.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1000000 sheets sheets × 0.1 mm each, converted to metres.",
+          "Compute: 1000000 × 0.1 ÷ 1000 = 100",
+          "Worked estimate: 100 m"
+        ]
+      }
+    },
+    {
+      "promptId": "kmh-to-mph-300",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A formula car tops 300 km/h. Convert to mph.",
+      "scope": null,
+      "unit": "mph",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "kmh*factor",
+        "inputs": [
+          {
+            "name": "kmh",
+            "value": "300",
+            "unit": "km/h",
+            "assumption": null,
+            "source": {
+              "title": "Given speed",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "factor",
+            "value": "0.621371",
+            "unit": "mi/km",
+            "assumption": null,
+            "source": {
+              "title": "Conversion factor (1 km = 0.621371 mi)",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "mph",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 300 km/h × 0.621371 mi/km.",
+          "Compute: 300 × 0.621371 = 186.4113",
+          "Worked estimate: 186.4 mph"
+        ]
+      },
+      "reveal": {
+        "explanation": "Miles per hour = km/h × 0.621371.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 300 km/h × 0.621371 mi/km.",
+          "Compute: 300 × 0.621371 = 186.4113",
+          "Worked estimate: 186.4 mph"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-mexico-city",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which metro area (by population) is closest to 22.5 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "city-metro-pop",
+        "target": "22.5"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible metro area (by population)s are shown.",
+        "comparison": "Figures use wider metropolitan-area estimates, not city-proper counts.",
+        "sourceTitle": "Editorial metro-area table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

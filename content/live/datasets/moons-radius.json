@@ -1,0 +1,97 @@
+{
+  "kind": "target_dataset",
+  "game": "estimation",
+  "id": "moons-radius",
+  "name": "Moon mean radii",
+  "unit": "km",
+  "revision": "2026-11-a",
+  "eligibleScope": null,
+  "entries": [
+    {
+      "id": "ganymede",
+      "label": "Ganymede",
+      "disambiguator": null,
+      "value": "2634.1",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "titan",
+      "label": "Titan",
+      "disambiguator": null,
+      "value": "2574.7",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "callisto",
+      "label": "Callisto",
+      "disambiguator": null,
+      "value": "2410.3",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "io",
+      "label": "Io",
+      "disambiguator": null,
+      "value": "1821.6",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "moon",
+      "label": "The Moon",
+      "disambiguator": null,
+      "value": "1737.4",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Luna"
+      ]
+    },
+    {
+      "id": "europa",
+      "label": "Europa",
+      "disambiguator": null,
+      "value": "1560.8",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "triton",
+      "label": "Triton",
+      "disambiguator": null,
+      "value": "1353.4",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    }
+  ]
+}

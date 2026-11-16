@@ -1,0 +1,221 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-14",
+  "themeTag": "fermi classics",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-light-year",
+      "roundType": "direct_fact",
+      "category": "space",
+      "prompt": "One light-year is exactly how many kilometres?",
+      "scope": null,
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "9460730472580.8",
+        "precision": 1,
+        "source": {
+          "title": "IAU definition (Julian year × c)",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 9,460,730,472,580.8 km — the distance light crosses in one Julian year",
+        "sourceTitle": "IAU definition (Julian year × c)"
+      }
+    },
+    {
+      "promptId": "bricks-wall-garden",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A 12 m² garden wall at about 60 bricks per m²: how many bricks?",
+      "scope": null,
+      "unit": "bricks",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*perM2",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "12",
+            "unit": "m²",
+            "assumption": "wall face area",
+            "source": null
+          },
+          {
+            "name": "perM2",
+            "value": "60",
+            "unit": "bricks/m²",
+            "assumption": "standard brick with mortar joints",
+            "source": null
+          }
+        ],
+        "outputUnit": "bricks",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 12 m² × 60 bricks/m².",
+          "Compute: 12 × 60 = 720",
+          "Worked estimate: 720 bricks"
+        ]
+      },
+      "reveal": {
+        "explanation": "Bricks = area × bricks per square metre.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 12 m² × 60 bricks/m².",
+          "Compute: 12 × 60 = 720",
+          "Worked estimate: 720 bricks"
+        ]
+      }
+    },
+    {
+      "promptId": "laps-pool-2500",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 2,500 m training swim in a 25 m pool — how many there-and-back laps?",
+      "scope": null,
+      "unit": "laps",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "meters/(length*2)",
+        "inputs": [
+          {
+            "name": "meters",
+            "value": "2500",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Training plan distance",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "length",
+            "value": "25",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Standard short-course pool length",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "laps",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 2500 m ÷ a lap of 25 m × 2.",
+          "Compute: 2500 ÷ (25 × 2) = 50",
+          "Worked estimate: 50 laps"
+        ]
+      },
+      "reveal": {
+        "explanation": "Laps = distance ÷ (2 × pool length).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 2500 m ÷ a lap of 25 m × 2.",
+          "Compute: 2500 ÷ (25 × 2) = 50",
+          "Worked estimate: 50 laps"
+        ]
+      }
+    },
+    {
+      "promptId": "kernels-buckets-five",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A movie night uses five 90 g bags (0.15 g per kernel). Kernel count?",
+      "scope": null,
+      "unit": "kernels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "bags*grams/gper",
+        "inputs": [
+          {
+            "name": "bags",
+            "value": "5",
+            "unit": "bag",
+            "assumption": null,
+            "source": {
+              "title": "Given quantity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "grams",
+            "value": "90",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Bag size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "gper",
+            "value": "0.15",
+            "unit": "g",
+            "assumption": "kernel mass",
+            "source": null
+          }
+        ],
+        "outputUnit": "kernels",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 5 bag × 90 g ÷ 0.15 g per kernel.",
+          "Compute: 5 × 90 ÷ 0.15 = 3,000",
+          "Worked estimate: 3000 kernels (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Kernels = popped-corn mass ÷ kernel mass.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 5 bag × 90 g ÷ 0.15 g per kernel.",
+          "Compute: 5 × 90 ÷ 0.15 = 3,000",
+          "Worked estimate: 3000 kernels (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "df-julian-year",
+      "roundType": "direct_fact",
+      "category": "time",
+      "prompt": "One Julian year is exactly how many days?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "365.25",
+        "precision": 2,
+        "source": {
+          "title": "IAU definition",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 365.25 days — 365 plus one leap day every four years",
+        "sourceTitle": "IAU definition"
+      }
+    }
+  ]
+}

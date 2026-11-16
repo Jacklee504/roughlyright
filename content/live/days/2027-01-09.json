@@ -1,0 +1,225 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-09",
+  "themeTag": "money and rates",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-horsepower",
+      "roundType": "direct_fact",
+      "category": "engineering",
+      "prompt": "One US mechanical horsepower is exactly how many watts?",
+      "scope": null,
+      "unit": "W",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "745.6998715823",
+        "precision": 9,
+        "source": {
+          "title": "NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 745.6998715823 W — 33,000 foot-pounds per minute",
+        "sourceTitle": "NIST SP 811"
+      }
+    },
+    {
+      "promptId": "tire-rotations-car",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A car tyre 0.65 m across rolls 50,000 km. Roughly how many rotations is that?",
+      "scope": null,
+      "unit": "rotations",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "0.65",
+          "unit": "m"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*1000/(pi*d)",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "50000",
+            "unit": "km",
+            "assumption": "tyre life distance",
+            "source": null
+          },
+          {
+            "name": "pi",
+            "value": "3.14159",
+            "unit": "(dimensionless)",
+            "assumption": "π rounded to 3.14159",
+            "source": null
+          },
+          {
+            "name": "d",
+            "value": "0.65",
+            "unit": "m",
+            "assumption": "tyre outer diameter",
+            "source": null
+          }
+        ],
+        "outputUnit": "rotations",
+        "precision": 0,
+        "roundTo": 100000,
+        "steps": [
+          "Model: 50000 km × 1,000 ÷ circumference (π × 0.65 m).",
+          "Compute: 50000 × 1000 ÷ (3.14159 × 0.65) = 24,485,396.542221",
+          "Worked estimate: 24500000 rotations (nearest 100,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Rotations = distance ÷ circumference.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 50000 km × 1,000 ÷ circumference (π × 0.65 m).",
+          "Compute: 50000 × 1000 ÷ (3.14159 × 0.65) = 24,485,396.542221",
+          "Worked estimate: 24500000 rotations (nearest 100,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "rice-grains-pot",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A pot for six uses 450 g of that same rice — how many grains?",
+      "scope": null,
+      "unit": "grains",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "grams*gpg",
+        "inputs": [
+          {
+            "name": "grams",
+            "value": "450",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Recipe quantity",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "gpg",
+            "value": "50",
+            "unit": "grains/g",
+            "assumption": "medium-grain rice ≈ 50 grains per gram",
+            "source": null
+          }
+        ],
+        "outputUnit": "grains",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 450 g × 50 grains/g.",
+          "Compute: 450 × 50 = 22,500",
+          "Worked estimate: 22500 grains"
+        ]
+      },
+      "reveal": {
+        "explanation": "Grains = mass × grains per gram.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 450 g × 50 grains/g.",
+          "Compute: 450 × 50 = 22,500",
+          "Worked estimate: 22500 grains"
+        ]
+      }
+    },
+    {
+      "promptId": "meeting-cost-sync",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A 30-minute sync (0.5 h) with 5 people at $55/hour — what did it burn?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "people*hours*rate",
+        "inputs": [
+          {
+            "name": "people",
+            "value": "5",
+            "unit": "people",
+            "assumption": null,
+            "source": {
+              "title": "Invite list",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "hours",
+            "value": "0.5",
+            "unit": "hours",
+            "assumption": null,
+            "source": {
+              "title": "Meeting length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "rate",
+            "value": "55",
+            "unit": "USD/h",
+            "assumption": "loaded hourly cost",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 5 people × 0.5 hours × 55 USD/h.",
+          "Compute: 5 × 0.5 × 55 = 137.5",
+          "Worked estimate: 137.5 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cost = attendees × hours × hourly cost.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 5 people × 0.5 hours × 55 USD/h.",
+          "Compute: 5 × 0.5 × 55 = 137.5",
+          "Worked estimate: 137.5 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-colorado",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which US state (by land area) is closest to 269,601 km²?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km²",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "us-states-area",
+        "target": "269601"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible US state (by land area)s are shown.",
+        "comparison": "Land areas in square kilometres, water area excluded.",
+        "sourceTitle": "Editorial US-state area table compiled from census land-area data"
+      }
+    }
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-17",
+  "themeTag": "everyday arithmetic",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-foot",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One foot is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "0.3048",
+        "precision": 4,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 0.3048 m — the yard is defined as exactly 0.9144 m",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "walk-big-moon",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "Walking to the Moon: with a 0.75 m stride, how many steps would the mean Earth–Moon distance take?",
+      "scope": null,
+      "unit": "steps",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "0.75",
+          "unit": "m"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*1000/stride",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "384400",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Mean Earth–Moon distance (NASA)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "stride",
+            "value": "0.75",
+            "unit": "m",
+            "assumption": "unhurried walking stride",
+            "source": null
+          }
+        ],
+        "outputUnit": "steps",
+        "precision": 0,
+        "roundTo": 100000,
+        "steps": [
+          "Model: Convert 384400 km to metres, then split into strides of 0.75 m.",
+          "Compute: 384400 × 1000 ÷ 0.75 = 512,533,333.333333",
+          "Worked estimate: 512500000 steps (nearest 100,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Steps = kilometres × 1,000 ÷ stride.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Convert 384400 km to metres, then split into strides of 0.75 m.",
+          "Compute: 384400 × 1000 ÷ 0.75 = 512,533,333.333333",
+          "Worked estimate: 512500000 steps (nearest 100,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "simple-interest-500",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "$500 earning 6% simple for 3 years ends at what total?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "principal*(1+rate*years/100)",
+        "inputs": [
+          {
+            "name": "principal",
+            "value": "500",
+            "unit": "USD",
+            "assumption": null,
+            "source": {
+              "title": "Deposit size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "rate",
+            "value": "6",
+            "unit": "%/yr",
+            "assumption": null,
+            "source": {
+              "title": "Rate assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "years",
+            "value": "3",
+            "unit": "years",
+            "assumption": null,
+            "source": {
+              "title": "Term",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 500 USD × (1 + 6 %/yr × 3 years ÷ 100).",
+          "Compute: 500 × (1+6 × 3 ÷ 100) = 590",
+          "Worked estimate: 590 USD (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Simple interest keeps the base fixed: total = principal × (1 + rate × years).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 500 USD × (1 + 6 %/yr × 3 years ÷ 100).",
+          "Compute: 500 × (1+6 × 3 ÷ 100) = 590",
+          "Worked estimate: 590 USD (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "trip-days-9000",
+      "roundType": "calculation",
+      "category": "geography",
+      "prompt": "A 9,000 km transcontinental drive at 600 km/day: how many days?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km/dayKm",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "9000",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Route length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "dayKm",
+            "value": "600",
+            "unit": "km/day",
+            "assumption": "daily driving distance",
+            "source": null
+          }
+        ],
+        "outputUnit": "days",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 9000 km ÷ 600 km/day per day.",
+          "Compute: 9000 ÷ 600 = 15",
+          "Worked estimate: 15 days"
+        ]
+      },
+      "reveal": {
+        "explanation": "Days = distance ÷ daily distance.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 9000 km ÷ 600 km/day per day.",
+          "Compute: 9000 ÷ 600 = 15",
+          "Worked estimate: 15 days"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-k2",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,611 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8611"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

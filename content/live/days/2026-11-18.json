@@ -1,0 +1,211 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-18",
+  "themeTag": "unit conversions",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-inch",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One inch is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "0.0254",
+        "precision": 4,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 0.0254 m — the inch is exactly 2.54 cm by definition",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "money-ton-ones",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A pallet holds a short ton of $1 bills. Roughly how many bills is that?",
+      "scope": null,
+      "unit": "bills",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "1",
+          "unit": "g"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "grams/mass",
+        "inputs": [
+          {
+            "name": "grams",
+            "value": "907185",
+            "unit": "g",
+            "assumption": "short ton ≈ 907,185 g",
+            "source": null
+          },
+          {
+            "name": "mass",
+            "value": "1",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "US Treasury: every US note weighs about 1 g",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "bills",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: Total mass 907185 g split into bills of 1 g each.",
+          "Compute: 907185 ÷ 1 = 907,185",
+          "Worked estimate: 907000 bills (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Count = total mass ÷ mass per bill. Notes weigh about a gram regardless of denomination.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Total mass 907185 g split into bills of 1 g each.",
+          "Compute: 907185 ÷ 1 = 907,185",
+          "Worked estimate: 907000 bills (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "temp-swing-heatwave",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "During a heatwave the temperature climbs from 21 °C to 30 °C. How big is that climb in °F?",
+      "scope": null,
+      "unit": "°F",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "(hi-lo)*9/5",
+        "inputs": [
+          {
+            "name": "hi",
+            "value": "30",
+            "unit": "°C",
+            "assumption": null,
+            "source": {
+              "title": "Forecast high",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "lo",
+            "value": "21",
+            "unit": "°C",
+            "assumption": null,
+            "source": {
+              "title": "Forecast low",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "°F",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: Swing 30 °C − 21 °C, scaled × 9/5.",
+          "Compute: (30 − 21) × 9 ÷ 5 = 16.2",
+          "Worked estimate: 16.2 °F"
+        ]
+      },
+      "reveal": {
+        "explanation": "A temperature *difference* scales by exactly 9/5; no 32 offset applies to changes.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Swing 30 °C − 21 °C, scaled × 9/5.",
+          "Compute: (30 − 21) × 9 ÷ 5 = 16.2",
+          "Worked estimate: 16.2 °F"
+        ]
+      }
+    },
+    {
+      "promptId": "book-words-epic",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 500-page epic at 350 words a page: about how many words?",
+      "scope": null,
+      "unit": "words",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "pages*wpp",
+        "inputs": [
+          {
+            "name": "pages",
+            "value": "500",
+            "unit": "pages",
+            "assumption": "book length",
+            "source": null
+          },
+          {
+            "name": "wpp",
+            "value": "350",
+            "unit": "words/page",
+            "assumption": "typical typeset page",
+            "source": null
+          }
+        ],
+        "outputUnit": "words",
+        "precision": 0,
+        "roundTo": 1000,
+        "steps": [
+          "Model: 500 pages × 350 words/page.",
+          "Compute: 500 × 350 = 175,000",
+          "Worked estimate: 175000 words (nearest 1,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Words = pages × words per page.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 500 pages × 350 words/page.",
+          "Compute: 500 × 350 = 175,000",
+          "Worked estimate: 175000 words (nearest 1,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-kangchenjunga",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,586 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8586"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

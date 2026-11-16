@@ -1,0 +1,209 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2027-01-02",
+  "themeTag": "money and rates",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-kilogram-force",
+      "roundType": "direct_fact",
+      "category": "physics",
+      "prompt": "One kilogram-force is exactly how many newtons?",
+      "scope": null,
+      "unit": "N",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "9.80665",
+        "precision": 5,
+        "source": {
+          "title": "CGPM 1901 standard gravity",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 9.80665 N — one kilogram times standard gravity",
+        "sourceTitle": "CGPM 1901 standard gravity"
+      }
+    },
+    {
+      "promptId": "toothpaste-days-100",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "A 100 mL tube, a 1 mL strip twice a day: how many days does it last?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "tube/(strip*perDay)",
+        "inputs": [
+          {
+            "name": "tube",
+            "value": "100",
+            "unit": "mL",
+            "assumption": null,
+            "source": {
+              "title": "Tube size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "strip",
+            "value": "1",
+            "unit": "mL",
+            "assumption": "pea-sized strip ≈ 1 mL",
+            "source": null
+          },
+          {
+            "name": "perDay",
+            "value": "2",
+            "unit": "brushes/day",
+            "assumption": null,
+            "source": {
+              "title": "Brushing habit assumption",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "days",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 100 mL ÷ (1 mL × 2 brushes/day).",
+          "Compute: 100 ÷ (1 × 2) = 50",
+          "Worked estimate: 50 days"
+        ]
+      },
+      "reveal": {
+        "explanation": "Days = tube ÷ daily use.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 100 mL ÷ (1 mL × 2 brushes/day).",
+          "Compute: 100 ÷ (1 × 2) = 50",
+          "Worked estimate: 50 days"
+        ]
+      }
+    },
+    {
+      "promptId": "ev-charge-three-phase",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "An 82 kWh battery on an 11 kW three-phase charger — full charge time?",
+      "scope": null,
+      "unit": "hours",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "battery/charger",
+        "inputs": [
+          {
+            "name": "battery",
+            "value": "82",
+            "unit": "kWh",
+            "assumption": "usable pack capacity",
+            "source": null
+          },
+          {
+            "name": "charger",
+            "value": "11",
+            "unit": "kW",
+            "assumption": "sustained three-phase output",
+            "source": null
+          }
+        ],
+        "outputUnit": "hours",
+        "precision": 1,
+        "roundTo": 0.5,
+        "steps": [
+          "Model: Pack energy 82 kWh ÷ charging power 11 kW.",
+          "Compute: 82 ÷ 11 = 7.454545",
+          "Worked estimate: 7.5 hours (nearest 0.5)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hours = energy ÷ power (ignoring taper).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Pack energy 82 kWh ÷ charging power 11 kW.",
+          "Compute: 82 ÷ 11 = 7.454545",
+          "Worked estimate: 7.5 hours (nearest 0.5)"
+        ]
+      }
+    },
+    {
+      "promptId": "ev-home-cost-topup",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "Topping up 9 kWh on a $0.30/kWh fast tariff: what's the bill?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "kwh*rate",
+        "inputs": [
+          {
+            "name": "kwh",
+            "value": "9",
+            "unit": "kWh",
+            "assumption": "energy delivered",
+            "source": null
+          },
+          {
+            "name": "rate",
+            "value": "0.30",
+            "unit": "USD/kWh",
+            "assumption": "fast-charge tariff",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 9 kWh × 0.30 USD/kWh.",
+          "Compute: 9 × 0.30 = 2.7",
+          "Worked estimate: 2.7 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cost = energy × tariff.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 9 kWh × 0.30 USD/kWh.",
+          "Compute: 9 × 0.30 = 2.7",
+          "Worked estimate: 2.7 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-osaka",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which metro area (by population) is closest to 18.9 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "city-metro-pop",
+        "target": "18.9"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible metro area (by population)s are shown.",
+        "comparison": "Figures use wider metropolitan-area estimates, not city-proper counts.",
+        "sourceTitle": "Editorial metro-area table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

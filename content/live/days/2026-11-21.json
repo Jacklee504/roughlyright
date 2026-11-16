@@ -1,0 +1,228 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-21",
+  "themeTag": "money and rates",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-chain",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One surveyor's chain is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "20.1168",
+        "precision": 4,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 20.1168 m — Gunter's chain is 22 yards, ten chains to the furlong",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "paint-litres-bedroom",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "Painting a 36 m² bedroom wall, two coats. How many litres of paint?",
+      "scope": null,
+      "unit": "L",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "area*coats/coverage",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "36",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Measured wall area",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "coats",
+            "value": "2",
+            "unit": "coats",
+            "assumption": null,
+            "source": {
+              "title": "Job spec",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "coverage",
+            "value": "10",
+            "unit": "m²/L",
+            "assumption": "typical emulsion covers about 10 m² per litre",
+            "source": null
+          }
+        ],
+        "outputUnit": "L",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 36 m² × 2 coats, then ÷ coverage of 10 m²/L.",
+          "Compute: 36 × 2 ÷ 10 = 7.2",
+          "Worked estimate: 7.2 L"
+        ]
+      },
+      "reveal": {
+        "explanation": "Paint = area × coats ÷ coverage per litre.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 36 m² × 2 coats, then ÷ coverage of 10 m²/L.",
+          "Compute: 36 × 2 ÷ 10 = 7.2",
+          "Worked estimate: 7.2 L"
+        ]
+      }
+    },
+    {
+      "promptId": "l-to-gal-50",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 50 L aquarium in US gallons?",
+      "scope": null,
+      "unit": "US gal",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "litres*factor",
+        "inputs": [
+          {
+            "name": "litres",
+            "value": "50",
+            "unit": "L",
+            "assumption": null,
+            "source": {
+              "title": "Tank size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "factor",
+            "value": "0.264172",
+            "unit": "gal/L",
+            "assumption": "rounded conversion factor (1 L ≈ 0.264172 US gal)",
+            "source": null
+          }
+        ],
+        "outputUnit": "US gal",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 50 L × 0.264172 gal/L.",
+          "Compute: 50 × 0.264172 = 13.2086",
+          "Worked estimate: 13.2 US gal"
+        ]
+      },
+      "reveal": {
+        "explanation": "US gallons = litres × 0.264172.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 50 L × 0.264172 gal/L.",
+          "Compute: 50 × 0.264172 = 13.2086",
+          "Worked estimate: 13.2 US gal"
+        ]
+      }
+    },
+    {
+      "promptId": "fare-year-6",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "Six $2 rides a week for a year: total fare?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "rides*weeks*fare",
+        "inputs": [
+          {
+            "name": "rides",
+            "value": "6",
+            "unit": "rides/week",
+            "assumption": null,
+            "source": {
+              "title": "Riding habit assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "weeks",
+            "value": "52",
+            "unit": "weeks",
+            "assumption": null,
+            "source": {
+              "title": "Calendar year",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "fare",
+            "value": "2",
+            "unit": "USD",
+            "assumption": "single-ride fare",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 6 rides/week × 52 weeks × 2 USD.",
+          "Compute: 6 × 52 × 2 = 624",
+          "Worked estimate: 624 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Annual cost = weekly rides × weeks × fare.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 6 rides/week × 52 weeks × 2 USD.",
+          "Compute: 6 × 52 × 2 = 624",
+          "Worked estimate: 624 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-cho-oyu",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,188 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8188"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

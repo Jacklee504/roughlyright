@@ -1,0 +1,181 @@
+{
+  "kind": "target_dataset",
+  "game": "estimation",
+  "id": "tallest-buildings",
+  "name": "Tall-building heights",
+  "unit": "m",
+  "revision": "2026-11-a",
+  "eligibleScope": null,
+  "entries": [
+    {
+      "id": "burj-khalifa",
+      "label": "Burj Khalifa",
+      "disambiguator": null,
+      "value": "828",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Burj Dubai"
+      ]
+    },
+    {
+      "id": "merdeka-118",
+      "label": "Merdeka 118",
+      "disambiguator": null,
+      "value": "678.9",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "PNB 118"
+      ]
+    },
+    {
+      "id": "shanghai-tower",
+      "label": "Shanghai Tower",
+      "disambiguator": null,
+      "value": "632",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "makkah-clock",
+      "label": "Makkah Royal Clock Tower",
+      "disambiguator": null,
+      "value": "601",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Abraj Al-Bait"
+      ]
+    },
+    {
+      "id": "ping-an",
+      "label": "Ping An Finance Centre",
+      "disambiguator": null,
+      "value": "599.1",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "lotte-world",
+      "label": "Lotte World Tower",
+      "disambiguator": null,
+      "value": "554.5",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "one-wtc",
+      "label": "One World Trade Center",
+      "disambiguator": null,
+      "value": "541.3",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Freedom Tower"
+      ]
+    },
+    {
+      "id": "chow-tai-fook",
+      "label": "Chow Tai Fook Finance Centre",
+      "disambiguator": null,
+      "value": "530",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "citic",
+      "label": "CITIC Tower",
+      "disambiguator": null,
+      "value": "527.7",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "China Zun"
+      ]
+    },
+    {
+      "id": "taipei-101",
+      "label": "Taipei 101",
+      "disambiguator": null,
+      "value": "508",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "willis",
+      "label": "Willis Tower",
+      "disambiguator": null,
+      "value": "442.1",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "Sears Tower"
+      ]
+    },
+    {
+      "id": "empire-state",
+      "label": "Empire State Building",
+      "disambiguator": null,
+      "value": "381",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": []
+    },
+    {
+      "id": "st-mary-axe",
+      "label": "30 St Mary Axe",
+      "disambiguator": null,
+      "value": "180",
+      "source": {
+        "title": "Editorial reference table compiled from public reference data",
+        "url": null,
+        "note": "Quantitative dataset curated for target-match rounds; values verified against public reference sources at authoring time."
+      },
+      "aliases": [
+        "The Gherkin"
+      ]
+    }
+  ]
+}

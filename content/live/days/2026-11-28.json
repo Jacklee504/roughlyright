@@ -1,0 +1,215 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-28",
+  "themeTag": "money and rates",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-sazhen",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One Russian sazhen is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "2.1336",
+        "precision": 4,
+        "source": {
+          "title": "Imperial Russian measure standard (1899)",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 2.1336 m — the sazhen is 7 English feet",
+        "sourceTitle": "Imperial Russian measure standard (1899)"
+      }
+    },
+    {
+      "promptId": "coffee-cups-250",
+      "roundType": "calculation",
+      "category": "food",
+      "prompt": "A 250 g bag of coffee, dosed at 15 g per cup: how many cups?",
+      "scope": null,
+      "unit": "cups",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "15",
+          "unit": "g"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "grams/dose",
+        "inputs": [
+          {
+            "name": "grams",
+            "value": "250",
+            "unit": "g",
+            "assumption": null,
+            "source": {
+              "title": "Bag size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "dose",
+            "value": "15",
+            "unit": "g",
+            "assumption": "typical pour-over dose",
+            "source": null
+          }
+        ],
+        "outputUnit": "cups",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 250 g of coffee ÷ 15 g per brew.",
+          "Compute: 250 ÷ 15 = 16.666667",
+          "Worked estimate: 17 cups (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cups = bag mass ÷ dose.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 250 g of coffee ÷ 15 g per brew.",
+          "Compute: 250 ÷ 15 = 16.666667",
+          "Worked estimate: 17 cups (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "seed-spacing-beans",
+      "roundType": "calculation",
+      "category": "everyday",
+      "prompt": "A 12 m bean row, seeds every 15 cm — how many seeds?",
+      "scope": null,
+      "unit": "seeds",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "rowcm/spacing",
+        "inputs": [
+          {
+            "name": "rowcm",
+            "value": "1200",
+            "unit": "cm",
+            "assumption": null,
+            "source": {
+              "title": "Row length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "spacing",
+            "value": "15",
+            "unit": "cm",
+            "assumption": "packet spacing",
+            "source": null
+          }
+        ],
+        "outputUnit": "seeds",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 1200 cm ÷ 15 cm per seed.",
+          "Compute: 1200 ÷ 15 = 80",
+          "Worked estimate: 80 seeds"
+        ]
+      },
+      "reveal": {
+        "explanation": "Seeds = row length ÷ spacing.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 1200 cm ÷ 15 cm per seed.",
+          "Compute: 1200 ÷ 15 = 80",
+          "Worked estimate: 80 seeds"
+        ]
+      }
+    },
+    {
+      "promptId": "light-seconds-sun",
+      "roundType": "calculation",
+      "category": "space",
+      "prompt": "Light crosses from the Sun to Earth (149,597,870.7 km) in how many seconds?",
+      "scope": null,
+      "unit": "s",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km/ckms",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "149597870.7",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Astronomical unit (IAU 2012, exact)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "ckms",
+            "value": "299792.458",
+            "unit": "km/s",
+            "assumption": null,
+            "source": {
+              "title": "Speed of light (exact)",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "s",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 149597870.7 km ÷ 299792.458 km/s.",
+          "Compute: 149597870.7 ÷ 299792.458 = 499.004784",
+          "Worked estimate: 499 s"
+        ]
+      },
+      "reveal": {
+        "explanation": "Seconds = distance ÷ light speed.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 149597870.7 km ÷ 299792.458 km/s.",
+          "Compute: 149597870.7 ÷ 299792.458 = 499.004784",
+          "Worked estimate: 499 s"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-nile",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which river is closest to 6,650 km?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "km",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "rivers-length",
+        "target": "6650"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible rivers are shown.",
+        "comparison": "Lengths follow the usual combined main-stem convention, so paired systems count both branches.",
+        "sourceTitle": "Editorial river-length table compiled from public reference data"
+      }
+    }
+  ]
+}

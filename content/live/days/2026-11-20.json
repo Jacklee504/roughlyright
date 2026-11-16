@@ -1,0 +1,215 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-20",
+  "themeTag": "household math",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-furlong",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One furlong is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "201.168",
+        "precision": 3,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 201.168 m — a furlong is 40 rods, the length of a furrow in a ploughed field",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "tiles-wall-bathroom",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "Tiling an 8 m² bathroom wall with 30 cm square tiles: how many tiles do you need?",
+      "scope": null,
+      "unit": "tiles",
+      "countMode": true,
+      "hint": {
+        "figure": {
+          "value": "0.3",
+          "unit": "m"
+        }
+      },
+      "scoring": {
+        "type": "calculation",
+        "formula": "area/tileArea",
+        "inputs": [
+          {
+            "name": "area",
+            "value": "8",
+            "unit": "m²",
+            "assumption": null,
+            "source": {
+              "title": "Measured wall area",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "tileArea",
+            "value": "0.09",
+            "unit": "m²",
+            "assumption": "30 cm × 30 cm tile",
+            "source": null
+          }
+        ],
+        "outputUnit": "tiles",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: Wall area 8 m² divided by each tile's 0.09 m².",
+          "Compute: 8 ÷ 0.09 = 88.888889",
+          "Worked estimate: 89 tiles (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Tile count = area ÷ tile area (before allowing waste for cuts).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Wall area 8 m² divided by each tile's 0.09 m².",
+          "Compute: 8 ÷ 0.09 = 88.888889",
+          "Worked estimate: 89 tiles (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "kg-to-lb-12",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 12 kg dog weighs how many pounds?",
+      "scope": null,
+      "unit": "lb",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "kg*factor",
+        "inputs": [
+          {
+            "name": "kg",
+            "value": "12",
+            "unit": "kg",
+            "assumption": null,
+            "source": {
+              "title": "Given mass",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "factor",
+            "value": "2.20462",
+            "unit": "lb/kg",
+            "assumption": null,
+            "source": {
+              "title": "Conversion factor (1 lb = 0.45359237 kg exactly)",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "lb",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: 12 kg × 2.20462 lb/kg.",
+          "Compute: 12 × 2.20462 = 26.45544",
+          "Worked estimate: 26.5 lb"
+        ]
+      },
+      "reveal": {
+        "explanation": "Pounds = kilograms × 2.20462.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 12 kg × 2.20462 lb/kg.",
+          "Compute: 12 × 2.20462 = 26.45544",
+          "Worked estimate: 26.5 lb"
+        ]
+      }
+    },
+    {
+      "promptId": "audiobook-hours-60000",
+      "roundType": "calculation",
+      "category": "computing",
+      "prompt": "A 60,000-word memoir read at 140 wpm: how many hours?",
+      "scope": null,
+      "unit": "hours",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "words/(wpm*60)",
+        "inputs": [
+          {
+            "name": "words",
+            "value": "60000",
+            "unit": "words",
+            "assumption": null,
+            "source": {
+              "title": "Book length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "wpm",
+            "value": "140",
+            "unit": "wpm",
+            "assumption": "narration pace",
+            "source": null
+          }
+        ],
+        "outputUnit": "hours",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 60000 words ÷ (140 wpm × 60).",
+          "Compute: 60000 ÷ (140 × 60) = 7.142857",
+          "Worked estimate: 7.14 hours"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hours = words ÷ words per hour.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 60000 words ÷ (140 wpm × 60).",
+          "Compute: 60000 ÷ (140 × 60) = 7.142857",
+          "Worked estimate: 7.14 hours"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-makalu",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,485 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8485"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}

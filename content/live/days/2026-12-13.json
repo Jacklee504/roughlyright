@@ -1,0 +1,209 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-13",
+  "themeTag": "scale and distance",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-tablespoon",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One US tablespoon (legal measure) is exactly how many millilitres?",
+      "scope": null,
+      "unit": "mL",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "15",
+        "precision": 0,
+        "source": {
+          "title": "US FDA nutrition labelling regulation",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 15 mL — the legal tablespoon is 3 teaspoons",
+        "sourceTitle": "US FDA nutrition labelling regulation"
+      }
+    },
+    {
+      "promptId": "ev-home-cost-commute",
+      "roundType": "calculation",
+      "category": "energy",
+      "prompt": "A 12 kWh overnight charge at $0.15 per kWh costs what?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "kwh*rate",
+        "inputs": [
+          {
+            "name": "kwh",
+            "value": "12",
+            "unit": "kWh",
+            "assumption": "energy delivered",
+            "source": null
+          },
+          {
+            "name": "rate",
+            "value": "0.15",
+            "unit": "USD/kWh",
+            "assumption": "home tariff",
+            "source": null
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: 12 kWh × 0.15 USD/kWh.",
+          "Compute: 12 × 0.15 = 1.8",
+          "Worked estimate: 1.8 USD"
+        ]
+      },
+      "reveal": {
+        "explanation": "Cost = energy × tariff.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 12 kWh × 0.15 USD/kWh.",
+          "Compute: 12 × 0.15 = 1.8",
+          "Worked estimate: 1.8 USD"
+        ]
+      }
+    },
+    {
+      "promptId": "toothpaste-days-75",
+      "roundType": "calculation",
+      "category": "body",
+      "prompt": "A 75 mL tube brushed three times a day with 1 mL each time — how many days?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "tube/(strip*perDay)",
+        "inputs": [
+          {
+            "name": "tube",
+            "value": "75",
+            "unit": "mL",
+            "assumption": null,
+            "source": {
+              "title": "Tube size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "strip",
+            "value": "1",
+            "unit": "mL",
+            "assumption": "pea-sized strip ≈ 1 mL",
+            "source": null
+          },
+          {
+            "name": "perDay",
+            "value": "3",
+            "unit": "brushes/day",
+            "assumption": null,
+            "source": {
+              "title": "Brushing habit assumption",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "days",
+        "precision": 0,
+        "roundTo": null,
+        "steps": [
+          "Model: 75 mL ÷ (1 mL × 3 brushes/day).",
+          "Compute: 75 ÷ (1 × 3) = 25",
+          "Worked estimate: 25 days"
+        ]
+      },
+      "reveal": {
+        "explanation": "Days = tube ÷ daily use.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 75 mL ÷ (1 mL × 3 brushes/day).",
+          "Compute: 75 ÷ (1 × 3) = 25",
+          "Worked estimate: 25 days"
+        ]
+      }
+    },
+    {
+      "promptId": "ev-charge-fast",
+      "roundType": "calculation",
+      "category": "engineering",
+      "prompt": "A 75 kWh battery at a 150 kW DC fast charger: full charge takes how many hours?",
+      "scope": null,
+      "unit": "hours",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "battery/charger",
+        "inputs": [
+          {
+            "name": "battery",
+            "value": "75",
+            "unit": "kWh",
+            "assumption": "usable pack capacity",
+            "source": null
+          },
+          {
+            "name": "charger",
+            "value": "150",
+            "unit": "kW",
+            "assumption": "sustained fast-charge output",
+            "source": null
+          }
+        ],
+        "outputUnit": "hours",
+        "precision": 2,
+        "roundTo": null,
+        "steps": [
+          "Model: Pack energy 75 kWh ÷ charging power 150 kW.",
+          "Compute: 75 ÷ 150 = 0.5",
+          "Worked estimate: 0.5 hours"
+        ]
+      },
+      "reveal": {
+        "explanation": "Hours = energy ÷ power (ignoring taper).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Pack energy 75 kWh ÷ charging power 150 kW.",
+          "Compute: 75 ÷ 150 = 0.5",
+          "Worked estimate: 0.5 hours"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-nigeria",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which country (by population) is closest to 229 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "229"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible country (by population)s are shown.",
+        "comparison": "Population figures are recent estimates rounded to the nearest million.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

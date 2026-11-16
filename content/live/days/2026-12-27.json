@@ -1,0 +1,221 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-12-27",
+  "themeTag": "scale and distance",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-stone",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One stone is exactly how many grams?",
+      "scope": null,
+      "unit": "g",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "6350.29318",
+        "precision": 5,
+        "source": {
+          "title": "UK Weights and Measures Act 1985",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 6,350.29318 g — a stone is 14 pounds",
+        "sourceTitle": "UK Weights and Measures Act 1985"
+      }
+    },
+    {
+      "promptId": "trip-days-4000",
+      "roundType": "calculation",
+      "category": "geography",
+      "prompt": "A 4,000 km road journey at 550 km a day: how many days on the road?",
+      "scope": null,
+      "unit": "days",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km/dayKm",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "4000",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "Route length",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "dayKm",
+            "value": "550",
+            "unit": "km/day",
+            "assumption": "daily driving distance",
+            "source": null
+          }
+        ],
+        "outputUnit": "days",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: 4000 km ÷ 550 km/day per day.",
+          "Compute: 4000 ÷ 550 = 7.272727",
+          "Worked estimate: 7 days (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Days = distance ÷ daily distance.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 4000 km ÷ 550 km/day per day.",
+          "Compute: 4000 ÷ 550 = 7.272727",
+          "Worked estimate: 7 days (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "walk-big-equator",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "How many steps to walk once around the Equator (40,075 km) with a 0.70 m stride?",
+      "scope": null,
+      "unit": "steps",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "km*1000/stride",
+        "inputs": [
+          {
+            "name": "km",
+            "value": "40075",
+            "unit": "km",
+            "assumption": null,
+            "source": {
+              "title": "WGS-84 equatorial circumference",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "stride",
+            "value": "0.70",
+            "unit": "m",
+            "assumption": "average walking stride",
+            "source": null
+          }
+        ],
+        "outputUnit": "steps",
+        "precision": 0,
+        "roundTo": 10000,
+        "steps": [
+          "Model: Convert 40075 km to metres and divide by strides of 0.70 m.",
+          "Compute: 40075 × 1000 ÷ 0.70 = 57,250,000",
+          "Worked estimate: 57250000 steps (nearest 10,000)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Steps = kilometres × 1,000 ÷ stride.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Convert 40075 km to metres and divide by strides of 0.70 m.",
+          "Compute: 40075 × 1000 ÷ 0.70 = 57,250,000",
+          "Worked estimate: 57250000 steps (nearest 10,000)"
+        ]
+      }
+    },
+    {
+      "promptId": "simple-interest-12000",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "A $12,000 bond at 5% simple over 10 years pays out what total at maturity?",
+      "scope": null,
+      "unit": "USD",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "principal*(1+rate*years/100)",
+        "inputs": [
+          {
+            "name": "principal",
+            "value": "12000",
+            "unit": "USD",
+            "assumption": null,
+            "source": {
+              "title": "Deposit size",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "rate",
+            "value": "5",
+            "unit": "%/yr",
+            "assumption": null,
+            "source": {
+              "title": "Rate assumption",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "years",
+            "value": "10",
+            "unit": "years",
+            "assumption": null,
+            "source": {
+              "title": "Term",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "USD",
+        "precision": 0,
+        "roundTo": 100,
+        "steps": [
+          "Model: 12000 USD × (1 + 5 %/yr × 10 years ÷ 100).",
+          "Compute: 12000 × (1+5 × 10 ÷ 100) = 18,000",
+          "Worked estimate: 18000 USD (nearest 100)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Simple interest keeps the base fixed: total = principal × (1 + rate × years).",
+        "sourceTitle": null,
+        "steps": [
+          "Model: 12000 USD × (1 + 5 %/yr × 10 years ÷ 100).",
+          "Compute: 12000 × (1+5 × 10 ÷ 100) = 18,000",
+          "Worked estimate: 18000 USD (nearest 100)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-dhaka",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which metro area (by population) is closest to 23.9 million?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "million",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "city-metro-pop",
+        "target": "23.9"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible metro area (by population)s are shown.",
+        "comparison": "Figures use wider metropolitan-area estimates, not city-proper counts.",
+        "sourceTitle": "Editorial metro-area table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

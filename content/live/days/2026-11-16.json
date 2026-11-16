@@ -1,0 +1,213 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-16",
+  "themeTag": "orders of magnitude",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-mile",
+      "roundType": "direct_fact",
+      "category": "measurement",
+      "prompt": "One statute mile is exactly how many metres?",
+      "scope": null,
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "1609.344",
+        "precision": 3,
+        "source": {
+          "title": "International yard and pound agreement, NIST SP 811",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Exactly 1,609.344 m — the mile is defined as exactly 5,280 feet",
+        "sourceTitle": "International yard and pound agreement, NIST SP 811"
+      }
+    },
+    {
+      "promptId": "marathon-steps-10k",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 10 km road race: with a steady 0.72 m stride, roughly how many steps does the whole race take?",
+      "scope": null,
+      "unit": "steps",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "distance/stride",
+        "inputs": [
+          {
+            "name": "distance",
+            "value": "10000",
+            "unit": "m",
+            "assumption": null,
+            "source": {
+              "title": "Official race distance (World Athletics)",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "stride",
+            "value": "0.72",
+            "unit": "m",
+            "assumption": "steady recreational running stride",
+            "source": null
+          }
+        ],
+        "outputUnit": "steps",
+        "precision": 0,
+        "roundTo": 10,
+        "steps": [
+          "Model: Race distance 10000 m covered one stride of 0.72 m at a time.",
+          "Compute: 10000 ÷ 0.72 = 13,888.888889",
+          "Worked estimate: 13890 steps (nearest 10)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Steps are distance divided by stride length; striding isn't uniform, so only the order of magnitude is meaningful.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Race distance 10000 m covered one stride of 0.72 m at a time.",
+          "Compute: 10000 ÷ 0.72 = 13,888.888889",
+          "Worked estimate: 13890 steps (nearest 10)"
+        ]
+      }
+    },
+    {
+      "promptId": "rule-72-3",
+      "roundType": "calculation",
+      "category": "money",
+      "prompt": "At 3% annual growth, the rule of 72 gives what doubling time?",
+      "scope": null,
+      "unit": "years",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "k/rate",
+        "inputs": [
+          {
+            "name": "k",
+            "value": "72",
+            "unit": "%·yr",
+            "assumption": "rule-of-72 constant (100 × ln 2 ≈ 69.3, rounded up for mental math)",
+            "source": null
+          },
+          {
+            "name": "rate",
+            "value": "3",
+            "unit": "%/yr",
+            "assumption": null,
+            "source": {
+              "title": "Growth rate assumption",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "outputUnit": "years",
+        "precision": 1,
+        "roundTo": null,
+        "steps": [
+          "Model: Rule of 72: 72 %·yr ÷ 3 %/yr.",
+          "Compute: 72 ÷ 3 = 24",
+          "Worked estimate: 24 years"
+        ]
+      },
+      "reveal": {
+        "explanation": "Doubling time ≈ 72 ÷ annual growth rate.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Rule of 72: 72 %·yr ÷ 3 %/yr.",
+          "Compute: 72 ÷ 3 = 24",
+          "Worked estimate: 24 years"
+        ]
+      }
+    },
+    {
+      "promptId": "pizza-slices-28",
+      "roundType": "calculation",
+      "category": "math",
+      "prompt": "A 28 cm pizza in 70 cm² slices: slice count?",
+      "scope": null,
+      "unit": "slices",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "pi*(d/2)*(d/2)/slice",
+        "inputs": [
+          {
+            "name": "pi",
+            "value": "3.14159",
+            "unit": "(dimensionless)",
+            "assumption": "π rounded to 3.14159",
+            "source": null
+          },
+          {
+            "name": "d",
+            "value": "28",
+            "unit": "cm",
+            "assumption": null,
+            "source": {
+              "title": "Pizza diameter",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "slice",
+            "value": "70",
+            "unit": "cm²",
+            "assumption": "slice area",
+            "source": null
+          }
+        ],
+        "outputUnit": "slices",
+        "precision": 0,
+        "roundTo": 1,
+        "steps": [
+          "Model: Area π × 28 cm/2 squared, ÷ 70 cm² per slice.",
+          "Compute: 3.14159 × (28 ÷ 2) × (28 ÷ 2) ÷ 70 = 8.796452",
+          "Worked estimate: 9 slices (nearest 1)"
+        ]
+      },
+      "reveal": {
+        "explanation": "Slices = pizza area ÷ slice area.",
+        "sourceTitle": null,
+        "steps": [
+          "Model: Area π × 28 cm/2 squared, ÷ 70 cm² per slice.",
+          "Compute: 3.14159 × (28 ÷ 2) × (28 ÷ 2) ÷ 70 = 8.796452",
+          "Worked estimate: 9 slices (nearest 1)"
+        ]
+      }
+    },
+    {
+      "promptId": "tg-everest",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Which mountain is closest to 8,849 m?",
+      "scope": "Pick from the dataset list; closeness to the target is what scores.",
+      "unit": "m",
+      "countMode": false,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "mountains-elev",
+        "target": "8849"
+      },
+      "reveal": {
+        "explanation": "Your pick is compared with the target; the closest eligible mountains are shown.",
+        "comparison": "All twelve eight-thousanders lie in the Himalaya–Karakoram region; the reference peaks below them show the scale.",
+        "sourceTitle": "Editorial elevation table compiled from public survey data"
+      }
+    }
+  ]
+}
