@@ -1,0 +1,198 @@
+{
+  "kind": "estimation_puzzle",
+  "game": "estimation",
+  "date": "2026-11-13",
+  "themeTag": "household math",
+  "quality": "live",
+  "prompts": [
+    {
+      "promptId": "df-earth-moon-dist-arch3",
+      "roundType": "direct_fact",
+      "category": "space",
+      "prompt": "What is the average centre-to-centre distance from Earth to the Moon in kilometres?",
+      "scope": "Average semi-major axis",
+      "unit": "km",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "direct_fact",
+        "value": "384400",
+        "precision": 0,
+        "source": {
+          "title": "NASA Moon Fact Sheet",
+          "url": null,
+          "note": null
+        }
+      },
+      "reveal": {
+        "explanation": "Average lunar distance is approximately 384,400 km.",
+        "sourceTitle": "NASA Moon Fact Sheet"
+      }
+    },
+    {
+      "promptId": "shower-water-litres-arch3",
+      "roundType": "calculation",
+      "category": "household",
+      "prompt": "With a standard water-saving showerhead flowing at 9 litres per minute, roughly how many litres of water does an 8-minute daily shower use over a full 30-day month?",
+      "scope": null,
+      "unit": "litres",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "flow_rate*shower_mins*days",
+        "inputs": [
+          {
+            "name": "flow_rate",
+            "value": "9",
+            "unit": "L/min",
+            "assumption": "EPA WaterSense standard showerhead flow rate",
+            "source": {
+              "title": "US EPA WaterSense guidelines",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "shower_mins",
+            "value": "8",
+            "unit": "min",
+            "assumption": "Average shower duration",
+            "source": {
+              "title": "Residential End Uses of Water study",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "days",
+            "value": "30",
+            "unit": "days",
+            "assumption": "30-day month",
+            "source": {
+              "title": "Calendar standard",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "benchmark": "2160",
+        "roundTo": "whole",
+        "target": "2160"
+      },
+      "reveal": {
+        "explanation": "9 L/min × 8 min × 30 days = 2,160 litres of water per month.",
+        "sourceTitle": "EPA WaterSense & WRF Water Study"
+      }
+    },
+    {
+      "promptId": "smartphone-screen-pixels-arch3",
+      "roundType": "calculation",
+      "category": "tech",
+      "prompt": "A modern smartphone OLED display has a resolution of 2556 × 1179 pixels. Roughly how many total pixels are on the screen?",
+      "scope": null,
+      "unit": "pixels",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "height*width",
+        "inputs": [
+          {
+            "name": "height",
+            "value": "2556",
+            "unit": "px",
+            "assumption": null,
+            "source": {
+              "title": "Standard smartphone display specification",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "width",
+            "value": "1179",
+            "unit": "px",
+            "assumption": null,
+            "source": {
+              "title": "Standard smartphone display specification",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "benchmark": "3013524",
+        "roundTo": "whole",
+        "target": "3013524"
+      },
+      "reveal": {
+        "explanation": "2,556 × 1,179 = ~3,013,524 pixels (approx 3.01 megapixels).",
+        "sourceTitle": "Display specifications"
+      }
+    },
+    {
+      "promptId": "library-books-weight-arch3",
+      "roundType": "calculation",
+      "category": "culture",
+      "prompt": "A small neighborhood library branch holds 15,000 hardcover books. If each book weighs on average 650 grams, roughly how many kilograms do all the books weigh in total?",
+      "scope": null,
+      "unit": "kg",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "calculation",
+        "formula": "(books*grams_per_book)/1000",
+        "inputs": [
+          {
+            "name": "books",
+            "value": "15000",
+            "unit": "books",
+            "assumption": "Neighborhood branch collection size",
+            "source": {
+              "title": "ALA Public Library Statistics",
+              "url": null,
+              "note": null
+            }
+          },
+          {
+            "name": "grams_per_book",
+            "value": "650",
+            "unit": "g",
+            "assumption": "Average hardcover trade book mass",
+            "source": {
+              "title": "Publishing trade physical specifications",
+              "url": null,
+              "note": null
+            }
+          }
+        ],
+        "benchmark": "9750",
+        "roundTo": "whole",
+        "target": "9750"
+      },
+      "reveal": {
+        "explanation": "15,000 books × 0.65 kg = 9,750 kilograms (nearly 10 tonnes).",
+        "sourceTitle": "ALA Library standards"
+      }
+    },
+    {
+      "promptId": "tm-country-pop-arch3",
+      "roundType": "target_match",
+      "category": "geography",
+      "prompt": "Name a country whose total national population is closest to 100 million people.",
+      "scope": "National population in millions",
+      "unit": "million",
+      "countMode": true,
+      "hint": null,
+      "scoring": {
+        "type": "target_match",
+        "datasetId": "countries-pop-millions",
+        "target": "100"
+      },
+      "reveal": {
+        "explanation": "Vietnam is ~100M, DR Congo is ~106M, Turkey is ~87M, and the Philippines is ~116M.",
+        "sourceTitle": "Editorial population table compiled from public demographic estimates"
+      }
+    }
+  ]
+}

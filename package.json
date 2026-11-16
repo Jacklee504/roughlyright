@@ -12,6 +12,7 @@
     "test": "vitest run && tsx tests/integration.mts",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
+    "db:seed:community": "tsx scripts/seed-community.ts",
     "content:publish": "tsx scripts/publish-content.mts",
     "jobs:daily": "tsx scripts/jobs-daily.mts",
     "metrics": "tsx scripts/metrics.mts",
