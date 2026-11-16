@@ -7,7 +7,6 @@ import { q } from "@/lib/db/client";
 import ScoreRing from "@/components/ScoreRing";
 import PixelSprite from "@/components/pixel/PixelSprite";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
-import PixelStars from "@/components/pixel/PixelStars";
 import { TROPHY, SPARKLE, PALETTES } from "@/components/pixel/sprites";
 
 export const dynamic = "force-dynamic";
@@ -66,7 +65,6 @@ export default async function ResultPage({ params }: { params: Promise<{ token: 
   return (
     <main>
       <div className="card result-hero">
-        <PixelStars count={7} seed={2} />
         <span className="chip">{p.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
         <ScoreRing total={p.total} max={p.maxTotal} />
         <p className="verdict-row">
@@ -75,7 +73,7 @@ export default async function ResultPage({ params }: { params: Promise<{ token: 
               <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={20} />
             </span>
           ) : (
-            <AnimatedSprite name="sparkle" palette={PALETTES.star} size={16} />
+            <AnimatedSprite name="sparkle" palette={PALETTES.sparkle} size={16} />
           )}
           <span className="verdict-text">
             {p.total >= 450

@@ -28,7 +28,7 @@ export default function PixelSprite({
     let x = 0;
     while (x < row.length) {
       const ch = row[x];
-      if (ch === "." || !palette[ch]) {
+      if (ch === "." || !palette || !palette[ch]) {
         x++;
         continue;
       }

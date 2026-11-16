@@ -1105,3 +1105,525 @@ button.quiet .kbd { display: none; }
   45% { transform: scale(1.12); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-3) 30%, transparent); }
   100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
 }
+
+.sound-toggle-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  border-radius: 8px;
+  min-height: 32px;
+  min-width: 34px;
+  padding: 0 6px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+.sound-toggle-btn:hover {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+/* ==========================================================================
+   Scientific Laboratory Calibration & Metrology Gauge
+   ========================================================================== */
+
+.calibration-meter-card {
+  margin-bottom: 16px;
+  padding: 14px 18px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(2, 5, 16, 0.45);
+}
+
+.cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.cal-label-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.cal-sub {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+
+.cal-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.cal-val {
+  font-size: 1.4rem;
+  font-weight: 850;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.cal-unit {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.cal-gain-pill {
+  font-size: 0.75rem;
+  font-weight: 750;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--good) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--good) 45%, transparent);
+  color: var(--good);
+  animation: calGainPop 500ms cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+}
+
+@keyframes calGainPop {
+  0% { transform: translateY(4px) scale(0.85); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.cal-grade-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+}
+
+.grade-name {
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: var(--text);
+}
+
+.grade-tolerance {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--accent-3);
+  background: rgba(95, 227, 195, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.vernier-track {
+  position: relative;
+  height: 38px;
+  margin: 10px 4px 6px;
+  display: flex;
+  align-items: center;
+}
+
+.vernier-track-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(14, 20, 42, 0.85);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.vernier-track-fill {
+  position: absolute;
+  left: 0;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #ff7d8a 0%, #ffcf5c 35%, #5fe3c3 70%, #5fe3a1 100%);
+  box-shadow: 0 0 12px rgba(95, 227, 195, 0.6);
+  transition: width 900ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.vernier-milestones {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.vernier-node {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.node-graduation-line {
+  width: 2px;
+  height: 14px;
+  background: var(--line-strong);
+  transition: all 400ms ease;
+}
+
+.vernier-node.reached .node-graduation-line {
+  background: #fff;
+  box-shadow: 0 0 8px var(--accent-3);
+  height: 18px;
+}
+
+.node-cal-lbl {
+  position: absolute;
+  top: 15px;
+  font-size: 0.65rem;
+  font-weight: 750;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.vernier-node.reached .node-cal-lbl {
+  color: var(--text-dim);
+}
+
+.vernier-cursor {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: left 900ms cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cursor-sight {
+  position: relative;
+  width: 18px;
+  height: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.needle-pointer {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 8px solid var(--accent-3);
+  filter: drop-shadow(0 0 4px var(--accent-3));
+}
+
+.needle-hub {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--accent-3);
+  box-shadow: 0 0 8px var(--accent-3);
+  margin-top: 2px;
+}
+
+.recap-altitude-card {
+  margin: 18px 0 10px;
+  background: var(--surface-2);
+  width: 100%;
+}
+
+/* ==========================================================================
+   Guess Graph (Fermi & Plain inspired Estimation Spectrum & Community Curve)
+   ========================================================================== */
+
+.guess-graph-card {
+  margin: 14px 0 16px;
+  padding: 14px 16px 14px;
+  background: rgba(10, 15, 34, 0.7);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+}
+
+.guess-graph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.guess-graph-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+
+.guess-graph-tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(21, 28, 51, 0.8);
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.graph-tab-btn {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 4px 9px;
+  min-height: 0;
+  border-radius: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.graph-tab-btn:hover {
+  color: var(--text);
+}
+
+.graph-tab-btn.active {
+  background: var(--accent);
+  color: #060a17;
+}
+
+/* Accuracy Scale View */
+.scale-track-container {
+  position: relative;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  margin: 18px 0 12px;
+}
+
+.scale-tier-bands {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 12px;
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.tier-band {
+  height: 100%;
+}
+
+.tier-band.tier-far {
+  background: color-mix(in srgb, var(--bad) 45%, #151b32);
+}
+
+.tier-band.tier-range {
+  background: color-mix(in srgb, var(--warn) 55%, #151b32);
+}
+
+.tier-band.tier-close {
+  background: color-mix(in srgb, var(--good) 75%, #151b32);
+}
+
+.target-center-pin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.target-line {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+}
+
+.target-badge {
+  position: absolute;
+  top: -18px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fff;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.player-guess-pin {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+  pointer-events: none;
+  transition: left 600ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.player-guess-pin .pin-pip {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.player-guess-pin.exact .pin-pip,
+.player-guess-pin.close .pin-pip {
+  background: var(--good);
+}
+
+.player-guess-pin.in-range .pin-pip {
+  background: var(--warn);
+}
+
+.player-guess-pin.far .pin-pip {
+  background: var(--bad);
+}
+
+.pin-popup {
+  position: absolute;
+  top: 18px;
+  font-size: 0.7rem;
+  font-weight: 750;
+  white-space: nowrap;
+  background: rgba(14, 20, 42, 0.95);
+  border: 1px solid var(--line-strong);
+  padding: 2px 7px;
+  border-radius: 6px;
+  color: var(--text);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.scale-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
+.center-tick {
+  color: var(--text-dim);
+  font-weight: 800;
+}
+
+.scale-points-explainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.explainer-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.dot-exact { background: var(--good); }
+.dot-range { background: var(--warn); }
+.dot-far { background: var(--bad); }
+
+/* Community Histogram View */
+.community-curve-view {
+  padding: 8px 4px 4px;
+}
+
+.histogram-bars {
+  display: flex;
+  align-items: flex-end;
+  height: 100px;
+  gap: 6px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+.histo-col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+}
+
+.histo-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background: rgba(138, 180, 255, 0.25);
+  border: 1px solid rgba(138, 180, 255, 0.4);
+  transition: all 400ms ease;
+}
+
+.histo-col.player-col .histo-bar {
+  background: var(--accent);
+  border-color: #fff;
+  box-shadow: 0 0 12px rgba(138, 180, 255, 0.7);
+}
+
+.player-indicator-tag {
+  position: absolute;
+  top: -20px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--accent);
+  color: #060a17;
+  padding: 1px 5px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  animation: tagBounce 600ms ease-out both;
+}
+
+@keyframes tagBounce {
+  0% { transform: translateY(-4px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.histo-label {
+  position: absolute;
+  bottom: -22px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.community-note {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin: 10px 0 2px;
+  text-align: center;
+}

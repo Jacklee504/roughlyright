@@ -3,9 +3,9 @@ import Link from "next/link";
 import { getGuestId } from "@/lib/http/session";
 import { utcToday } from "@/lib/domain/calendar";
 import { q } from "@/lib/db/client";
-import PixelSky from "@/components/PixelSky";
-import PixelSprite from "@/components/pixel/PixelSprite";
-import { PLANET, PALETTES } from "@/components/pixel/sprites";
+import LabGrid from "@/components/LabGrid";
+import AnimatedSprite from "@/components/pixel/AnimatedSprite";
+import { PALETTES } from "@/components/pixel/sprites";
 
 export const metadata: Metadata = {
   title: "Estimation archive",
@@ -31,9 +31,10 @@ export default async function ArchiveIndexPage() {
 
   return (
     <main>
-      <PixelSky density={56} />
+      <LabGrid density={32} />
       <div className="hero">
-        <PixelSprite sprite={PLANET} palette={PALETTES.planet} size={38} className="hero-mascot" />
+        <AnimatedSprite name="oscilloscope" palette={PALETTES.oscilloscope} size={38} className="hero-mascot" />
+        <span className="chip">Historical calibration records</span>
         <h1>
           Estimation <span className="grad-text">archive</span>
         </h1>
@@ -69,6 +70,14 @@ export default async function ArchiveIndexPage() {
         </table>
       )}
       <div className="actions">
+        {rows.length > 0 ? (
+          <Link
+            className="primary"
+            href={`/estimation/archive/${rows[Math.floor(Math.random() * rows.length)].date}`}
+          >
+            🎲 Play random past puzzle
+          </Link>
+        ) : null}
         <Link className="btn" href="/estimation">Today's daily</Link>
         <Link className="btn" href="/">Home</Link>
       </div>

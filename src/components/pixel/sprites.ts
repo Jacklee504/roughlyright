@@ -1,127 +1,169 @@
 /**
- * Pixel-art sprites — hand-drawn text grids.
+ * Pixel-art sprites — hand-drawn technical & laboratory grids.
  *
- * A sprite is an array of equal-length strings (the grid). Each character is
- * a palette key; "." is transparent. Static sprites are rendered by
- * PixelSprite as crisp SVG rects (shape-rendering: crispEdges). Animated
- * sprites list their frames in SPRITE_FRAMES and are cycled by
- * AnimatedSprite with pure CSS steps — zero JS per frame.
- *
- * Style notes (keep consistent when drawing new frames):
- * - 12-wide grids (SPARKLE is 7-wide, allowed), 12 rows, square viewBox.
- * - Two-tone shading: a darker companion colour for depth, never outlines.
- * - Palettes reuse the design-system accents (see globals.css :root).
+ * Grids: 12-wide, 12 rows, square viewBox (shape-rendering: crispEdges).
+ * Two-tone shading for depth, no harsh black borders.
  */
 
 export type Palette = Record<string, string>;
 
-/** Astronaut mascot: frame 2 blinks (visor eyes closed). */
-const ASTRONAUT_OPEN = [
+/** Laboratory Scientist / Researcher Mascot: blinking safety goggles */
+const SCIENTIST_OPEN = [
   "...wwwwww...",
   "..wwwwwwww..",
   ".wwwwwwwwww.",
-  ".wwkkkkkkww.",
-  ".wkkkkkkkkw.",
-  ".wkkwkkwkkw.",
-  ".wkkkkkkkkw.",
+  ".wccccccccw.",
+  ".wccccccccw.",
+  ".wcckcckccw.",
+  ".wccccccccw.",
   ".wwkkkkkkww.",
   "..wwwwwwww..",
   "...wwwwww...",
+  "...wwwwww...",
   "....wwww....",
-  "............",
 ];
-const ASTRONAUT_BLINK = [
+
+const SCIENTIST_BLINK = [
   "...wwwwww...",
   "..wwwwwwww..",
   ".wwwwwwwwww.",
-  ".wwkkkkkkww.",
-  ".wkkkkkkkkw.",
-  ".wkkkkkkkkw.",
-  ".wkkkkkkkkw.",
+  ".wccccccccw.",
+  ".wccccccccw.",
+  ".wccccccccw.",
+  ".wccccccccw.",
   ".wwkkkkkkww.",
   "..wwwwwwww..",
   "...wwwwww...",
+  "...wwwwww...",
   "....wwww....",
+];
+
+export const SCIENTIST = SCIENTIST_OPEN;
+
+/** Laboratory Flask / Beaker: bubbling liquid inside */
+const FLASK_F1 = [
+  "....wwww....",
+  "....w..w....",
+  "....w..w....",
+  "...w....w...",
+  "..w..gg..w..",
+  ".w..gggg..w.",
+  ".w.gggggg.w.",
+  ".w.gggggg.w.",
+  ".w.ggyygg.w.",
+  ".wggggggggw.",
+  "..wwwwwwww..",
   "............",
 ];
-export const ASTRONAUT = ASTRONAUT_OPEN;
 
-/** Rocket: three exhaust flicker frames (bottom two rows vary). */
-const ROCKET_BODY = [
-  ".....rr.....",
-  "....rwwr....",
+const FLASK_F2 = [
   "....wwww....",
-  "...wwyyww...",
-  "...wwyyww...",
+  "....w..w....",
+  "....w..w....",
+  "...w....w...",
+  "..w.gg...w..",
+  ".w..gggg..w.",
+  ".w.ggyygg.w.",
+  ".w.gggggg.w.",
+  ".w..gggg..w.",
+  ".wggggggggw.",
   "..wwwwwwww..",
-  "..wwwwwwww..",
-  ".rwwwwwwwwr.",
-  ".rrwwwwwwrr.",
-  ".rr.wwww.rr.",
+  "............",
 ];
-export const ROCKET = [
-  ...ROCKET_BODY,
-  ".....oo.....",
-  ".....oo.....",
-];
-const ROCKET_F2 = [
-  ...ROCKET_BODY,
-  "....oyyo....",
-  ".....oo.....",
-];
-const ROCKET_F3 = [
-  ...ROCKET_BODY,
-  ".....oo.....",
-  "....oyyo....",
-];
-export const ROCKET_FRAMES = [ROCKET, ROCKET_F2, ROCKET_F3, ROCKET_F2];
 
-/** Flame: three flicker frames. */
-export const FLAME = [
-  ".....y......",
-  "....yy......",
-  "....yyy.....",
-  "...yyyy.o...",
-  "..oyyyyoo...",
-  "..oyyyyoo...",
-  ".ooyyyyooo..",
-  ".ooyyyyooo..",
-  ".oooyyyoooo.",
-  "..ooyyoooo..",
-  "...oooooo...",
-  "....oooo....",
+export const FLASK = FLASK_F1;
+export const FLASK_FRAMES = [FLASK_F1, FLASK_F2];
+
+/** Oscilloscope / Signal Wave: sine pulse scan */
+const SCOPE_F1 = [
+  ".kkkkkkkkkk.",
+  ".kcccccccck.",
+  ".kc......ck.",
+  ".kc......ck.",
+  ".kc..gg..ck.",
+  ".kcg.gg.gck.",
+  ".kc.g..g.ck.",
+  ".kc......ck.",
+  ".kc......ck.",
+  ".kcccccccck.",
+  ".kkkkkkkkkk.",
+  "....k..k....",
 ];
-const FLAME_F2 = [
-  "......y.....",
-  "....yy......",
-  "....yyy.....",
-  "...yyyyo....",
-  "..oyyyyoo...",
-  "..oyyyyoo...",
-  ".ooyyyyooo..",
-  ".ooyyyyooo..",
-  ".oooyyyooo..",
-  "..ooyyoooo..",
-  "...oooooo...",
-  "....oooo....",
+
+const SCOPE_F2 = [
+  ".kkkkkkkkkk.",
+  ".kcccccccck.",
+  ".kc......ck.",
+  ".kc.gg...ck.",
+  ".kcg..g..ck.",
+  ".kc....g.ck.",
+  ".kc.....gck.",
+  ".kc......ck.",
+  ".kc......ck.",
+  ".kcccccccck.",
+  ".kkkkkkkkkk.",
+  "....k..k....",
 ];
-const FLAME_F3 = [
-  "....y.......",
+
+export const OSCILLOSCOPE = SCOPE_F1;
+export const OSCILLOSCOPE_FRAMES = [SCOPE_F1, SCOPE_F2];
+
+/** Caliper / Precision Gauge: micrometer jaws */
+export const CALIPER = [
+  "wwwwwwwwwwww",
+  "wkkkkkkkkkkw",
+  "wk...k....kw",
+  "wk...k....kw",
+  "wk...k....kw",
+  "wk...w....kw",
+  "wk........kw",
+  "wkkkkkkkkkkw",
+  "............",
+  "............",
+  "............",
+  "............",
+];
+
+/** Precision Balance Scale */
+export const BALANCE = [
   ".....yy.....",
-  "....yyy.....",
-  "..oyyyy.....",
-  "..oyyyyoo...",
-  "..oyyyyoo...",
-  ".ooyyyyooo..",
-  ".oooyyyooo..",
-  ".oooyyyoooo.",
-  "..ooyyoooo..",
-  "...oooooo...",
-  "....oooo....",
+  "....yyyy....",
+  "y...yyyy...y",
+  "yy..yyyy..yy",
+  "yyyy.yy.yyyy",
+  ".yy..yy..yy.",
+  ".....yy.....",
+  ".....yy.....",
+  ".....yy.....",
+  ".....yy.....",
+  "...yyyyyy...",
+  "..yyyyyyyy..",
 ];
-export const FLAME_FRAMES = [FLAME, FLAME_F2, FLAME_F3, FLAME_F2];
 
-/** Trophy (static; the shine is a CSS sweep on the wrapper). */
+/** Sparkle / Precision Indicator */
+export const SPARKLE = [
+  "...w...",
+  "..wXw..",
+  ".wXXXw.",
+  "wXXXXXw",
+  ".wXXXw.",
+  "..wXw..",
+  "...w...",
+];
+
+const SPARKLE_SMALL = [
+  ".......",
+  "...w...",
+  "..wXw..",
+  "...w...",
+  ".......",
+  ".......",
+  ".......",
+];
+
+export const SPARKLE_FRAMES = [SPARKLE, SPARKLE_SMALL];
+
+/** Trophy: golden benchmark */
 export const TROPHY = [
   ".oooooooooo.",
   ".oyyyyyyyyo.",
@@ -137,129 +179,30 @@ export const TROPHY = [
   "............",
 ];
 
-export const PLANET = [
-  "....llll....",
-  "..ll....ll..",
-  ".l.pppppp.l.",
-  ".lppplppppl.",
-  "..ppplpppp..",
-  "...pppppp...",
-  "...pppppp...",
-  "..pppppppp..",
-  ".l.pppppp.l.",
-  "..ll....ll..",
-  "....llll....",
-  "............",
-];
-
-/** Crescent moon with two subtle crater frames (slow "phase" shimmer). */
-export const MOON = [
-  "....wwww....",
-  "..ww....ww..",
-  ".ww......w..",
-  ".w..........",
-  ".w..........",
-  "w......d....",
-  ".w..........",
-  ".w..........",
-  ".w......d...",
-  ".ww......w..",
-  "..ww....ww..",
-  "....wwww....",
-];
-const MOON_F2 = [
-  "....wwww....",
-  "..ww....ww..",
-  ".ww......w..",
-  ".w..........",
-  ".w.....d....",
-  "w...........",
-  ".w..........",
-  ".w.....d....",
-  ".w..........",
-  ".ww......w..",
-  "..ww....ww..",
-  "....wwww....",
-];
-export const MOON_FRAMES = [MOON, MOON, MOON_F2, MOON_F2];
-
-/** UFO: frame 2 lowers the tractor beam. */
-export const UFO = [
-  "............",
-  "............",
-  "....wwww....",
-  "...wwwwww...",
-  "..wyywwyyw..",
-  ".wwwwwwwwww.",
-  ".wkwwkkwwkw.",
-  "..wwwwwwww..",
-  "............",
-  "............",
-  "............",
-  "............",
-];
-const UFO_BEAM = [
-  "............",
-  "............",
-  "....wwww....",
-  "...wwwwww...",
-  "..wyywwyyw..",
-  ".wwwwwwwwww.",
-  ".wkwwkkwwkw.",
-  "..wwwwwwww..",
-  "....d..d....",
-  "...d....d...",
-  "....d..d....",
-  "............",
-];
-export const UFO_FRAMES = [UFO, UFO, UFO_BEAM, UFO_BEAM, UFO, UFO];
-
-export const SPARKLE = [
-  "...w...",
-  "..wXw..",
-  ".wXXXw.",
-  "wXXXXXw",
-  ".wXXXw.",
-  "..wXw..",
-  "...w...",
-];
-const SPARKLE_SMALL = [
-  ".......",
-  "...w...",
-  "..wXw..",
-  "...w...",
-  ".......",
-  ".......",
-  ".......",
-];
-export const SPARKLE_FRAMES = [SPARKLE, SPARKLE_SMALL];
-
 /** Multi-frame animation table for AnimatedSprite. */
 export const SPRITE_FRAMES = {
-  astronaut: { frames: [ASTRONAUT_OPEN, ASTRONAUT_BLINK, ASTRONAUT_OPEN, ASTRONAUT_OPEN], fps: 1.2 },
-  rocket: { frames: ROCKET_FRAMES, fps: 8 },
-  flame: { frames: FLAME_FRAMES, fps: 7 },
-  moon: { frames: MOON_FRAMES, fps: 0.8 },
-  ufo: { frames: UFO_FRAMES, fps: 2.5 },
+  scientist: { frames: [SCIENTIST_OPEN, SCIENTIST_BLINK, SCIENTIST_OPEN, SCIENTIST_OPEN], fps: 1.2 },
+  flask: { frames: FLASK_FRAMES, fps: 2 },
+  oscilloscope: { frames: OSCILLOSCOPE_FRAMES, fps: 2.5 },
   sparkle: { frames: SPARKLE_FRAMES, fps: 2.2 },
 } as const;
 
 export type AnimatedSpriteName = keyof typeof SPRITE_FRAMES;
 
-/** Shared palettes; a gray/ghost variant of any sprite reads as "inactive". */
+/** Shared laboratory palettes */
 export const PALETTES = {
-  astronaut: { w: "#e8eeff", k: "#0d1430", y: "#8ab4ff" } satisfies Palette,
-  rocket: { w: "#e8eeff", r: "#ff7d8a", y: "#ffcf5c", o: "#ff9d4d" } satisfies Palette,
+  scientist: { w: "#f1f4ff", k: "#101830", c: "#5fe3c3" } satisfies Palette,
+  flask: { w: "#dfe7ff", g: "#5fe3a1", y: "#ffcf5c" } satisfies Palette,
+  oscilloscope: { k: "#0a1022", c: "#202e52", g: "#5fe3c3" } satisfies Palette,
+  caliper: { w: "#8ab4ff", k: "#151e36" } satisfies Palette,
+  balance: { y: "#ffcf5c" } satisfies Palette,
   trophy: { y: "#ffd75c", o: "#c9953a" } satisfies Palette,
-  flame: { o: "#ff9d4d", y: "#ffcf5c" } satisfies Palette,
-  planet: { p: "#8f7bff", l: "#b48cff" } satisfies Palette,
-  moon: { w: "#e8eeff", d: "#9aa8cc" } satisfies Palette,
-  ufo: { w: "#e8eeff", y: "#8ab4ff", k: "#0d1430", d: "#4a5e8f" } satisfies Palette,
-  ghost: { p: "#5a647f", l: "#4a5470" } satisfies Palette,
+  sparkle: { w: "#dfe7ff", X: "#5fe3c3" } satisfies Palette,
   star: { w: "#dfe7ff", X: "#8ab4ff" } satisfies Palette,
   starWarm: { w: "#ffe9a3", X: "#ffcf5c" } satisfies Palette,
   starMint: { w: "#b9ffe8", X: "#5fe3c3" } satisfies Palette,
+  gauge: { w: "#8ab4ff", g: "#5fe3a1", r: "#ff7d8a", k: "#0b1226" } satisfies Palette,
+  ghost: { p: "#5a647f", l: "#4a5470", k: "#202e52" } satisfies Palette,
 } as const;
 
-/** Pixel-confetti colours (canvas), matching the sprite palettes. */
-export const CONFETTI_COLORS = ["#6ea8ff", "#8f7bff", "#b48cff", "#5fe3c3", "#ffcf5c", "#ff9d4d", "#ff7d8a", "#e8eeff"];
+export const CONFETTI_COLORS = ["#5fe3c3", "#5fe3a1", "#8ab4ff", "#b48cff", "#ffcf5c", "#f1f4ff"];

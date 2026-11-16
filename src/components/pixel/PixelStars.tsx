@@ -21,7 +21,7 @@ export default function PixelStars({
     const size = i % 3 === 0 ? 10 : 7;
     const delay = `${(i % 6) * 0.42}s`;
     const palette =
-      i % 3 === 0 ? PALETTES.starWarm : i % 3 === 1 ? PALETTES.star : PALETTES.starMint;
+      i % 3 === 0 ? PALETTES.sparkle : i % 3 === 1 ? PALETTES.flask : PALETTES.scientist;
     return { x, y, size, delay, palette };
   });
 

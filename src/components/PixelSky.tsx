@@ -43,6 +43,10 @@ export default function PixelSky({ density = 64 }: { density?: number }) {
     let flyby: Flyby | null = null;
     let nextFlybyAt = 14 + Math.random() * 12;
 
+    type SatelliteObj = { x: number; y: number; vx: number; vy: number; blink: number };
+    let satellite: SatelliteObj | null = null;
+    let nextSatelliteAt = 10 + Math.random() * 15;
+
     const resize = () => {
       w = Math.max(1, Math.floor(window.innerWidth / SCALE));
       h = Math.max(1, Math.floor(window.innerHeight / SCALE));
@@ -147,6 +151,40 @@ export default function PixelSky({ density = 64 }: { density?: number }) {
           if (flyby.y < -10) {
             flyby = null;
             nextFlybyAt = t / 1000 + 18 + Math.random() * 14;
+          }
+        }
+
+        // Slow horizontal satellite pass with blinking beacon
+        if (!satellite && t / 1000 > nextSatelliteAt) {
+          satellite = {
+            x: -8,
+            y: 8 + Math.random() * (h * 0.45),
+            vx: 7 + Math.random() * 5,
+            vy: (Math.random() - 0.5) * 1.5,
+            blink: 0,
+          };
+        }
+        if (satellite) {
+          satellite.x += satellite.vx * dt;
+          satellite.y += satellite.vy * dt;
+          satellite.blink += dt * 4;
+          const sx = Math.floor(satellite.x);
+          const sy = Math.floor(satellite.y);
+          // Solar panels
+          ctx.fillStyle = "#4a72b0";
+          ctx.fillRect(sx - 2, sy, 1, 2);
+          ctx.fillRect(sx + 2, sy, 1, 2);
+          // Core chassis
+          ctx.fillStyle = "#dfe7ff";
+          ctx.fillRect(sx - 1, sy, 3, 2);
+          // Blinking light
+          if (Math.sin(satellite.blink) > 0) {
+            ctx.fillStyle = "#5fe3c3";
+            ctx.fillRect(sx, sy - 1, 1, 1);
+          }
+          if (satellite.x > w + 12) {
+            satellite = null;
+            nextSatelliteAt = t / 1000 + 15 + Math.random() * 16;
           }
         }
       }

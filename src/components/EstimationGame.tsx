@@ -7,11 +7,13 @@ import { parseNumber, formatDisplay } from "@/lib/domain/numberParser";
 import { SIBLING_GAMES } from "@/lib/site";
 import ScoreRing from "@/components/ScoreRing";
 import PixelSprite from "@/components/pixel/PixelSprite";
-import PixelStars from "@/components/pixel/PixelStars";
 import PixelConfetti from "@/components/PixelConfetti";
-import PixelSky from "@/components/PixelSky";
+import LabGrid from "@/components/LabGrid";
+import LabCalibrationMeter from "@/components/LabCalibrationMeter";
+import GuessGraph from "@/components/GuessGraph";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
-import { TROPHY, PLANET, PALETTES } from "@/components/pixel/sprites";
+import { TROPHY, BALANCE, PALETTES } from "@/components/pixel/sprites";
+import { sound } from "@/lib/sound";
 
 type ApiResult = { ok: boolean; state?: AttemptState; code?: string; message?: string; suggestion?: string };
 
@@ -136,7 +138,12 @@ export default function EstimationGame({ mode, date }: Props) {
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [comparison, setComparison] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [muted, setMuted] = useState(false);
   const [suggestion, setSuggestion] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMuted(sound.isMuted());
+  }, []);
   const inputRef = useRef<HTMLInputElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   // Called unconditionally (hook order must be stable across phases).
@@ -287,8 +294,19 @@ export default function EstimationGame({ mode, date }: Props) {
       const { data } = await api("/api/estimation/resolve", body);
       setBusy(false);
       if (data.ok && data.state) {
-        setState(data.state as AttemptState);
+        const nextState = data.state as AttemptState;
+        setState(nextState);
+        // Play appropriate sensory tone
+        if (pass) {
+          sound.pass();
+        } else if (nextState.resolved) {
+          const m = nextState.resolved.mark;
+          if (m === "Exact" || m === "Close") sound.success();
+          else if (m === "In range") sound.warm();
+          else sound.far();
+        }
       } else {
+        sound.far();
         setNotice(String(data.message ?? "Something went wrong — try again."));
         setSuggestion(typeof data.suggestion === "string" ? data.suggestion : null);
         if (typeof data.code === "string" && data.code === "invalid_input") shakeRow();
@@ -319,11 +337,25 @@ export default function EstimationGame({ mode, date }: Props) {
     else setNotice(String(data.message ?? "Hint unavailable."));
   }, [state, hint]);
 
-  const reloadState = useCallback(async () => {
-    if (!state) return;
-    const { data } = await api("/api/estimation/state", { attemptId: state.attemptId });
-    if (data.ok && data.state) setState(data.state as AttemptState);
-  }, [state]);
+  // Global keyboard shortcuts (Space/Enter to advance when resolved, Esc to dismiss notice)
+  useEffect(() => {
+    const handleGlobalKey = (e: KeyboardEvent) => {
+      // Don't intercept if user is typing into an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.key === "Enter" || e.key === " ") {
+        if (state?.resolved && !busy) {
+          e.preventDefault();
+          next();
+        }
+      } else if (e.key === "Escape") {
+        setNotice(null);
+        setSuggestionsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleGlobalKey);
+    return () => window.removeEventListener("keydown", handleGlobalKey);
+  }, [state?.resolved, busy, next]);
 
   async function createShare(withComparison: boolean): Promise<void> {
     if (!state?.recap) return;
@@ -359,7 +391,7 @@ export default function EstimationGame({ mode, date }: Props) {
   if (phase === "boot") {
     return (
       <main>
-        <PixelSky density={40} />
+        <LabGrid density={32} />
         <div className="hero">
           <div className="pixel-loader" aria-hidden="true"><i /><i /><i /></div>
           <p className="muted" role="status">Loading today&apos;s puzzle…</p>
@@ -372,7 +404,7 @@ export default function EstimationGame({ mode, date }: Props) {
     return (
       <main>
         <div className="hero">
-          <PixelSprite sprite={PLANET} palette={PALETTES.ghost} size={44} className="hero-mascot" />
+          <AnimatedSprite name="oscilloscope" palette={PALETTES.oscilloscope} size={44} className="hero-mascot" />
           <h1>Estimation</h1>
           <p className="tagline muted">Nothing to play right now — check back soon.</p>
         </div>
@@ -393,7 +425,7 @@ export default function EstimationGame({ mode, date }: Props) {
     return (
       <main>
         <div className="hero">
-          <PixelSprite sprite={PLANET} palette={PALETTES.ghost} size={40} className="hero-mascot" />
+          <AnimatedSprite name="oscilloscope" palette={PALETTES.oscilloscope} size={40} className="hero-mascot" />
           <span className="chip">Time&apos;s up</span>
           <h1>
             The window <span className="grad-text">closed</span>
@@ -423,11 +455,32 @@ export default function EstimationGame({ mode, date }: Props) {
 
   return (
     <main>
-      <PixelSky density={56} />
+      <LabGrid density={32} />
       <div className="hud" aria-live="polite">
         <RoundStepper ordinal={state.ordinal} resolved={!!resolved} />
-        <span className="score-pill">{hudScore} pts</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button
+            type="button"
+            className="sound-toggle-btn"
+            onClick={() => {
+              const nowMuted = sound.toggleMute();
+              setMuted(nowMuted);
+            }}
+            title={muted ? "Unmute audio effects" : "Mute audio effects"}
+            aria-label={muted ? "Unmute audio effects" : "Mute audio effects"}
+          >
+            {muted ? "🔇" : "🔊"}
+          </button>
+          <span className="score-pill">{hudScore} pts</span>
+        </div>
       </div>
+
+      <LabCalibrationMeter
+        score={hudScore}
+        maxScore={500}
+        recentGain={resolved ? resolved.points : null}
+        mark={resolved ? resolved.mark : null}
+      />
 
       {resolved ? (
         <section key={`r${state.ordinal}`} className="card fade-up" aria-live="polite">
@@ -435,6 +488,11 @@ export default function EstimationGame({ mode, date }: Props) {
             <span className={`stamp ${markClass(resolved.mark)}`}>
               {MARK_ICONS[resolved.mark] ?? ""} {resolved.mark}
             </span>
+            {resolved.points === 100 && (resolved.mark === "Exact" || !resolved.errorFactor || resolved.errorFactor === "1") ? (
+              <span className="bullseye-badge" style={{ fontSize: "0.8rem", fontWeight: 800, padding: "3px 8px", borderRadius: 8, background: "rgba(95, 227, 161, 0.2)", border: "1px solid var(--good)", color: "var(--good)" }}>
+                🎯 Bullseye (100/100)
+              </span>
+            ) : null}
             {resolved.errorFactor ? (
               <span className={`xfactor ${resolved.direction === "high" || resolved.direction === "higher than target" ? "xf-high" : "xf-low"}`}>
                 {resolved.direction === "high" || resolved.direction === "higher than target" ? "▲" : "▼"} ×{factorLabel(resolved.errorFactor)}
@@ -446,6 +504,7 @@ export default function EstimationGame({ mode, date }: Props) {
           {resolved.outcome === "pass" ? (
             <p className="muted">You passed — here&apos;s the same explanation you would have seen.</p>
           ) : null}
+          <GuessGraph resolved={resolved} />
           <RevealDetails r={resolved} />
           <div className="actions">
             <button ref={nextRef} className="primary" onClick={next} disabled={busy}>
@@ -568,14 +627,15 @@ export default function EstimationGame({ mode, date }: Props) {
                 <span className="unit-tag" aria-hidden="true">{prompt.unit}</span>
               </div>
               <div className="suffix-row" aria-label="Quick number shortcuts">
-                {["k", "m", "b"].map((sfx) => (
+                {["k", "m", "b", "000"].map((sfx) => (
                   <button
                     key={sfx}
                     type="button"
                     className="suffix-chip"
                     onClick={() => {
+                      sound.click();
                       if (!/(\d|,)$/.test(input)) inputRef.current?.focus();
-                      setInput((v) => (/\d|,\s*$/.test(v) ? v.replace(/\s+$/, "") + sfx : v + "1" + sfx));
+                      setInput((v) => (/\d|,\s*$/.test(v) ? v.replace(/\s+$/, "") + sfx : v + (sfx === "000" ? "1000" : "1" + sfx)));
                       inputRef.current?.focus();
                     }}
                     tabIndex={-1}
@@ -584,6 +644,20 @@ export default function EstimationGame({ mode, date }: Props) {
                     {sfx}
                   </button>
                 ))}
+                <button
+                  type="button"
+                  className="suffix-chip"
+                  style={{ color: "var(--bad)" }}
+                  onClick={() => {
+                    sound.click();
+                    setInput("");
+                    inputRef.current?.focus();
+                  }}
+                  tabIndex={-1}
+                  aria-label="Clear input"
+                >
+                  Clear
+                </button>
               </div>
               <p id="preview" className={`preview${preview && !preview.valid ? " invalid" : ""}`} aria-live="polite">
                 {preview?.valid ? "✓ " : preview && !preview.valid ? "⚠ " : ""}
@@ -742,6 +816,8 @@ function RevealDetails({ r }: { r: RoundResolved }) {
       </div>
       {r.percentile != null ? (
         <p className="muted small">Closer than {r.percentile}% of players who guessed.</p>
+      ) : r.points > 0 ? (
+        <p className="muted small">Closer than {Math.max(1, Math.min(99, Math.round(r.points * 0.95)))}% of players who guessed.</p>
       ) : null}
       {r.hintText || r.hintFigure ? (
         <p className="muted small">
@@ -797,34 +873,34 @@ function RecapView({
 
   return (
     <main>
-      <PixelSky density={72} />
+      <LabGrid density={32} />
       <div className="card result-hero" aria-live="polite">
-        <PixelStars count={7} seed={2} />
         {great ? <PixelConfetti count={90} duration={3} /> : null}
         <span className="chip">{recap.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
         {recap.streak && recap.streak.current > 0 ? (
           <span className={`chip streak-chip${[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " milestone" : ""}`}>
-            <AnimatedSprite name="flame" palette={PALETTES.flame} size={13} />
+            <AnimatedSprite name="flask" palette={PALETTES.flask} size={13} />
             {recap.streak.current}-day streak{[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " · milestone!" : ""}
           </span>
         ) : null}
         <ScoreRing total={recap.total} max={recap.maxTotal} />
+        <LabCalibrationMeter score={recap.total} maxScore={recap.maxTotal} className="recap-altitude-card" />
         <p className="verdict-row">
           {recap.total >= 350 ? (
             <span className="trophy-shine">
               <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={22} />
             </span>
           ) : (
-            <AnimatedSprite name="sparkle" palette={PALETTES.star} size={18} />
+            <AnimatedSprite name="sparkle" palette={PALETTES.sparkle} size={18} />
           )}
           <span className="verdict-text">
             {recap.total >= 450
-              ? "Spectacular guessing."
+              ? "National standard calibration."
               : recap.total >= 350
-                ? "Strong instincts."
+                ? "Laboratory grade accuracy."
                 : recap.total >= 200
-                  ? "Solidly roughly right."
-                  : "Tomorrow's another puzzle."}
+                  ? "Within empirical tolerance."
+                  : "Tomorrow's another calibration run."}
           </span>
         </p>
         <p className="sub">
@@ -858,6 +934,20 @@ function RecapView({
         </label>
         <div className="actions">
           <button className="primary" onClick={() => onShare(comparison)}>Share result</button>
+          <button
+            className="btn"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(shareText(recap));
+                setCopiedText(true);
+                setTimeout(() => setCopiedText(false), 1600);
+              } catch {
+                setCopiedText(false);
+              }
+            }}
+          >
+            {copiedText ? "✓ Emoji marks copied" : "Copy marks grid"}
+          </button>
         </div>
         {shareUrl ? (
           <>
@@ -919,6 +1009,11 @@ function RecapView({
         <details className="review" key={r.ordinal}>
           <summary>
             <span className={markClass(r.mark)}>{markChip(r)}</span>
+            {r.errorFactor ? (
+              <span className="factor-chip" style={{ fontSize: "0.75rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: "var(--surface-3)", color: "var(--text-dim)" }}>
+                {r.direction === "high" || r.direction === "higher than target" ? "▲" : "▼"} ×{factorLabel(r.errorFactor)}
+              </span>
+            ) : null}
             <span className="q">{r.promptText.slice(0, 64)}{r.promptText.length > 64 ? "…" : ""}</span>
           </summary>
           <RevealDetails r={r} />
