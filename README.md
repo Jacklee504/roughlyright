@@ -34,7 +34,8 @@ demo days used only when no live content exists.
 | `npm run db:migrate`     | Apply versioned SQL migrations from `migrations/*.sql` |
 | `npm run db:seed`        | Import editorial content — live library first; fixtures only when no live content exists (local demo) |
 | `npm run content:publish`| **Production path**: imports approved live content only — rejects fixtures, requires `content/live/approvals.json` editor approval metadata, freezes datasets referenced by published puzzles |
-| `npm run jobs:daily`     | Daily ops job: atomically reconciles `site_events` rollups from attempt ground truth and applies retention (12-month inactive-attempt purge, closed reports + old rollup rows deleted after 12 months) |
+| `npm run jobs:daily`     | Daily ops job: reconciles `site_events` rollups from attempt ground truth, rolls up invalid-input funnel reasons (Q48), applies retention (12-month attempts/reports/rollups, 90-day granular invalid-input events, expired rate-limit windows) and alerts (exit code 2) if today's live daily is missing (Q50) |
+| `npm run metrics`        | Q45 KPI report: D7 return among first-time finishers (primary), D1, completion, share and invalid-input correction rates, with the <100-finishers directional caveat |
 | `npx tsx scripts/triage.mts list` | Private content-report triage CLI (`list [--status …]`, `resolve <id>`, `dismiss <id>`) |
 | `npx tsx scripts/verify-content.mts` | Re-validates every file in `content/live/` with the production validator + benchmark cross-checks |
 | `npm run db:reset`       | Delete the local database and redo migrate + seed |
@@ -61,6 +62,7 @@ There are no required environment variables for local development. Optional:
 | --------------- | ------- | ------------- |
 | `DATABASE_PATH` | PGlite data directory, or `:memory:` for a RAM-only database | `./.data/pg` |
 | `DATABASE_URL`  | Hosted PostgreSQL connection string; when set, it takes precedence over PGlite (production/Netlify mode) | `postgresql://…-pooler…/neondb?sslmode=require` |
+| `CONTACT_EMAIL` | Operator contact address shown on `/terms`; when empty the terms page points at the in-game report button and privacy controls instead | `you@example.com` |
 
 No `.env` file is needed for local play; nothing here reads secrets.
 (Never put secrets in this project or in chat — hosted credentials live in

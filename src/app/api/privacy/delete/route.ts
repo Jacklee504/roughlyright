@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGuestId, GUEST_COOKIE } from "@/lib/http/session";
 import { sameOrigin } from "@/lib/http/origin";
-import { rateLimit } from "@/lib/http/ratelimit";
+import { rateLimit, rateLimitNetwork } from "@/lib/http/ratelimit";
 import { deleteGuestData } from "@/lib/service/privacy";
 
 export const dynamic = "force-dynamic";
@@ -21,6 +21,10 @@ export async function POST(req: NextRequest) {
   }
   if (!rateLimit(`privacy-delete:${guestId}`, 5, 60 * 60_000)) {
     return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many requests." }, { status: 429 });
+  }
+  // Q26: coarse hashed network-key limit alongside the per-guest one.
+  if (!(await rateLimitNetwork(req, "privacy-delete-net", 10))) {
+    return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many requests from your network — try again in a moment." }, { status: 429 });
   }
   const body = await req.json().catch(() => null);
   if (!body || body.confirm !== "DELETE MY DATA") {

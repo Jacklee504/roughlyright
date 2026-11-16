@@ -13,3 +13,11 @@ export type CrossPromo = {
 };
 
 export const SIBLING_GAMES: CrossPromo[] = [];
+
+/**
+ * Operator contact address (Q25/Q57). Shown on the terms page as a plain
+ * mailto link; when left empty the terms page points players at the in-game
+ * report button and the privacy controls instead. Set this per-deployment —
+ * it is deliberately not a shared secret, just a site option.
+ */
+export const CONTACT_EMAIL = "";

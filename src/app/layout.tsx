@@ -32,6 +32,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </nav>
         </header>
         {children}
+        <footer className="site-footer" style={{ textAlign: "center", padding: "28px 16px 40px", fontSize: "0.85rem" }}>
+          <span className="muted">
+            <Link href="/privacy">Privacy</Link>
+            {" · "}
+            <Link href="/terms">Terms &amp; contact</Link>
+          </span>
+        </footer>
       </body>
     </html>
   );

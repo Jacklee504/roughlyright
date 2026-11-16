@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGuestId, ensureGuest } from "@/lib/http/session";
 import { sameOrigin } from "@/lib/http/origin";
-import { rateLimit } from "@/lib/http/ratelimit";
+import { rateLimit, rateLimitNetwork } from "@/lib/http/ratelimit";
 import { isUuid } from "@/lib/http/validate";
 import { advanceRound } from "@/lib/service/attempts";
 
@@ -16,6 +16,10 @@ export async function POST(req: NextRequest) {
   await ensureGuest(guestId);
   if (!rateLimit(`advance:${guestId}`, 60, 60_000)) {
     return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many requests — try again in a moment." }, { status: 429 });
+  }
+  // Q26: coarse hashed network-key limit alongside the per-guest one.
+  if (!(await rateLimitNetwork(req, "advance-net", 300))) {
+    return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many requests from your network — try again in a moment." }, { status: 429 });
   }
   const body = await req.json().catch(() => null);
   if (!body || !isUuid(body.attemptId) || typeof body.ordinal !== "number" || typeof body.requestId !== "string") {

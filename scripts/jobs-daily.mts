@@ -74,7 +74,49 @@ async function main() {
   `);
   console.log(`retention: deleted ${events.rows.length} old daily rollup rows`);
 
-  process.exit(0);
+  // --- Invalid-input funnel rollup (Q48) ------------------------------------
+  // Counts coarse reason codes by round type and corrected-or-not; the
+  // granular rows themselves are kept only 90 days (Q23) and never contain
+  // the rejected text.
+  await db.transaction(async (tx) => {
+    await tx.query(`
+      insert into site_events (day, game_slug, event, detail, count)
+      select (created_at at time zone 'UTC')::date, 'estimation', 'invalid_input',
+             round_type || ':' || reason || ':' || case when corrected_at is null then 'open' else 'corrected' end,
+             count(*)
+      from invalid_guess_events
+      where created_at >= current_date - interval '89 days'
+      group by 1, 4
+      on conflict (day, game_slug, event, detail) do update set count = excluded.count
+    `);
+  });
+  console.log("rollup: invalid_input reasons reconciled");
+  const invalid = await db.query<{ count: string }>(`
+    delete from invalid_guess_events where created_at < now() - interval '90 days' returning 1
+  `);
+  console.log(`retention: deleted ${invalid.rows.length} old invalid-input events`);
+
+  // --- Shared rate-limit counter cleanup (Q26) ------------------------------
+  // Epoch seconds passed as a float — Date.now() millis overflow integer params.
+  const limits = await db.query<{ count: string }>(`
+    delete from rate_limit_hits where window_start < to_timestamp($1::double precision) returning 1
+  `, [(Date.now() - 10 * 60_000) / 1000]);
+  console.log(`retention: deleted ${limits.rows.length} expired rate-limit windows`);
+
+  // --- Launch readiness alert (Q50): the scheduled daily must exist ---------
+  const todayPuzzle = await db.query<{ n: string }>(
+    `select count(*)::text as n from puzzles
+     where game_slug = 'estimation' and status = 'live' and date = current_date`,
+  );
+  if (todayPuzzle.rows[0]?.n === "0") {
+    console.error(`ALERT: no live estimation puzzle is scheduled for today (${new Date().toISOString().slice(0, 10)}).`);
+    console.error("Publish today's content or investigate the content pipeline before players hit the site.");
+    process.exitCode = 2; // let the scheduler alert on the non-zero exit
+  } else {
+    console.log("check: today's daily puzzle is scheduled");
+  }
+
+  process.exit(process.exitCode ?? 0);
 }
 
 main().catch((e) => {

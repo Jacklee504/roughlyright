@@ -17,6 +17,21 @@ const nextConfig = {
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
         ],
       },
+      // Q52: personalised / game-state pages must never be cached by a CDN or
+      // browser — a stale cache could serve the wrong day's puzzle state or
+      // one guest's result to another.
+      {
+        source: "/estimation/result/:token*",
+        headers: [{ key: "Cache-Control", value: "no-store" }],
+      },
+      {
+        source: "/estimation/archive/:date*",
+        headers: [{ key: "Cache-Control", value: "no-store" }],
+      },
+      {
+        source: "/estimation/insights",
+        headers: [{ key: "Cache-Control", value: "no-store" }],
+      },
     ];
   },
 };

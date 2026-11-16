@@ -34,12 +34,20 @@ Both scripts are idempotent — re-running is always safe.
 ## Scheduled jobs
 
 `npm run jobs:daily` performs the daily operations work: it atomically
-reconciles the anonymous `site_events` counters from attempt ground truth
-and applies the retention policy (attempts belonging to guests inactive for
-12 months are purged, closed content reports and rollup rows older than
-12 months are deleted). Schedule it once a day (e.g. Netlify scheduled
-function, cron) with the same `DATABASE_URL`. It is restart-safe and
-idempotent.
+reconciles the anonymous `site_events` counters from attempt ground truth,
+rolls up the invalid-input funnel reasons (Q48), applies the retention
+policy (attempts belonging to guests inactive for 12 months are purged,
+closed content reports and rollup rows older than 12 months are deleted,
+granular invalid-input events after 90 days, expired rate-limit counters),
+and alerts if today's live daily puzzle is missing by exiting with code 2
+(Q50) — wire that non-zero exit into your scheduler's alerting. Schedule it
+once a day (e.g. Netlify scheduled function, cron) with the same
+`DATABASE_URL`. It is restart-safe and idempotent.
+
+`npm run metrics` prints the Q45 KPI report (D7 return among first-time
+finishers primary; D1, completion, share and correction rates secondary;
+explicitly directional below 100 qualified first-time finishers). Run it
+whenever you want a read — it is read-only.
 
 ## Netlify site setup
 
@@ -60,7 +68,7 @@ idempotent.
 | Migrations | automatic on boot | `npm run db:migrate` (manual, idempotent) |
 | Content | `npm run db:seed` (live library; fixtures only if none) | `npm run content:publish` (strict, approval-gated) |
 | Guest cookie | `Secure` off (http) | `Secure` on (https) |
-| Rate limits | in-memory per process | in-memory per function instance (approximate) |
+| Rate limits | in-memory per process | shared `rate_limit_hits` counters in hosted Postgres (Q26/Q49); fail-open to per-instance memory on limiter errors |
 | Daily job | `npm run jobs:daily` (optional) | scheduled daily with `DATABASE_URL` |
 
 ## Updating content after launch

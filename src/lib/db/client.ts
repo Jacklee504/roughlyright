@@ -145,6 +145,17 @@ export function getDb(): Promise<Db> {
   const g = globalThis as GlobalWithDb;
   if (!g[globalKey]) {
     const url = databaseUrl();
+    // Q49: fail clearly in hosted/serverless production without database
+    // configuration instead of silently falling back to an ephemeral
+    // filesystem database that would lose all data between invocations.
+    if (!url && process.env.NETLIFY === "true") {
+      g[globalKey] = Promise.reject(
+        new Error(
+          "Database not configured: set DATABASE_URL to the pooled hosted PostgreSQL connection string (see DEPLOY.md).",
+        ),
+      );
+      return g[globalKey];
+    }
     g[globalKey] = (url ? Promise.resolve(createHostedDatabase(url)) : createPgliteDatabase()).catch((e) => {
       g[globalKey] = undefined;
       throw e;

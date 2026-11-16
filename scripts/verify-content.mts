@@ -29,14 +29,15 @@ const root = path.join(process.cwd(), "content", "live");
 const files = walk(root);
 const datasets: EditorialDataset[] = [];
 const puzzles: EditorialPuzzle[] = [];
+let metadataFiles = 0;
 for (const f of files) {
   const json = JSON.parse(readFileSync(f, "utf8")) as { kind?: string };
   if (json.kind === "target_dataset") datasets.push(json as EditorialDataset);
   else if (json.kind === "estimation_puzzle") puzzles.push(json as EditorialPuzzle);
-  else if (json.kind == null) continue; // approvals.json and other release metadata
+  else if (json.kind == null) metadataFiles++; // approvals.json and other release metadata
   else throw new Error(`Unexpected file: ${f} (kind ${json.kind})`);
 }
-if (files.length !== datasets.length + puzzles.length) throw new Error("Unaccounted files");
+if (files.length !== datasets.length + puzzles.length + metadataFiles) throw new Error("Unaccounted files");
 
 let errors = 0;
 const fail = (msg: string) => {

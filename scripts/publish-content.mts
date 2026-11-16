@@ -23,6 +23,11 @@ async function main() {
 }
 
 main().catch((e) => {
+  // Q50: structured publish-failure log. Only the error class, never content.
+  const reason = e instanceof Error ? (e.name === "ImportError" ? "import_rejected" : "unhandled_error") : "unknown";
+  process.stdout.write(
+    JSON.stringify({ ts: new Date().toISOString(), event: "publish_failure", route: "content:publish", code: reason }) + "\n",
+  );
   console.error(String(e));
   process.exit(1);
 });

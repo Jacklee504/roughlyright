@@ -384,6 +384,11 @@ export async function resolveRound(guestId: string, input: ResolveInput): Promis
     } else if (revision.round_type === "target_match") {
       if (scoring.type !== "target_match") return { ok: false as const, code: "stale" as const, message: "Scoring data mismatch." };
       if (!input.entity || !input.entity.trim()) {
+        await tx.query(
+          `insert into invalid_guess_events (id, attempt_id, ordinal, round_type, reason)
+           values (gen_random_uuid(), $1, $2, $3, 'empty_entity')`,
+          [attempt.id, input.ordinal, revision.round_type],
+        );
         return { ok: false as const, code: "invalid_input" as const, message: "Type the name of an item from the list, then lock your guess." };
       }
       const entries = await eligibleEntries(scoring.datasetId, scoring.eligibleEntryIds, tx);
@@ -410,6 +415,11 @@ export async function resolveRound(guestId: string, input: ResolveInput): Promis
           // The plain label is always an accepted match form on resolve.
           suggestion = bestEntry?.label ?? best.candidate.display;
         }
+        await tx.query(
+          `insert into invalid_guess_events (id, attempt_id, ordinal, round_type, reason)
+           values (gen_random_uuid(), $1, $2, $3, 'no_match')`,
+          [attempt.id, input.ordinal, revision.round_type],
+        );
         return {
           ok: false as const,
           code: "invalid_input" as const,
@@ -428,6 +438,11 @@ export async function resolveRound(guestId: string, input: ResolveInput): Promis
       const parsed = parseNumber(input.guess ?? "", revision.count_mode ? "count" : "measured", revision.unit);
       if (!parsed.ok) {
         const repair = repairNumberInput(input.guess ?? "", revision.count_mode ? "count" : "measured", revision.unit);
+        await tx.query(
+          `insert into invalid_guess_events (id, attempt_id, ordinal, round_type, reason)
+           values (gen_random_uuid(), $1, $2, $3, 'parse_error')`,
+          [attempt.id, input.ordinal, revision.round_type],
+        );
         return {
           ok: false as const,
           code: "invalid_input" as const,
@@ -462,6 +477,12 @@ export async function resolveRound(guestId: string, input: ResolveInput): Promis
     }
     await tx.query(`update attempts set score = score + $2 where id = $1`, [attempt.id, points]);
     attempt.score += points;
+    // Q48: mark any pending invalid-input events for this round as corrected.
+    await tx.query(
+      `update invalid_guess_events set corrected_at = now()
+       where attempt_id = $1 and ordinal = $2 and corrected_at is null`,
+      [attempt.id, input.ordinal],
+    );
     await recordEventTx(tx, puzzle.game_slug, "round_resolved", `${input.ordinal}:${outcome}`);
 
     const state = await buildState(tx, attempt, puzzle);

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGuestId, ensureGuest } from "@/lib/http/session";
 import { sameOrigin } from "@/lib/http/origin";
-import { rateLimit } from "@/lib/http/ratelimit";
+import { rateLimit, rateLimitNetwork } from "@/lib/http/ratelimit";
 import { startOrResume } from "@/lib/service/attempts";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +15,10 @@ export async function POST(req: NextRequest) {
   await ensureGuest(guestId);
   if (!rateLimit(`start:${guestId}`, 30, 60_000)) {
     return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many requests — try again in a moment." }, { status: 429 });
+  }
+  // Q26: coarse hashed network-key limit alongside the per-guest one.
+  if (!(await rateLimitNetwork(req, "start-net", 120))) {
+    return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many requests from your network — try again in a moment." }, { status: 429 });
   }
   const body = await req.json().catch(() => ({}));
   const result = await startOrResume(guestId, {

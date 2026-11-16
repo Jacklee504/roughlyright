@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGuestId } from "@/lib/http/session";
-import { rateLimit } from "@/lib/http/ratelimit";
+import { rateLimit, rateLimitNetwork } from "@/lib/http/ratelimit";
 import { q } from "@/lib/db/client";
 import { normalizeKey } from "@/lib/domain/text";
 import { getTargetDatasetForRound } from "@/lib/service/attempts";
@@ -25,6 +25,10 @@ export async function GET(req: NextRequest) {
   }
   if (!rateLimit(`suggest:${guestId}`, 40, 60_000)) {
     return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many lookups — slow down for a moment." }, { status: 429 });
+  }
+  // Q26: coarse hashed network-key limit alongside the per-guest one.
+  if (!(await rateLimitNetwork(req, "suggest-net", 600))) {
+    return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many requests from your network — try again in a moment." }, { status: 429 });
   }
   const norm = normalizeKey(raw);
   if (norm.length < 3) return NextResponse.json({ ok: true, suggestions: [] });

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGuestId, ensureGuest } from "@/lib/http/session";
 import { sameOrigin } from "@/lib/http/origin";
-import { rateLimit } from "@/lib/http/ratelimit";
+import { rateLimit, rateLimitNetwork } from "@/lib/http/ratelimit";
 import { isUuid } from "@/lib/http/validate";
 import { createShare, revokeShare } from "@/lib/service/share";
 
@@ -17,6 +17,10 @@ export async function POST(req: NextRequest) {
   await ensureGuest(guestId);
   if (!rateLimit(`share:${guestId}`, 20, 60_000)) {
     return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many share actions — try again in a moment." }, { status: 429 });
+  }
+  // Q26: coarse hashed network-key limit alongside the per-guest one.
+  if (!(await rateLimitNetwork(req, "share-net", 120))) {
+    return NextResponse.json({ ok: false, code: "rate_limited", message: "Too many requests from your network — try again in a moment." }, { status: 429 });
   }
   const body = await req.json().catch(() => null);
   if (!body || !isUuid(body.attemptId)) {

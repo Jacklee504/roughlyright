@@ -470,6 +470,41 @@ test("unknown or invalid tokens return a neutral not-found", async () => {
   assert.equal(gone.found, false);
 });
 
+test("invalid-input funnel logs coarse reasons only, never the rejected text, and marks corrections (Q48)", async () => {
+  const guest = await newGuest();
+  const s0 = await startDaily(guest);
+  const attemptId = s0.attemptId;
+  // Rounds 1–4: quick pass-through of a numeric round with a bad guess first.
+  const bad = await resolveRound(guest, { attemptId, ordinal: 1, requestId: rid(), pass: false, guess: "abc" });
+  assert.equal(bad.ok, false);
+  if (!bad.ok) assert.equal(bad.code, "invalid_input");
+  const good = await resolveRound(guest, { attemptId, ordinal: 1, requestId: rid(), pass: false, guess: "900" });
+  assert.ok(good.ok);
+  await advanceRound(guest, { attemptId, ordinal: 1, requestId: rid() });
+  for (const o of [2, 3, 4]) {
+    await resolveRound(guest, { attemptId, ordinal: o, requestId: rid(), pass: true });
+    await advanceRound(guest, { attemptId, ordinal: o, requestId: rid() });
+  }
+  // Target-match round: empty then unmatchable entity, then a match.
+  const empty = await resolveRound(guest, { attemptId, ordinal: 5, requestId: rid(), pass: false, entity: "   " });
+  assert.equal(empty.ok, false);
+  const nomatch = await resolveRound(guest, { attemptId, ordinal: 5, requestId: rid(), pass: false, entity: "zzzunmatchable" });
+  assert.equal(nomatch.ok, false);
+  const match = await resolveRound(guest, { attemptId, ordinal: 5, requestId: rid(), pass: false, entity: "harbor lights" });
+  assert.ok(match.ok);
+
+  const db = await getDb();
+  const events = await db.query<{ reason: string; round_type: string; corrected: boolean; attempt_id: string }>(
+    `select reason, round_type, (corrected_at is not null) as corrected, attempt_id
+     from invalid_guess_events where attempt_id = $1 order by created_at`,
+    [attemptId],
+  );
+  const reasons = events.rows.map((r) => r.reason);
+  assert.deepEqual(reasons, ["parse_error", "empty_entity", "no_match"]);
+  assert.ok(events.rows.every((r) => r.attempt_id === attemptId));
+  assert.ok(events.rows.every((r) => r.corrected), "all three were corrected by the eventual success");
+});
+
 async function completedPuzzleId(attemptId: string): Promise<string | null> {
   const db = await getDb();
   const rows = await db.query<{ puzzle_id: string }>(`select puzzle_id from attempts where id = $1`, [attemptId]);

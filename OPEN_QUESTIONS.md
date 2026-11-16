@@ -59,15 +59,57 @@ All 62 questions are now **resolved** by the owner's answers document
   forced tutorial.
 - Q54 — privacy/cookie notice published on `/privacy` ahead of launch.
 
+**Resolved and implemented in a second pass (Nov 2026)**
+
+- Q26/Q49 — rate limiting upgraded: per-guest limits unchanged, plus a
+  **shared limiter** on hosted Postgres (`rate_limit_hits`, migration 0004)
+  so counters are consistent across serverless instances; locally it stays
+  in-memory. Coarse **hashed network keys** (/24 IPv4, /48 IPv6, salted
+  SHA-256, never raw IPs) now gate every public mutating + suggest endpoint
+  alongside the per-guest limit. The limiter fails open on its own errors;
+  counters are purged by the daily job. Production also fails clearly (500)
+  in `getDb()` when `NETLIFY=true` is set without `DATABASE_URL`.
+- Q48 — invalid-input funnel: every failed lock-in writes a coarse event to
+  `invalid_guess_events` (`empty_entity` / `parse_error` / `no_match` by
+  round type); `corrected_at` is stamped when the same round later succeeds.
+  The rejected text is never stored; granular rows are purged after 90 days
+  and aggregated daily into `site_events` by the daily job. Covered by a new
+  integration test.
+- Q50 — launch observability: `/api/estimation/status` remains the uptime
+  probe target (owner schedules the 5-minute check); resolve and publish
+  failures now emit **redacted structured JSON logs** (route, code, duration
+  only — no input text, no raw identifiers); the daily job alerts (exit 2)
+  when today's live daily is absent.
+- Q57 — `/terms` page (playing/submissions, shared links, misuse, contact),
+  linked from a new site footer next to `/privacy`. No forced click-through.
+- Q25 (contact) — `CONTACT_EMAIL` option in `src/lib/site.ts`; `/terms`
+  shows a mailto link when set, otherwise it directs players to the in-game
+  report button and self-service privacy controls.
+- Q45 — `npm run metrics`: D7 return among first-time finishers (primary),
+  D1, completion, share and correction rates per day, with the explicit
+  "no performance verdict below 100 qualified first-time finishers" caveat
+  and the 20% D7 starting target.
+- Q12 — `content/live/approvals.example.json` template documents the
+  approval shape; the real `approvals.json` remains the operator's gate.
+- Q52 — `Cache-Control: no-store` headers on the result, archive-date and
+  insights pages (next.config), so no CDN or browser can cache personalised
+  game state.
+- Q41 — contrast audit of the design-system variables: all foreground/
+  background pairs measured ≥ 6.9:1 on surfaces; `--text-faint` was raised
+  from 4.49:1 to 5.20:1 to clear the WCAG AA 4.5 threshold.
+
 **Resolved — remaining work is owner-owned**
 
 - Q12 (approval): `approvals.json` must be filled in with a real named editor
   before any production publish; gates are deliberate.
 - Q49–Q53, Q62: staging pilot (≤20 invited players), device QA (real
-  VoiceOver/desktop AT per Q42), backup rehearsal (Q51), uptime probe (Q50)
-  and the 14-day sign-off remain the owner's launch gates.
-- Q55/Q57: owner territory/audience review and short terms/rules page before
-  public release.
+  VoiceOver/desktop AT per Q42), backup rehearsal (Q51), scheduling the
+  5-minute uptime probe against `/api/estimation/status` (Q50 — the alerting
+  hook and structured logs are built) and the 14-day sign-off remain the
+  owner's launch gates.
+- Q55/Q57: owner territory review (Q55) before public release; the short
+  terms/rules page (Q57) is now published on `/terms` pending owner wording
+  review.
 
 **Deviations recorded**
 
@@ -349,9 +391,10 @@ its own domain/codebase and reuse patterns rather than routes.
    so this equals guests today), include archive attempts, or show the
    percentile from a lower threshold. What threshold and audience is desired?
 2. **Rate limits** — coarse per-guest limits (resolve 60/min, share 20/min,
-   report 5/hour, etc.), in-memory only. They reset on process restart and
-   are per-instance. Fine for a prototype; a hosted multi-instance deploy
-   needs a shared limiter. Are specific numbers desired?
+   report 5/hour, etc.). **Upgraded per Q26/Q49 (Nov 2026):** hosted deploys
+   use shared Postgres counters and every public endpoint also carries a
+   coarse hashed network-key limit. In-memory fallback locally; specific
+   numbers remain owner-tunable.
 3. **`state` and `hint` endpoints are POST** — kept GETs out to stay
    consistent with the same-origin discipline used by the mutators. If you
    prefer semantic GETs for reads, they can be split, at the cost of a second
@@ -407,9 +450,10 @@ its own domain/codebase and reuse patterns rather than routes.
 
 ## D. Known limitations (accepted for the prototype)
 
-- Rate limiting and event aggregation are in-memory; they do not survive
-  restarts and do not aggregate across instances (on Netlify: per function
-  instance, so limits are approximate).
+- Rate limiting falls back to in-memory per process when `DATABASE_URL` is
+  unset (fine locally); on hosted Postgres the counters are shared via
+  `rate_limit_hits` (Q26/Q49). Event aggregation via `site_events` still
+  requires the daily job to reconcile.
 - No full-text search or filtering in the archive beyond the date index.
 - The parser supports the handoff's grammar (units suffixes, grouping,
   scientific notation, fractions of counted things rejected) but not

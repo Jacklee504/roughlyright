@@ -1,0 +1,4 @@
+{
+  "_comment": "Template for content/live/approvals.json (Q12). Copy to approvals.json and fill in one entry per puzzle date being published: the named editor who reviewed the puzzle and the review date (YYYY-MM-DD). approvals.json is version-controlled release metadata; this example file is inert (verify-content skips non-content JSON)." ,
+  "2026-11-16": { "editor": "Example Editor", "reviewedAt": "2026-11-15" }
+}

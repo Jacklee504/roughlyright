@@ -22,6 +22,22 @@ function contentHash(obj: unknown): string {
   return createHash("sha256").update(JSON.stringify(obj)).digest("hex");
 }
 
+/**
+ * Key-order-insensitive comparison for the live-immutability check. Postgres
+ * stores JSONB with normalised key order (length, then bytewise), so a raw
+ * JSON.stringify comparison would falsely report identical content as edited.
+ */
+function canonicalJson(v: unknown): string {
+  if (Array.isArray(v)) return `[${v.map(canonicalJson).join(",")}]`;
+  if (v && typeof v === "object") {
+    const entries = Object.entries(v as Record<string, unknown>)
+      .map(([k, val]) => [k, canonicalJson(val)] as const)
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+    return `{${entries.map(([k, val]) => `${JSON.stringify(k)}:${val}`).join(",")}}`;
+  }
+  return JSON.stringify(v);
+}
+
 export type ImportResult = {
   puzzles: { game: string; date: string; quality: string }[];
   datasets: string[];
@@ -115,7 +131,7 @@ async function importPuzzle(db: Db, puzzle: EditorialPuzzle, datasets: DatasetIn
       const row = existing.rows[0];
       if (row.status === "live" && row.quality === "live") {
         // Immutable once live: identical re-import must match; edits create new revisions naturally.
-        if (JSON.stringify(row.private) !== JSON.stringify(privatePayload)) {
+        if (canonicalJson(row.private) !== canonicalJson(privatePayload)) {
           throw new ImportError(
             `Prompt ${p.promptId}: live scoring content is immutable. Create a new revision instead.`,
           );

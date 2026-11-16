@@ -14,6 +14,7 @@
     "db:seed": "tsx scripts/seed.ts",
     "content:publish": "tsx scripts/publish-content.mts",
     "jobs:daily": "tsx scripts/jobs-daily.mts",
+    "metrics": "tsx scripts/metrics.mts",
     "db:reset": "rm -rf .data && npm run db:migrate && npm run db:seed",
     "import": "tsx scripts/seed.ts"
   },
