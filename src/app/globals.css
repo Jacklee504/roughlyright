@@ -1627,3 +1627,45 @@ button.quiet .kbd { display: none; }
   margin: 10px 0 2px;
   text-align: center;
 }
+
+/* ==========================================================================
+   Seamless play III — recap keep-playing CTA, sound toggle affordance,
+   insights history polish.
+   ========================================================================== */
+
+/* Post-daily recap: keep the momentum going without pressure. */
+.keep-playing {
+  margin-top: 18px;
+  padding: 14px 16px 16px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  text-align: center;
+}
+.kp-title { font-weight: 750; margin-bottom: 4px; }
+.btn.cta {
+  background: var(--grad);
+  color: #fff;
+  border-color: transparent;
+  font-weight: 750;
+}
+.btn.cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+/* Insights: average reference line + personal-best highlight on the spark. */
+.spark { position: relative; }
+.spark-avg {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  border-top: 2px dashed color-mix(in srgb, var(--text-dim) 60%, transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+.spark-bar.best {
+  outline: 1.5px solid var(--warn);
+  outline-offset: 1px;
+  opacity: 1;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--warn) 45%, transparent);
+}
+.trend-pill.up { color: color-mix(in srgb, var(--good) 85%, var(--text)); }
+.trend-pill.down { color: color-mix(in srgb, var(--bad) 85%, var(--text)); }

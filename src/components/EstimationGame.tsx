@@ -468,6 +468,7 @@ export default function EstimationGame({ mode, date }: Props) {
             }}
             title={muted ? "Unmute audio effects" : "Mute audio effects"}
             aria-label={muted ? "Unmute audio effects" : "Mute audio effects"}
+            aria-pressed={!muted}
           >
             {muted ? "🔇" : "🔊"}
           </button>
@@ -697,7 +698,7 @@ export default function EstimationGame({ mode, date }: Props) {
       ) : (
         <section className="card">
           <p role="status">Loading…</p>
-          <button onClick={reloadState}>Reload state</button>
+          <button onClick={() => window.location.reload()}>Reload state</button>
         </section>
       )}
     </main>
@@ -1025,10 +1026,21 @@ function RecapView({
         </details>
       ))}
 
-      <div className="actions">
-        <Link className="btn" href="/">Home</Link>
-        <Link className="btn" href="/estimation/archive">Archive</Link>
-      </div>
+      {recap.mode === "daily" ? (
+        <div className="keep-playing" role="region" aria-label="Keep playing">
+          <p className="kp-title">Done for today — the next calibration lands in {resetIn}</p>
+          <p className="muted small">Keep your hand in on any past puzzle. Archive runs are unranked, so they never touch your streak.</p>
+          <div className="actions">
+            <Link className="btn cta" href="/estimation/archive">Keep playing · the archive →</Link>
+            <Link className="btn" href="/">Home</Link>
+          </div>
+        </div>
+      ) : (
+        <div className="actions">
+          <Link className="btn" href="/">Home</Link>
+          <Link className="btn" href="/estimation">Back to today</Link>
+        </div>
+      )}
       {SIBLING_GAMES.length > 0 ? (
         <p className="muted small" style={{ textAlign: "center", marginTop: 18 }}>
           More daily games: {SIBLING_GAMES.map((g, i) => (

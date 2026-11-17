@@ -57,6 +57,14 @@ export default async function InsightsPage() {
   const maxScore = 500;
   const best = scores.length > 0 ? Math.max(...scores.map((s) => s.score)) : 0;
   const avg = scores.length > 0 ? Math.round(scores.reduce((s, r) => s + r.score, 0) / scores.length) : 0;
+  // Trend: last 3 games vs the 3 before them (needs 4+ games to be meaningful).
+  const recent = scores.slice(-3);
+  const prior = scores.slice(-6, -3);
+  const recentAvg = recent.length > 0 ? Math.round(recent.reduce((s, r) => s + r.score, 0) / recent.length) : 0;
+  const priorAvg = prior.length > 0 ? Math.round(prior.reduce((s, r) => s + r.score, 0) / prior.length) : 0;
+  const delta = prior.length > 0 ? recentAvg - priorAvg : 0;
+  const tierColor = (score: number): string =>
+    score >= 350 ? "var(--good)" : score >= 200 ? "var(--warn)" : "var(--text-faint)";
 
   return (
     <main>
@@ -70,6 +78,11 @@ export default async function InsightsPage() {
           <span className="pill">🔥 {streak.current} streak · best {streak.best}</span>
           <span className="pill">📊 Avg {avg}/500</span>
           <span className="pill">🏆 Best {best}/500</span>
+          {prior.length > 0 ? (
+            <span className={`pill trend-pill${delta >= 0 ? " up" : " down"}`}>
+              {delta >= 0 ? "▲" : "▼"} {Math.abs(delta)} pts vs previous run
+            </span>
+          ) : null}
         </div>
       </div>
 
@@ -79,17 +92,26 @@ export default async function InsightsPage() {
           <p className="muted">Complete a daily to start your history.</p>
         ) : (
           <div className="spark" role="img" aria-label="Score history, most recent right">
+            <div className="spark-avg" style={{ bottom: `${Math.max(4, Math.round((avg / maxScore) * 100))}%` }} aria-hidden="true" title={`Average ${avg}`} />
             {scores.map((s) => (
               <div
                 key={s.date + s.mode}
-                className="spark-bar"
-                title={`${s.date} · ${s.score}/500`}
-                style={{ height: `${Math.max(4, Math.round((s.score / maxScore) * 100))}%` }}
+                className={`spark-bar${s.score === best ? " best" : ""}`}
+                title={`${s.date} · ${s.score}/500${s.score === best ? " · personal best" : ""}`}
+                style={{
+                  height: `${Math.max(4, Math.round((s.score / maxScore) * 100))}%`,
+                  background: tierColor(s.score),
+                }}
               />
             ))}
           </div>
         )}
-        {scores.length > 0 ? <p className="muted small">Oldest → newest · out of 500</p> : null}
+        {scores.length > 0 ? (
+          <p className="muted small">
+            Oldest → newest · out of 500 · dashed line is your {avg}-point average
+            {best > 0 ? ` · 🏆 marks your best (${best})` : ""}
+          </p>
+        ) : null}
       </section>
 
       <section className="card" aria-label="Mark distribution">

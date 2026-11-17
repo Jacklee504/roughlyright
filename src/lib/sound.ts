@@ -7,12 +7,13 @@
 
 class SoundEngine {
   private ctx: AudioContext | null = null;
-  private muted: boolean = false;
+  // Off by default (owner decision): sound only after the player explicitly
+  // enables it. Persisted choice flips it on permanently.
+  private muted: boolean = true;
 
   constructor() {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("rr_audio_muted");
-      this.muted = stored === "true";
+      this.muted = localStorage.getItem("rr_audio_muted") !== "false";
     }
   }
 
