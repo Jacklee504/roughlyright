@@ -20,6 +20,12 @@ export async function generateMetadata({ params }: { params: Promise<{ token: st
     title: "Shared estimation result",
     description: "A shared result from Roughly Right — Estimation. Score out of 500.",
     robots: { index: false },
+    openGraph: {
+      title: "A Roughly Right result",
+      description: "Someone calibrated their estimates against today's puzzle. Can you get closer?",
+      images: [{ url: "/og.png", width: 1200, height: 630, alt: "Roughly Right — a daily estimation game" }],
+    },
+    twitter: { card: "summary_large_image" },
   };
 }
 

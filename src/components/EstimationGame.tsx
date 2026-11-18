@@ -139,6 +139,7 @@ export default function EstimationGame({ mode, date }: Props) {
   const [comparison, setComparison] = useState(false);
   const [busy, setBusy] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [howtoOpen, setHowtoOpen] = useState(false);
   const [suggestion, setSuggestion] = useState<string | null>(null);
 
   useEffect(() => {
@@ -159,6 +160,13 @@ export default function EstimationGame({ mode, date }: Props) {
       if (data.ok && data.state) {
         setState(data.state as AttemptState);
         setPhase("play");
+        // First-visit onboarding: a single dismissible card, remembered
+        // locally. Never shown again once acknowledged.
+        try {
+          if (!localStorage.getItem("rr_seen_howto")) setHowtoOpen(true);
+        } catch {
+          /* storage unavailable — skip onboarding */
+        }
       } else {
         setNotice(String(data.message ?? "Unavailable."));
         setPhase("unavailable");
@@ -399,7 +407,6 @@ export default function EstimationGame({ mode, date }: Props) {
       </main>
     );
   }
-
   if (phase === "unavailable") {
     return (
       <main>
@@ -453,9 +460,36 @@ export default function EstimationGame({ mode, date }: Props) {
 
   const resolved = state.resolved;
 
+  const closeHowto = useCallback(() => {
+    setHowtoOpen(false);
+    try {
+      localStorage.setItem("rr_seen_howto", "1");
+    } catch {
+      /* storage unavailable */
+    }
+    inputRef.current?.focus();
+  }, []);
+
   return (
     <main>
       <LabGrid density={32} />
+      {howtoOpen ? (
+        <div className="howto-scrim" role="dialog" aria-modal="true" aria-label="How to play" onKeyDown={(e) => { if (e.key === "Escape") closeHowto(); }}>
+          <div className="card howto-card fade-up">
+            <span className="chip">How it works</span>
+            <h2>Estimate. Calibrate. Come back tomorrow.</h2>
+            <ol className="howto-list">
+              <li><strong>Five rounds.</strong> Type your estimate — suffixes like <span className="pill">5k</span> and <span className="pill">1.2m</span> are fine.</li>
+              <li><strong>Some rounds need a pick.</strong> For target-match rounds, choose from the matching list (↵ selects).</li>
+              <li><strong>Scoring /500.</strong> <span className="pill">Exact</span> and <span className="pill">Close</span> score big, <span className="pill">In range</span> keeps you moving, <span className="pill">Far</span> teaches tomorrow.</li>
+              <li><strong>No timer.</strong> Hints are free and never change your score. ↵ locks and advances.</li>
+            </ol>
+            <div className="actions">
+              <button className="primary" autoFocus onClick={closeHowto}>Got it — let&apos;s estimate</button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       <div className="hud" aria-live="polite">
         <RoundStepper ordinal={state.ordinal} resolved={!!resolved} />
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

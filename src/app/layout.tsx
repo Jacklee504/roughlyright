@@ -3,11 +3,26 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: {
     default: "Roughly Right — daily estimation games",
     template: "%s · Roughly Right",
   },
   description: "Make five real-world estimates. Get closer to earn more points. A new puzzle every day at 00:00 UTC.",
+  openGraph: {
+    type: "website",
+    siteName: "Roughly Right",
+    title: "Roughly Right — daily estimation games",
+    description: "Five real-world estimates a day. Get closer to earn more points. No timer, no signup.",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Roughly Right — a daily estimation game" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Roughly Right — daily estimation games",
+    description: "Five real-world estimates a day. Get closer to earn more points. No timer, no signup.",
+    images: ["/og.png"],
+  },
+  manifest: "/manifest.webmanifest",
 };
 
 export const viewport: Viewport = {

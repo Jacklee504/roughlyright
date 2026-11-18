@@ -3,7 +3,7 @@ import { getGuestId } from "@/lib/http/session";
 import { getGameStatus } from "@/lib/service/status";
 import { SIBLING_GAMES } from "@/lib/site";
 import PixelSprite from "@/components/pixel/PixelSprite";
-import LabGrid from "@/components/LabGrid";
+import PixelSky from "@/components/PixelSky";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
 import { TROPHY, BALANCE, PALETTES } from "@/components/pixel/sprites";
 
@@ -25,7 +25,7 @@ export default async function LandingPage() {
 
   return (
     <main>
-      <LabGrid density={32} />
+      <PixelSky density={56} />
       <section className="hero">
         <AnimatedSprite name="scientist" palette={PALETTES.scientist} size={46} className="hero-mascot" />
         <span className="chip">Daily estimation</span>
@@ -70,6 +70,7 @@ export default async function LandingPage() {
             <span className="muted">The daily is unavailable — check back after the next reset.</span>
           )}
           <Link className="btn" href="/estimation/archive">Archive</Link>
+          <Link className="btn quiet" href="/estimation/insights">Your insights</Link>
         </div>
       </section>
 

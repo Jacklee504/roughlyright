@@ -17,7 +17,8 @@
     "jobs:daily": "tsx scripts/jobs-daily.mts",
     "metrics": "tsx scripts/metrics.mts",
     "db:reset": "rm -rf .data && npm run db:migrate && npm run db:seed",
-    "import": "tsx scripts/seed.ts"
+    "import": "tsx scripts/seed.ts",
+    "assets": "tsx scripts/og-image.mts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.14",

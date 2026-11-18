@@ -18,6 +18,12 @@ const { getGameStatus } = await import("@/lib/service/status");
 const { computeStreaks } = await import("@/lib/service/stats");
 const { createShare, getSharePayload, revokeShare } = await import("@/lib/service/share");
 const { setClock } = await import("@/lib/domain/clock");
+// Pin the suite's calendar. Fixtures import with `dayOffset` relative to
+// utcToday(), and the archive/expiry tests reference fixed dates — without a
+// pinned clock the whole suite silently drifts (and breaks) on a real-world
+// date rollover.
+const FIXED_NOW = new Date("2026-11-17T12:00:00Z");
+setClock(FIXED_NOW);
 
 type Test = { name: string; fn: () => Promise<void> };
 const tests: Test[] = [];
