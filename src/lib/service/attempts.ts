@@ -743,7 +743,20 @@ export async function buildRecap(
     // Own-data momentum (PlayPlain energy): the daily streak this completion
     // extended. Archive runs are unranked and never touch the streak.
     streak: attempt.mode === "daily" ? await computeStreaks(puzzle.game_slug, attempt.guest_id, client) : null,
+    // Previous daily best (excluding this attempt) for the "new best" moment.
+    previousBest: await previousBestScore(attempt, client),
   };
+}
+
+/** Highest completed daily score before this attempt; null if none. */
+async function previousBestScore(attempt: AttemptRow, client?: Queryable): Promise<number | null> {
+  const rows = await (client ?? (await getDb())).query<{ best: number | string | null }>(
+    `select max(score) as best from attempts
+     where guest_id = $1 and mode = 'daily' and state = 'completed' and id <> $2`,
+    [attempt.guest_id, attempt.id],
+  );
+  const best = rows.rows[0]?.best;
+  return best == null ? null : Number(best);
 }
 
 export async function getRecapForGuest(guestId: string, attemptId: string): Promise<{ ok: true; recap: Recap } | { ok: false; code: string; message: string }> {

@@ -140,6 +140,7 @@ export default function EstimationGame({ mode, date }: Props) {
   const [busy, setBusy] = useState(false);
   const [muted, setMuted] = useState(false);
   const [howtoOpen, setHowtoOpen] = useState(false);
+  const resultRef = useRef<HTMLElement | null>(null);
   const [suggestion, setSuggestion] = useState<string | null>(null);
 
   useEffect(() => {
@@ -214,6 +215,24 @@ export default function EstimationGame({ mode, date }: Props) {
     setNotice(null);
     setSuggestion(null);
   }, [state?.ordinal]);
+
+  // Result readability on phones: once the round resolves, bring the mark and
+  // explanation to the top of the viewport instead of leaving them below the
+  // fold. Desktop keeps its scroll position.
+  useEffect(() => {
+    if (!state?.resolved || !resultRef.current) return;
+    if (!window.matchMedia("(max-width: 640px)").matches) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    resultRef.current.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  }, [state?.resolved, state?.ordinal]);
+
+  // The tab title tracks progress, so players with several tabs open can see
+  // where they are at a glance.
+  useEffect(() => {
+    if (!state) return;
+    if (state.state === "active") document.title = `Round ${state.ordinal}/5 · Roughly Right`;
+    else if (state.recap) document.title = `${state.recap.total}/500 · Roughly Right`;
+  }, [state]);
 
   const begin = useCallback(
     async (override?: { mode?: "daily" | "archive" }) => {
@@ -359,11 +378,14 @@ export default function EstimationGame({ mode, date }: Props) {
       } else if (e.key === "Escape") {
         setNotice(null);
         setSuggestionsOpen(false);
+      } else if ((e.key === "h" || e.key === "H") && state?.state === "active" && state.prompt && !state.resolved && !busy) {
+        e.preventDefault();
+        showHint();
       }
     };
     window.addEventListener("keydown", handleGlobalKey);
     return () => window.removeEventListener("keydown", handleGlobalKey);
-  }, [state?.resolved, busy, next]);
+  }, [state, busy, next, showHint]);
 
   async function createShare(withComparison: boolean): Promise<void> {
     if (!state?.recap) return;
@@ -393,7 +415,8 @@ export default function EstimationGame({ mode, date }: Props) {
 
   function shareText(recap: NonNullable<AttemptState["recap"]>): string {
     const marks = recap.rounds.map((r) => r.mark).join(", ");
-    return `Roughly Right — Estimation #${recap.displayNumber} (${recap.puzzleDate})\nScore: ${recap.total}/${recap.maxTotal}\nRound marks: ${marks}`;
+    const streak = recap.streak && recap.streak.current > 0 ? `\n🔥 ${recap.streak.current}-day streak` : "";
+    return `Roughly Right — Estimation #${recap.displayNumber} (${recap.puzzleDate})\nScore: ${recap.total}/${recap.maxTotal}${streak}\nRound marks: ${marks}`;
   }
 
   if (phase === "boot") {
@@ -518,7 +541,7 @@ export default function EstimationGame({ mode, date }: Props) {
       />
 
       {resolved ? (
-        <section key={`r${state.ordinal}`} className="card fade-up" aria-live="polite">
+        <section key={`r${state.ordinal}`} ref={resultRef} className="card fade-up" aria-live="polite">
           <div className="stamp-row">
             <span className={`stamp ${markClass(resolved.mark)}`}>
               {MARK_ICONS[resolved.mark] ?? ""} {resolved.mark}
@@ -703,7 +726,7 @@ export default function EstimationGame({ mode, date }: Props) {
 
           {prompt.hintAvailable ? (
             <details className="hint" open={hintOpen} onToggle={(e) => { if ((e.target as HTMLDetailsElement).open && !hint) showHint(); }}>
-              <summary>Show hint</summary>
+              <summary>Show hint <span className="kbd" aria-hidden="true">H</span></summary>
               {hint ? (
                 <HintContent hint={hint} imgFailed={imgFailed} setImgFailed={setImgFailed} />
               ) : (
@@ -918,6 +941,12 @@ function RecapView({
             {recap.streak.current}-day streak{[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " · milestone!" : ""}
           </span>
         ) : null}
+        {recap.mode === "daily" && recap.previousBest != null && recap.total > recap.previousBest ? (
+          <span className="chip pb-chip">
+            <AnimatedSprite name="sparkle" palette={PALETTES.sparkle} size={13} />
+            New personal best!
+          </span>
+        ) : null}
         <ScoreRing total={recap.total} max={recap.maxTotal} />
         <LabCalibrationMeter score={recap.total} maxScore={recap.maxTotal} className="recap-altitude-card" />
         <p className="verdict-row">
@@ -950,6 +979,13 @@ function RecapView({
         </div>
         {recap.closestRound ? (
           <p className="muted small">Closest round: #{recap.closestRound.ordinal} — {recap.closestRound.shortLabel}</p>
+        ) : null}
+        {recap.mode === "daily" && recap.previousBest != null ? (
+          <p className="muted small">
+            {recap.total > recap.previousBest
+              ? `Beat your previous best of ${recap.previousBest}.`
+              : `Personal best: ${recap.previousBest} — ${recap.previousBest - recap.total} to beat it.`}
+          </p>
         ) : null}
         <p className="muted small">Next reset in <span className="countdown">{resetIn}</span> (00:00 UTC).</p>
       </div>

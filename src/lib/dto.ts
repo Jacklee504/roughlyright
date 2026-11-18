@@ -73,6 +73,8 @@ export type Recap = {
   nextResetIso: string;
   /** Own-data motivation: daily streak at completion time (null for archive runs). */
   streak: { current: number; best: number } | null;
+  /** Best earlier completed daily score (null when this is the first daily). */
+  previousBest: number | null;
 };
 
 export type AttemptState = {

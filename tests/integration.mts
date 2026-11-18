@@ -159,10 +159,39 @@ test("plays the full daily: fact, three calcs, target match, then recap", async 
   if (a.ok) {
     assert.equal(a.state.state, "completed");
     assert.equal(a.state.recap?.total, 450); // 100 + 100 + 100 + 50 + 100
+    assert.equal(a.state.recap?.previousBest, null); // first completed daily
     assert.equal(a.state.recap?.rounds.length, 5);
     assert.equal(a.state.recap?.closestRound?.ordinal, 2); // raw-factor ties break to earliest
   }
   completedDaily = { guest, attemptId };
+});
+
+test("recap tracks the previous daily best and the streak across days", async () => {
+  const guest = await newGuest();
+  // Complete the earlier fixture day (11-16) with passes — zero score.
+  setClock(new Date("2026-11-16T12:00:00Z"));
+  let s = await startDaily(guest);
+  for (let i = 1; i <= 5; i++) {
+    await resolveRound(guest, { attemptId: s.attemptId, ordinal: i, requestId: rid(), pass: true });
+    await advanceRound(guest, { attemptId: s.attemptId, ordinal: i, requestId: rid() });
+  }
+  // Next day (11-17) with a real run: previous best should be the zero.
+  setClock(new Date("2026-11-17T12:00:00Z"));
+  s = await startDaily(guest);
+  const guesses = ["900", "5k", "35000", "1650000"];
+  for (let i = 1; i <= 4; i++) {
+    await resolveRound(guest, { attemptId: s.attemptId, ordinal: i, requestId: rid(), pass: false, guess: guesses[i - 1] });
+    await advanceRound(guest, { attemptId: s.attemptId, ordinal: i, requestId: rid() });
+  }
+  await resolveRound(guest, { attemptId: s.attemptId, ordinal: 5, requestId: rid(), pass: false, entity: "harbor lights" });
+  const done = await advanceRound(guest, { attemptId: s.attemptId, ordinal: 5, requestId: rid() });
+  assert.ok(done.ok);
+  if (done.ok) {
+    assert.equal(done.state.recap?.total, 450);
+    assert.equal(done.state.recap?.previousBest, 0);
+    assert.equal(done.state.recap?.streak?.current, 2);
+  }
+  setClock(FIXED_NOW);
 });
 
 test("privacy: export contains own rounds and share tokens but no answer keys; deletion wipes everything", async () => {
