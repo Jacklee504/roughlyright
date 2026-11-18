@@ -15,6 +15,22 @@ export const dynamic = "force-dynamic";
 
 type Row = { date: string; display_number: number; theme_tag: string | null; state: string | null; score: number | null };
 
+function dayLabel(date: string): string {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+function monthLabel(date: string): string {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
 export default async function ArchiveIndexPage() {
   const today = utcToday();
   const guestId = await getGuestId();
@@ -29,6 +45,17 @@ export default async function ArchiveIndexPage() {
     [guestId ?? "", today],
   );
 
+  const played = rows.filter((r) => r.state === "completed").length;
+
+  // Group the log by month, newest first.
+  const groups: { key: string; label: string; days: Row[] }[] = [];
+  for (const r of rows) {
+    const key = r.date.slice(0, 7);
+    const last = groups[groups.length - 1];
+    if (last && last.key === key) last.days.push(r);
+    else groups.push({ key, label: monthLabel(r.date), days: [r] });
+  }
+
   return (
     <main>
       <LabGrid density={32} />
@@ -39,36 +66,55 @@ export default async function ArchiveIndexPage() {
           Estimation <span className="grad-text">archive</span>
         </h1>
         <p className="tagline muted">
-          Released dates before today. Completed dates open their recap; missed dates can be played
-          once as unranked archive puzzles. Archive runs never affect your daily streak.
+          Every released date before today. Completed dates open their recap; missed dates can be
+          played once as unranked archive puzzles. Archive runs never affect your daily streak.
         </p>
+        <div className="pills">
+          <span className="pill">📅 {rows.length} released</span>
+          <span className="pill">✓ {played} played</span>
+          <span className="pill">↺ unranked replays</span>
+        </div>
       </div>
+
       {rows.length === 0 ? (
         <div className="card">
-          <p role="status" className="muted">No released dates yet.</p>
+          <p role="status" className="muted">No released dates yet — today is the beginning of the log.</p>
         </div>
       ) : (
-        <table className="archive">
-          <thead>
-            <tr>
-              <th scope="col">Puzzle</th>
-              <th scope="col">Date</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.date}>
-                <td>
-                  <Link href={`/estimation/archive/${r.date}`}>#{r.display_number}{r.theme_tag ? ` · ${r.theme_tag}` : ""}</Link>
-                </td>
-                <td>{r.date}</td>
-                <td>{r.state === "completed" ? <span className="pill">✓ {r.score}/500</span> : <span className="muted">Not played</span>}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        groups.map((g) => (
+          <section className="card" key={g.key} aria-labelledby={`month-${g.key}`}>
+            <h2 id={`month-${g.key}`}>{g.label}</h2>
+            <ul className="day-grid">
+              {g.days.map((r) => {
+                const done = r.state === "completed";
+                const score = r.score ?? 0;
+                return (
+                  <li key={r.date}>
+                    <Link
+                      className={`day-tile${done ? " played" : ""}`}
+                      href={`/estimation/archive/${r.date}`}
+                      aria-label={`Puzzle ${r.display_number} from ${dayLabel(r.date)}${
+                        done ? `, played: ${score} of 500` : ", not played"
+                      }`}
+                    >
+                      <span className="day-top">
+                        <span className="day-num">#{r.display_number}</span>
+                        {done ? <span className="day-check">✓ {score}</span> : <span className="day-play">Play →</span>}
+                      </span>
+                      <span className="day-date">{dayLabel(r.date)}</span>
+                      {r.theme_tag ? <span className="day-tag">{r.theme_tag}</span> : null}
+                      <span className="day-bar" aria-hidden="true">
+                        <span style={{ width: `${Math.min(100, Math.round((score / 500) * 100))}%` }} />
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))
       )}
+
       <div className="actions">
         {rows.length > 0 ? (
           <Link
@@ -78,8 +124,7 @@ export default async function ArchiveIndexPage() {
             🎲 Play random past puzzle
           </Link>
         ) : null}
-        <Link className="btn" href="/estimation">Today's daily</Link>
-        <Link className="btn" href="/">Home</Link>
+        <Link className="btn" href="/estimation">Today&apos;s daily</Link>
       </div>
     </main>
   );

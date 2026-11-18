@@ -19,13 +19,16 @@ export default async function ArchiveDatePage({ params }: { params: Promise<{ da
   if (!puzzle) {
     return (
       <main>
-        <h1>Not available</h1>
-        <p role="alert" className="muted">
-          That date has no released puzzle, or it isn't openable in the archive.
-        </p>
+        <div className="hero">
+          <span className="chip">Off the log</span>
+          <h1>Not <span className="grad-text">available</span></h1>
+          <p className="tagline muted">
+            That date has no released puzzle, or it isn&apos;t openable in the archive.
+          </p>
+        </div>
         <div className="actions">
-          <Link className="btn" href="/estimation/archive">Archive</Link>
-          <Link className="btn" href="/estimation">Today's daily</Link>
+          <Link className="btn" href="/estimation/archive">Back to the log</Link>
+          <Link className="btn" href="/estimation">Today&apos;s daily</Link>
         </div>
       </main>
     );

@@ -4,7 +4,8 @@ import { getGuestId } from "@/lib/http/session";
 import { computeStreaks } from "@/lib/service/stats";
 import { q } from "@/lib/db/client";
 import PixelSprite from "@/components/pixel/PixelSprite";
-import { TROPHY, SPARKLE, PALETTES } from "@/components/pixel/sprites";
+import AnimatedSprite from "@/components/pixel/AnimatedSprite";
+import { TROPHY, SPARKLE, GHOST, PALETTES } from "@/components/pixel/sprites";
 
 export const metadata: Metadata = { title: "Insights" };
 export const dynamic = "force-dynamic";
@@ -75,7 +76,10 @@ export default async function InsightsPage() {
           Your <span className="grad-text">Insights</span>
         </h1>
         <div className="pills">
-          <span className="pill">🔥 {streak.current} streak · best {streak.best}</span>
+          <span className="pill streak-pill">
+            <AnimatedSprite name="flame" palette={PALETTES.flame} size={14} />
+            {streak.current} streak · best {streak.best}
+          </span>
           <span className="pill">📊 Avg {avg}/500</span>
           <span className="pill">🏆 Best {best}/500</span>
           {prior.length > 0 ? (
@@ -89,7 +93,11 @@ export default async function InsightsPage() {
       <section className="card" aria-label="Score history">
         <h2>Last {scores.length || 0} games</h2>
         {scores.length === 0 ? (
-          <p className="muted">Complete a daily to start your history.</p>
+          <div className="empty-state">
+            <PixelSprite sprite={GHOST} palette={PALETTES.ghost} size={30} />
+            <p className="muted">No history yet — the chart draws itself as you play.</p>
+            <Link className="btn" href="/estimation">Play today&apos;s Estimation</Link>
+          </div>
         ) : (
           <div className="spark" role="img" aria-label="Score history, most recent right">
             <div className="spark-avg" style={{ bottom: `${Math.max(4, Math.round((avg / maxScore) * 100))}%` }} aria-hidden="true" title={`Average ${avg}`} />

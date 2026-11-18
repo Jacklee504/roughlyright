@@ -163,6 +163,86 @@ const SPARKLE_SMALL = [
 
 export const SPARKLE_FRAMES = [SPARKLE, SPARKLE_SMALL];
 
+/** Flame: the streak marker. Two frames so the tip flickers mid-burn. */
+const FLAME_F1 = [
+  "............",
+  ".....o......",
+  "....oo......",
+  "....oyo.....",
+  "...oyyo.....",
+  "...oyyyo....",
+  "..oyywyyyo..",
+  "..oyywwwyo..",
+  "..oyywwwyo..",
+  "...oywwyo...",
+  "....oooo....",
+  "............",
+];
+const FLAME_F2 = [
+  "............",
+  "......o.....",
+  "......oo....",
+  ".....oyo....",
+  "....oyyo....",
+  "...oyyyo....",
+  "..oyywwyyo..",
+  "..oyywwwyo..",
+  "..oyywwwyo..",
+  "...oywwyo...",
+  "....oooo....",
+  "............",
+];
+export const FLAME = FLAME_F1;
+export const FLAME_FRAMES = [FLAME_F1, FLAME_F2];
+
+/** Medal: personal-best marker (ribbon + gold disc). */
+export const MEDAL = [
+  "...rr...rr..",
+  "..rrr..rrr..",
+  "..rrr..rrr..",
+  "...rr..rr...",
+  "....rrrr....",
+  "...yyyyyy...",
+  "..yyoyyoyy..",
+  "..yyoyyoyy..",
+  "..yyyyyyyy..",
+  "...yyyyyy...",
+  "....o..o....",
+  "............",
+];
+
+/** Hourglass: the finish window has closed. */
+export const HOURGLASS = [
+  "..oooooooo..",
+  "..oyyyyyyo..",
+  "..oyyyyyyo..",
+  "...oyyyyo...",
+  "....oyyo....",
+  "....yooy....",
+  "....yooy....",
+  "...yoyyoy...",
+  "..oyyyyyyo..",
+  "..oyyyyyyo..",
+  "..oooooooo..",
+  "............",
+];
+
+/** Ghost: empty states and lost pages. */
+export const GHOST = [
+  "...pppppp...",
+  "..pppppppp..",
+  ".pppppppppp.",
+  ".ppkppppkpp.",
+  ".ppkppppkpp.",
+  ".pppppppppp.",
+  ".pppppppppp.",
+  ".pppppppppp.",
+  ".pppppppppp.",
+  ".pppppppppp.",
+  ".pp.pp.pp.p.",
+  "............",
+];
+
 /** Trophy: golden benchmark */
 export const TROPHY = [
   ".oooooooooo.",
@@ -185,6 +265,7 @@ export const SPRITE_FRAMES = {
   flask: { frames: FLASK_FRAMES, fps: 2 },
   oscilloscope: { frames: OSCILLOSCOPE_FRAMES, fps: 2.5 },
   sparkle: { frames: SPARKLE_FRAMES, fps: 2.2 },
+  flame: { frames: FLAME_FRAMES, fps: 6 },
 } as const;
 
 export type AnimatedSpriteName = keyof typeof SPRITE_FRAMES;
@@ -198,11 +279,14 @@ export const PALETTES = {
   balance: { y: "#ffcf5c" } satisfies Palette,
   trophy: { y: "#ffd75c", o: "#c9953a" } satisfies Palette,
   sparkle: { w: "#dfe7ff", X: "#5fe3c3" } satisfies Palette,
+  flame: { o: "#ff8a3d", y: "#ffcf5c", w: "#ffe9a3" } satisfies Palette,
+  medal: { r: "#ff7d8a", y: "#ffd75c", o: "#c9953a" } satisfies Palette,
+  hourglass: { o: "#c9953a", y: "#ffcf5c" } satisfies Palette,
+  ghost: { p: "#c7d0ea", l: "#9aa7c7", k: "#101830" } satisfies Palette,
   star: { w: "#dfe7ff", X: "#8ab4ff" } satisfies Palette,
   starWarm: { w: "#ffe9a3", X: "#ffcf5c" } satisfies Palette,
   starMint: { w: "#b9ffe8", X: "#5fe3c3" } satisfies Palette,
   gauge: { w: "#8ab4ff", g: "#5fe3a1", r: "#ff7d8a", k: "#0b1226" } satisfies Palette,
-  ghost: { p: "#5a647f", l: "#4a5470", k: "#202e52" } satisfies Palette,
 } as const;
 
 export const CONFETTI_COLORS = ["#5fe3c3", "#5fe3a1", "#8ab4ff", "#b48cff", "#ffcf5c", "#f1f4ff"];

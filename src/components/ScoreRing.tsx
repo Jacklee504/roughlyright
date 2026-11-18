@@ -75,6 +75,22 @@ export default function ScoreRing({
           transform="rotate(-90 80 80)"
           style={{ transition: "stroke-dashoffset 1.1s cubic-bezier(0.2, 0.7, 0.3, 1)" }}
         />
+        {/* Decade ticks: every 10% of the dial, lit once the score passes it. */}
+        {Array.from({ length: 10 }, (_, i) => {
+          const lit = frac >= (i + 1) / 10 - 1e-9;
+          return (
+            <line
+              key={i}
+              x1="80"
+              y1="4"
+              x2="80"
+              y2="1.5"
+              stroke={lit ? "#5fe3c3" : "rgba(148,170,255,0.22)"}
+              strokeWidth={lit ? 2.6 : 2}
+              transform={`rotate(${i * 36} 80 80)`}
+            />
+          );
+        })}
       </svg>
       <div className="ring-label" aria-hidden="true">
         <div>

@@ -1714,3 +1714,80 @@ button.quiet .kbd { display: none; }
   60% { transform: scale(1.1); }
   100% { transform: scale(1); opacity: 1; }
 }
+
+/* ==========================================================================
+   Art pass — archive as a pixel calibration log, streak pill.
+   ========================================================================== */
+
+.day-grid {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 10px;
+}
+.day-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px 9px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+.day-tile:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface-2));
+}
+.day-tile.played {
+  border-color: color-mix(in srgb, var(--good) 38%, var(--line));
+}
+.day-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.day-check { color: var(--good); font-size: 0.8rem; }
+.day-play { color: var(--accent); font-size: 0.76rem; font-weight: 750; }
+.day-date { font-size: 0.8rem; color: var(--text-dim); }
+.day-tag {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.day-bar {
+  height: 4px;
+  margin-top: 4px;
+  border-radius: 2px;
+  background: rgba(148, 170, 255, 0.12);
+  overflow: hidden;
+}
+.day-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--grad);
+}
+.day-tile:not(.played) .day-bar { visibility: hidden; }
+
+/* Home streak pill gets the animated flame, so it reads as momentum. */
+.streak-pill { display: inline-flex; align-items: center; gap: 6px; }
+
+/* Empty states get a little pixel company instead of a bare sentence. */
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 14px 6px 4px;
+  text-align: center;
+}

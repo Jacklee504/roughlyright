@@ -12,7 +12,7 @@ import LabGrid from "@/components/LabGrid";
 import LabCalibrationMeter from "@/components/LabCalibrationMeter";
 import GuessGraph from "@/components/GuessGraph";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
-import { TROPHY, BALANCE, PALETTES } from "@/components/pixel/sprites";
+import { TROPHY, BALANCE, MEDAL, HOURGLASS, PALETTES } from "@/components/pixel/sprites";
 import { sound } from "@/lib/sound";
 
 type ApiResult = { ok: boolean; state?: AttemptState; code?: string; message?: string; suggestion?: string };
@@ -455,7 +455,7 @@ export default function EstimationGame({ mode, date }: Props) {
     return (
       <main>
         <div className="hero">
-          <AnimatedSprite name="oscilloscope" palette={PALETTES.oscilloscope} size={40} className="hero-mascot" />
+          <PixelSprite sprite={HOURGLASS} palette={PALETTES.hourglass} size={38} className="hero-mascot" />
           <span className="chip">Time&apos;s up</span>
           <h1>
             The window <span className="grad-text">closed</span>
@@ -937,13 +937,13 @@ function RecapView({
         <span className="chip">{recap.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
         {recap.streak && recap.streak.current > 0 ? (
           <span className={`chip streak-chip${[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " milestone" : ""}`}>
-            <AnimatedSprite name="flask" palette={PALETTES.flask} size={13} />
+            <AnimatedSprite name="flame" palette={PALETTES.flame} size={14} />
             {recap.streak.current}-day streak{[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " · milestone!" : ""}
           </span>
         ) : null}
         {recap.mode === "daily" && recap.previousBest != null && recap.total > recap.previousBest ? (
           <span className="chip pb-chip">
-            <AnimatedSprite name="sparkle" palette={PALETTES.sparkle} size={13} />
+            <PixelSprite sprite={MEDAL} palette={PALETTES.medal} size={14} />
             New personal best!
           </span>
         ) : null}

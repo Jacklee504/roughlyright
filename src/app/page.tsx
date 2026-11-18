@@ -42,8 +42,8 @@ export default async function LandingPage() {
           <span className="pill">🎯 Scored /500</span>
           <span className="pill">🌅 Resets 00:00 UTC</span>
           {status.streak.current > 0 || status.streak.best > 0 ? (
-            <span className="pill">
-              <AnimatedSprite name="flask" palette={PALETTES.flask} size={13} />
+            <span className="pill streak-pill">
+              <AnimatedSprite name="flame" palette={PALETTES.flame} size={14} />
               {status.streak.current} streak · best {status.streak.best}
             </span>
           ) : null}
