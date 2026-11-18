@@ -1791,3 +1791,6 @@ button.quiet .kbd { display: none; }
   padding: 14px 6px 4px;
   text-align: center;
 }
+
+/* Round-type pill carries its instrument sprite. */
+.round-pill { display: inline-flex; align-items: center; gap: 6px; }

@@ -12,7 +12,7 @@ import LabGrid from "@/components/LabGrid";
 import LabCalibrationMeter from "@/components/LabCalibrationMeter";
 import GuessGraph from "@/components/GuessGraph";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
-import { TROPHY, BALANCE, MEDAL, HOURGLASS, PALETTES } from "@/components/pixel/sprites";
+import { TROPHY, BALANCE, MEDAL, HOURGLASS, CALIPER, PALETTES } from "@/components/pixel/sprites";
 import { sound } from "@/lib/sound";
 
 type ApiResult = { ok: boolean; state?: AttemptState; code?: string; message?: string; suggestion?: string };
@@ -123,6 +123,22 @@ const ROUND_LABELS: Record<string, string> = {
   calculation: "Calculation",
   target_match: "Target match",
 };
+
+/** Each round type gets its instrument: flask, scope, caliper. */
+function RoundTypePill({ type }: { type: string }) {
+  return (
+    <span className="pill round-pill">
+      {type === "calculation" ? (
+        <AnimatedSprite name="oscilloscope" palette={PALETTES.oscilloscope} size={14} />
+      ) : type === "target_match" ? (
+        <PixelSprite sprite={CALIPER} palette={PALETTES.caliper} size={14} />
+      ) : (
+        <AnimatedSprite name="flask" palette={PALETTES.flask} size={14} />
+      )}
+      {ROUND_LABELS[type] ?? type}
+    </span>
+  );
+}
 
 export default function EstimationGame({ mode, date }: Props) {
   const [state, setState] = useState<AttemptState | null>(null);
@@ -579,10 +595,10 @@ export default function EstimationGame({ mode, date }: Props) {
                 <span className="chip">
                   {categoryIcon(prompt.category)} {prompt.category}
                 </span>
-                <span className="pill">{ROUND_LABELS[prompt.roundType]}</span>
+                <RoundTypePill type={prompt.roundType} />
               </>
             ) : (
-              <span className="chip">{ROUND_LABELS[prompt.roundType]}</span>
+              <RoundTypePill type={prompt.roundType} />
             )}
           </div>
           <p className="prompt-text">{prompt.prompt}</p>
