@@ -154,7 +154,7 @@ export default function EstimationGame({ mode, date }: Props) {
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [comparison, setComparison] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true); // matches the off-by-default engine; synced below
   const [howtoOpen, setHowtoOpen] = useState(false);
   const resultRef = useRef<HTMLElement | null>(null);
   const [suggestion, setSuggestion] = useState<string | null>(null);
@@ -557,7 +557,7 @@ export default function EstimationGame({ mode, date }: Props) {
       />
 
       {resolved ? (
-        <section key={`r${state.ordinal}`} ref={resultRef} className="card fade-up" aria-live="polite">
+        <section key={`r${state.ordinal}`} ref={resultRef} className="card resolved-card fade-up" aria-live="polite">
           <div className="stamp-row">
             <span className={`stamp ${markClass(resolved.mark)}`}>
               {MARK_ICONS[resolved.mark] ?? ""} {resolved.mark}
@@ -794,7 +794,7 @@ function RoundStepper({ ordinal, resolved }: { ordinal: number; resolved: boolea
         const done = n < ordinal || (n === ordinal && resolved);
         const current = n === ordinal && !resolved;
         return (
-          <div key={n} className={`step${done ? " done" : ""}${current ? " current" : ""}`}>
+          <div key={n} className={`step${done ? " done" : ""}${current ? " current" : ""}`} aria-current={current ? "step" : undefined}>
             {n > 1 ? <span className={`link${done || current ? " done-fill" : ""}`} /> : null}
             <span className="dot">{done ? "✓" : n}</span>
           </div>
@@ -943,13 +943,15 @@ function RecapView({
     return () => clearInterval(id);
   }, [recap.nextResetIso]);
 
+  const newBest = recap.mode === "daily" && recap.previousBest != null && recap.total > recap.previousBest;
   const great = recap.total >= 350;
+  const celebrate = great || newBest;
 
   return (
     <main>
       <LabGrid density={32} />
       <div className="card result-hero" aria-live="polite">
-        {great ? <PixelConfetti count={90} duration={3} /> : null}
+        {celebrate ? <PixelConfetti count={newBest && !great ? 120 : 90} duration={3} /> : null}
         <span className="chip">{recap.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
         {recap.streak && recap.streak.current > 0 ? (
           <span className={`chip streak-chip${[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " milestone" : ""}`}>

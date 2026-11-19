@@ -1794,3 +1794,67 @@ button.quiet .kbd { display: none; }
 
 /* Round-type pill carries its instrument sprite. */
 .round-pill { display: inline-flex; align-items: center; gap: 6px; }
+
+/* ==========================================================================
+   Instrument pass — scope-style corner ticks on the play cards, mark-coloured
+   rails in the answer review.
+   ========================================================================== */
+
+.question-card, .result-hero, .resolved-card { position: relative; }
+.question-card::after, .result-hero::after, .resolved-card::after {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  pointer-events: none;
+  --tick: color-mix(in srgb, var(--accent) 60%, transparent);
+  background:
+    linear-gradient(var(--tick), var(--tick)) left top / 16px 2px no-repeat,
+    linear-gradient(var(--tick), var(--tick)) left top / 2px 16px no-repeat,
+    linear-gradient(var(--tick), var(--tick)) right top / 16px 2px no-repeat,
+    linear-gradient(var(--tick), var(--tick)) right top / 2px 16px no-repeat,
+    linear-gradient(var(--tick), var(--tick)) left bottom / 16px 2px no-repeat,
+    linear-gradient(var(--tick), var(--tick)) left bottom / 2px 16px no-repeat,
+    linear-gradient(var(--tick), var(--tick)) right bottom / 16px 2px no-repeat,
+    linear-gradient(var(--tick), var(--tick)) right bottom / 2px 16px no-repeat;
+  opacity: 0.5;
+}
+
+details.review { border-left-width: 3px; }
+details.review:has(.mark-Exact) { border-left-color: var(--good); }
+details.review:has(.mark-Close) { border-left-color: color-mix(in srgb, var(--good) 55%, transparent); }
+details.review:has(.mark-In-range) { border-left-color: var(--warn); }
+details.review:has(.mark-Far) { border-left-color: var(--bad); }
+details.review:has(.mark-Pass) { border-left-color: var(--text-faint); }
+
+/* Insights: category strengths as instrument bars. */
+.cat-list { display: grid; gap: 10px; margin-top: 6px; }
+.cat-row {
+  display: grid;
+  grid-template-columns: 108px 1fr 92px;
+  align-items: center;
+  gap: 10px;
+}
+.cat-name {
+  font-size: 0.86rem;
+  font-weight: 650;
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cat-track {
+  height: 10px;
+  border-radius: 6px;
+  background: rgba(148, 170, 255, 0.1);
+  overflow: hidden;
+}
+.cat-fill {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--grad);
+}
+.cat-num { font-variant-numeric: tabular-nums; text-align: right; font-size: 0.86rem; }
+@media (max-width: 520px) {
+  .cat-row { grid-template-columns: 88px 1fr 78px; }
+}

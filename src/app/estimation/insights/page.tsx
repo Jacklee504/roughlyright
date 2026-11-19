@@ -155,24 +155,20 @@ export default async function InsightsPage() {
         {categories.length === 0 ? (
           <p className="muted">Play a few days to unlock this breakdown.</p>
         ) : (
-          <table className="archive">
-            <thead>
-              <tr>
-                <th scope="col">Category</th>
-                <th scope="col">Rounds</th>
-                <th scope="col">Avg pts</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((c) => (
-                <tr key={c.category}>
-                  <td style={{ textTransform: "capitalize" }}>{c.category}</td>
-                  <td>{c.n}</td>
-                  <td>{c.avg_pts}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="cat-list">
+            {categories.map((c) => (
+              <div className="cat-row" key={c.category}>
+                <span className="cat-name">{c.category}</span>
+                <span className="cat-track" aria-hidden="true">
+                  <span className="cat-fill" style={{ width: `${Math.max(2, Math.min(100, Number(c.avg_pts)))}%` }} />
+                </span>
+                <span className="cat-num">
+                  {c.avg_pts}
+                  <span className="muted small"> avg · {c.n}</span>
+                </span>
+              </div>
+            ))}
+          </div>
         )}
       </section>
 
