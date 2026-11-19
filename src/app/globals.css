@@ -1858,3 +1858,28 @@ details.review:has(.mark-Pass) { border-left-color: var(--text-faint); }
 @media (max-width: 520px) {
   .cat-row { grid-template-columns: 88px 1fr 78px; }
 }
+
+/* ==========================================================================
+   Mark stamps — each result chip slams onto the sheet in sequence, the way a
+   calibration stamp lands on a lab record.
+   ========================================================================== */
+
+.marks .mark {
+  transform-origin: 50% 60%;
+  animation: markStamp 420ms cubic-bezier(0.18, 1.45, 0.4, 1) both;
+}
+.marks .mark:nth-child(2) { animation-delay: 90ms; }
+.marks .mark:nth-child(3) { animation-delay: 180ms; }
+.marks .mark:nth-child(4) { animation-delay: 270ms; }
+.marks .mark:nth-child(5) { animation-delay: 360ms; }
+
+@keyframes markStamp {
+  0% { transform: scale(1.75) rotate(-6deg); opacity: 0; }
+  55% { transform: scale(0.93) rotate(1.5deg); opacity: 1; }
+  78% { transform: scale(1.03) rotate(-0.5deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* The trophy glint runs on a slower loop than the stamp so the two don't
+   beat in lockstep. */
+.trophy-shine { filter: drop-shadow(0 0 6px color-mix(in srgb, #ffd75c 40%, transparent)); }

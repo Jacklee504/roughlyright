@@ -5,7 +5,7 @@ import { SIBLING_GAMES } from "@/lib/site";
 import PixelSprite from "@/components/pixel/PixelSprite";
 import PixelSky from "@/components/PixelSky";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
-import { TROPHY, BALANCE, PALETTES } from "@/components/pixel/sprites";
+import { BALANCE, PALETTES } from "@/components/pixel/sprites";
 
 export const dynamic = "force-dynamic";
 
@@ -86,7 +86,7 @@ export default async function LandingPage() {
           <span>Closer estimates tighten your calibration index toward national standards.</span>
         </div>
         <div className="feature">
-          <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={20} />
+          <AnimatedSprite name="trophy" palette={PALETTES.trophy} size={20} />
           <strong>Compare</strong>
           <span>Share spoiler-free marks and compare estimation accuracy curves with friends.</span>
         </div>

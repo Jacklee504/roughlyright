@@ -5,7 +5,7 @@ import { computeStreaks } from "@/lib/service/stats";
 import { q } from "@/lib/db/client";
 import PixelSprite from "@/components/pixel/PixelSprite";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
-import { TROPHY, SPARKLE, GHOST, PALETTES } from "@/components/pixel/sprites";
+import { SPARKLE, GHOST, PALETTES } from "@/components/pixel/sprites";
 
 export const metadata: Metadata = { title: "Insights" };
 export const dynamic = "force-dynamic";

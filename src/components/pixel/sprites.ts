@@ -259,6 +259,51 @@ export const TROPHY = [
   "............",
 ];
 
+/** Trophy shine: a white glint walks across the cup, then loops. */
+const TROPHY_GLINT_LEFT = [
+  ".oooooooooo.",
+  ".oywyyyyyyo.",
+  ".oywyyyyyyo.",
+  "..oyyyyyyo..",
+  "...oyyyyo...",
+  "....oyyo....",
+  ".....yy.....",
+  "...yyyyyy...",
+  "..oooooooo..",
+  "..oooooooo..",
+  ".oooooooooo.",
+  "............",
+];
+const TROPHY_GLINT_MID = [
+  ".oooooooooo.",
+  ".oyyyywyyyo.",
+  ".oyyyywyyyo.",
+  "..oyyyyyyo..",
+  "...oyyyyo...",
+  "....oyyo....",
+  ".....yy.....",
+  "...yyyyyy...",
+  "..oooooooo..",
+  "..oooooooo..",
+  ".oooooooooo.",
+  "............",
+];
+const TROPHY_GLINT_RIGHT = [
+  ".oooooooooo.",
+  ".oyyyyyywyo.",
+  ".oyyyyyywyo.",
+  "..oyyyyyyo..",
+  "...oyyyyo...",
+  "....oyyo....",
+  ".....yy.....",
+  "...yyyyyy...",
+  "..oooooooo..",
+  "..oooooooo..",
+  ".oooooooooo.",
+  "............",
+];
+export const TROPHY_FRAMES = [TROPHY_GLINT_LEFT, TROPHY_GLINT_MID, TROPHY_GLINT_RIGHT];
+
 /** Multi-frame animation table for AnimatedSprite. */
 export const SPRITE_FRAMES = {
   scientist: { frames: [SCIENTIST_OPEN, SCIENTIST_BLINK, SCIENTIST_OPEN, SCIENTIST_OPEN], fps: 1.2 },
@@ -266,6 +311,7 @@ export const SPRITE_FRAMES = {
   oscilloscope: { frames: OSCILLOSCOPE_FRAMES, fps: 2.5 },
   sparkle: { frames: SPARKLE_FRAMES, fps: 2.2 },
   flame: { frames: FLAME_FRAMES, fps: 6 },
+  trophy: { frames: TROPHY_FRAMES, fps: 1.8 },
 } as const;
 
 export type AnimatedSpriteName = keyof typeof SPRITE_FRAMES;
@@ -277,7 +323,7 @@ export const PALETTES = {
   oscilloscope: { k: "#0a1022", c: "#202e52", g: "#5fe3c3" } satisfies Palette,
   caliper: { w: "#8ab4ff", k: "#151e36" } satisfies Palette,
   balance: { y: "#ffcf5c" } satisfies Palette,
-  trophy: { y: "#ffd75c", o: "#c9953a" } satisfies Palette,
+  trophy: { y: "#ffd75c", o: "#c9953a", w: "#fff6c8" } satisfies Palette,
   sparkle: { w: "#dfe7ff", X: "#5fe3c3" } satisfies Palette,
   flame: { o: "#ff8a3d", y: "#ffcf5c", w: "#ffe9a3" } satisfies Palette,
   medal: { r: "#ff7d8a", y: "#ffd75c", o: "#c9953a" } satisfies Palette,

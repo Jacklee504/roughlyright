@@ -12,8 +12,9 @@ import LabGrid from "@/components/LabGrid";
 import LabCalibrationMeter from "@/components/LabCalibrationMeter";
 import GuessGraph from "@/components/GuessGraph";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
-import { TROPHY, BALANCE, MEDAL, HOURGLASS, CALIPER, PALETTES } from "@/components/pixel/sprites";
+import { BALANCE, MEDAL, HOURGLASS, CALIPER, PALETTES } from "@/components/pixel/sprites";
 import { sound } from "@/lib/sound";
+import { MARK_ICONS, markClass } from "@/lib/marks";
 
 type ApiResult = { ok: boolean; state?: AttemptState; code?: string; message?: string; suggestion?: string };
 
@@ -36,18 +37,6 @@ async function api(path: string, body?: unknown): Promise<{ status: number; data
   });
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   return { status: res.status, data };
-}
-
-const MARK_ICONS: Record<string, string> = {
-  Exact: "◎",
-  Close: "✓",
-  "In range": "≈",
-  Far: "✗",
-  Pass: "–",
-};
-
-export function markClass(mark: string): string {
-  return `mark mark-${mark.replace(/\s+/g, "-")}`;
 }
 
 const MARK_EMOJI: Record<string, string> = {
@@ -499,7 +488,7 @@ export default function EstimationGame({ mode, date }: Props) {
 
   const resolved = state.resolved;
 
-  const closeHowto = useCallback(() => {
+  const closeHowto = () => {
     setHowtoOpen(false);
     try {
       localStorage.setItem("rr_seen_howto", "1");
@@ -507,7 +496,7 @@ export default function EstimationGame({ mode, date }: Props) {
       /* storage unavailable */
     }
     inputRef.current?.focus();
-  }, []);
+  };
 
   return (
     <main>
@@ -970,7 +959,7 @@ function RecapView({
         <p className="verdict-row">
           {recap.total >= 350 ? (
             <span className="trophy-shine">
-              <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={22} />
+              <AnimatedSprite name="trophy" palette={PALETTES.trophy} size={22} />
             </span>
           ) : (
             <AnimatedSprite name="sparkle" palette={PALETTES.sparkle} size={18} />

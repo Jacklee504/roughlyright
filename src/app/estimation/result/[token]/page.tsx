@@ -5,9 +5,9 @@ import { getGuestId } from "@/lib/http/session";
 import { getSharePayload } from "@/lib/service/share";
 import { q } from "@/lib/db/client";
 import ScoreRing from "@/components/ScoreRing";
-import PixelSprite from "@/components/pixel/PixelSprite";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
-import { TROPHY, SPARKLE, PALETTES } from "@/components/pixel/sprites";
+import { PALETTES } from "@/components/pixel/sprites";
+import { MARK_ICONS, markClass } from "@/lib/marks";
 
 export const dynamic = "force-dynamic";
 
@@ -76,7 +76,7 @@ export default async function ResultPage({ params }: { params: Promise<{ token: 
         <p className="verdict-row">
           {p.total >= 350 ? (
             <span className="trophy-shine">
-              <PixelSprite sprite={TROPHY} palette={PALETTES.trophy} size={20} />
+              <AnimatedSprite name="trophy" palette={PALETTES.trophy} size={20} />
             </span>
           ) : (
             <AnimatedSprite name="sparkle" palette={PALETTES.sparkle} size={16} />
@@ -96,8 +96,8 @@ export default async function ResultPage({ params }: { params: Promise<{ token: 
         </p>
         <div className="marks" role="list" aria-label="Round marks">
           {p.marks.map((m) => (
-            <span role="listitem" key={m.ordinal} className={`mark mark-${m.mark.replace(/\s+/g, "-")}`}>
-              {m.mark}
+            <span role="listitem" key={m.ordinal} className={markClass(m.mark)}>
+              {MARK_ICONS[m.mark] ?? ""} {m.mark}
             </span>
           ))}
         </div>
