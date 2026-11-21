@@ -243,66 +243,10 @@ export const GHOST = [
   "............",
 ];
 
-/** Trophy: golden benchmark */
-export const TROPHY = [
-  ".oooooooooo.",
-  ".oyyyyyyyyo.",
-  ".oyyyyyyyyo.",
-  "..oyyyyyyo..",
-  "...oyyyyo...",
-  "....oyyo....",
-  ".....yy.....",
-  "...yyyyyy...",
-  "..oooooooo..",
-  "..oooooooo..",
-  ".oooooooooo.",
-  "............",
-];
-
-/** Trophy shine: a white glint walks across the cup, then loops. */
-const TROPHY_GLINT_LEFT = [
-  ".oooooooooo.",
-  ".oywyyyyyyo.",
-  ".oywyyyyyyo.",
-  "..oyyyyyyo..",
-  "...oyyyyo...",
-  "....oyyo....",
-  ".....yy.....",
-  "...yyyyyy...",
-  "..oooooooo..",
-  "..oooooooo..",
-  ".oooooooooo.",
-  "............",
-];
-const TROPHY_GLINT_MID = [
-  ".oooooooooo.",
-  ".oyyyywyyyo.",
-  ".oyyyywyyyo.",
-  "..oyyyyyyo..",
-  "...oyyyyo...",
-  "....oyyo....",
-  ".....yy.....",
-  "...yyyyyy...",
-  "..oooooooo..",
-  "..oooooooo..",
-  ".oooooooooo.",
-  "............",
-];
-const TROPHY_GLINT_RIGHT = [
-  ".oooooooooo.",
-  ".oyyyyyywyo.",
-  ".oyyyyyywyo.",
-  "..oyyyyyyo..",
-  "...oyyyyo...",
-  "....oyyo....",
-  ".....yy.....",
-  "...yyyyyy...",
-  "..oooooooo..",
-  "..oooooooo..",
-  ".oooooooooo.",
-  "............",
-];
-export const TROPHY_FRAMES = [TROPHY_GLINT_LEFT, TROPHY_GLINT_MID, TROPHY_GLINT_RIGHT];
+/** Trophy: the outlined second-edition trophy lives in art.ts; re-exported for older callers. */
+import { TROPHY as ART_TROPHY, TROPHY_FRAMES as ART_TROPHY_FRAMES } from "./art";
+export const TROPHY = ART_TROPHY;
+export const TROPHY_FRAMES = ART_TROPHY_FRAMES;
 
 /** Multi-frame animation table for AnimatedSprite. */
 export const SPRITE_FRAMES = {
@@ -323,7 +267,7 @@ export const PALETTES = {
   oscilloscope: { k: "#0a1022", c: "#202e52", g: "#5fe3c3" } satisfies Palette,
   caliper: { w: "#8ab4ff", k: "#151e36" } satisfies Palette,
   balance: { y: "#ffcf5c" } satisfies Palette,
-  trophy: { y: "#ffd75c", o: "#c9953a", w: "#fff6c8" } satisfies Palette,
+  trophy: { k: "#3b2606", y: "#ffd447", o: "#d08f1f", w: "#fff3b0" } satisfies Palette,
   sparkle: { w: "#dfe7ff", X: "#5fe3c3" } satisfies Palette,
   flame: { o: "#ff8a3d", y: "#ffcf5c", w: "#ffe9a3" } satisfies Palette,
   medal: { r: "#ff7d8a", y: "#ffd75c", o: "#c9953a" } satisfies Palette,

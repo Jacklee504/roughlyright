@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 /**
- * Animated score dial: gradient progress ring with the total centered inside.
+ * Animated score dial with the total centered inside.
  * The ring sweeps from zero on mount and the number counts up to the total
  * (both ease-out; the count-up is skipped entirely under reduced motion).
  */
@@ -54,20 +54,13 @@ export default function ScoreRing({
         role="img"
         aria-label={`Score ${total} of ${max}`}
       >
-        <defs>
-          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#6ea8ff" />
-            <stop offset="55%" stopColor="#8f7bff" />
-            <stop offset="100%" stopColor="#b48cff" />
-          </linearGradient>
-        </defs>
-        <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(148,170,255,0.14)" strokeWidth="10" />
+        <circle cx="80" cy="80" r={r} fill="none" stroke="var(--line)" strokeWidth="10" />
         <circle
           cx="80"
           cy="80"
           r={r}
           fill="none"
-          stroke="url(#ringGrad)"
+          stroke="var(--accent)"
           strokeWidth="10"
           strokeLinecap="round"
           strokeDasharray={c}
@@ -85,7 +78,7 @@ export default function ScoreRing({
               y1="4"
               x2="80"
               y2="1.5"
-              stroke={lit ? "#5fe3c3" : "rgba(148,170,255,0.22)"}
+              stroke={lit ? "var(--accent-2)" : "var(--line-strong)"}
               strokeWidth={lit ? 2.6 : 2}
               transform={`rotate(${i * 36} 80 80)`}
             />
