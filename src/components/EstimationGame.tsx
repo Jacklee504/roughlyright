@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { AttemptState, RoundResolved } from "@/lib/dto";
 import { parseNumber, formatDisplay } from "@/lib/domain/numberParser";
@@ -8,35 +8,36 @@ import { SIBLING_GAMES } from "@/lib/site";
 import ScoreRing from "@/components/ScoreRing";
 import PixelSprite from "@/components/pixel/PixelSprite";
 import PixelConfetti from "@/components/PixelConfetti";
-import LabGrid from "@/components/LabGrid";
-import LabCalibrationMeter from "@/components/LabCalibrationMeter";
 import GuessGraph from "@/components/GuessGraph";
 import AnimatedSprite from "@/components/pixel/AnimatedSprite";
-import { BALANCE, MEDAL, HOURGLASS, CALIPER, PALETTES } from "@/components/pixel/sprites";
+import { HOURGLASS, PALETTES } from "@/components/pixel/sprites";
+import { CALC, CALC_PALETTE, OWL, OWL_PALETTE, RULER, RULER_PALETTE, TARGET, TARGET_PALETTE } from "@/components/pixel/art";
 import { sound } from "@/lib/sound";
 import { MARK_ICONS, markClass } from "@/lib/marks";
-
-type ApiResult = { ok: boolean; state?: AttemptState; code?: string; message?: string; suggestion?: string };
 
 type Props = {
   mode: "daily" | "archive";
   date?: string;
 };
 
-type Suggestion = { label: string; disambiguator: string | null; fuzzy?: boolean };
+type Suggestion = { label: string; disambiguator: string | null };
 
 function requestId(): string {
-  return crypto.randomUUID();
+  return crypto.randomUUID?.() ?? Array.from(crypto.getRandomValues(new Uint8Array(16)), (n) => n.toString(16).padStart(2, "0")).join("");
 }
 
-async function api(path: string, body?: unknown): Promise<{ status: number; data: Record<string, unknown> }> {
-  const res = await fetch(path, {
-    method: body === undefined ? "GET" : "POST",
-    headers: body === undefined ? undefined : { "content-type": "application/json" },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-  return { status: res.status, data };
+async function api(path: string, body?: unknown, signal?: AbortSignal): Promise<{ data: Record<string, unknown> }> {
+  try {
+    const res = await fetch(path, {
+      method: body === undefined ? "GET" : "POST",
+      headers: body === undefined ? undefined : { "content-type": "application/json" },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      signal,
+    });
+    return { data: await res.json() };
+  } catch {
+    return { data: { ok: false, message: "Couldn’t reach the game. Try again in a moment." } };
+  }
 }
 
 const MARK_EMOJI: Record<string, string> = {
@@ -50,15 +51,7 @@ const MARK_EMOJI: Record<string, string> = {
 /** Text share card: game, number, marks and total. Never prompts or answers. */
 function shareText(recap: NonNullable<AttemptState["recap"]>): string {
   const marks = recap.rounds.map((r) => MARK_EMOJI[r.mark] ?? "\u26aa").join("");
-  return `Roughly Right \u2014 Estimation #${recap.displayNumber}\n${recap.total}/${recap.maxTotal} ${marks}`;
-}
-
-/** Fermi-style "×1.45" label from the canonical error-factor decimal. */
-function factorLabel(f: string): string {
-  const n = Number(f);
-  if (!Number.isFinite(n) || n <= 0) return f;
-  const s = n >= 100 ? Math.round(n).toString() : n.toFixed(2).replace(/\.?0+$/, "");
-  return s;
+  return `Roughly Right · ${recap.mode === "archive" ? "Archive" : "Daily"} #${recap.displayNumber}\n${recap.total}/${recap.maxTotal} ${marks}`;
 }
 
 function markChip(r: { points: number; mark: string }): string {
@@ -72,6 +65,10 @@ function useCountUp(target: number): number {
   useEffect(() => {
     const from = shown;
     if (from === target) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(target);
+      return;
+    }
     const start = performance.now();
     const dur = 450;
     const tick = (t: number) => {
@@ -87,44 +84,17 @@ function useCountUp(target: number): number {
   return shown;
 }
 
-/** CSS confetti burst; pure decoration, disabled under reduced motion. */
-const CATEGORY_ICONS: Record<string, string> = {
-  space: "🛰️",
-  food: "🍞",
-  nature: "🌿",
-  tech: "⚙️",
-  history: "🏺",
-  sports: "🏟️",
-  geography: "🗺️",
-  money: "💱",
-  culture: "🎭",
-  science: "🔬",
-  people: "🧑",
-  transport: "🚄",
+const ROUND_TYPES = {
+  direct_fact: { label: "Know the scale", sprite: RULER, palette: RULER_PALETTE },
+  calculation: { label: "Back of the envelope", sprite: CALC, palette: CALC_PALETTE },
+  target_match: { label: "Match the target", sprite: TARGET, palette: TARGET_PALETTE },
 };
 
-function categoryIcon(category: string | null): string {
-  return (category && CATEGORY_ICONS[category.toLowerCase()]) || "🧭";
-}
-
-const ROUND_LABELS: Record<string, string> = {
-  direct_fact: "Direct fact",
-  calculation: "Calculation",
-  target_match: "Target match",
-};
-
-/** Each round type gets its instrument: flask, scope, caliper. */
-function RoundTypePill({ type }: { type: string }) {
+function RoundTypePill({ type }: { type: keyof typeof ROUND_TYPES }) {
+  const { label, sprite, palette } = ROUND_TYPES[type];
   return (
-    <span className="pill round-pill">
-      {type === "calculation" ? (
-        <AnimatedSprite name="oscilloscope" palette={PALETTES.oscilloscope} size={14} />
-      ) : type === "target_match" ? (
-        <PixelSprite sprite={CALIPER} palette={PALETTES.caliper} size={14} />
-      ) : (
-        <AnimatedSprite name="flask" palette={PALETTES.flask} size={14} />
-      )}
-      {ROUND_LABELS[type] ?? type}
+    <span className="eyebrow round-pill">
+      <PixelSprite sprite={sprite} palette={palette} size={24} /> {label}
     </span>
   );
 }
@@ -138,21 +108,26 @@ export default function EstimationGame({ mode, date }: Props) {
   const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [hintOpen, setHintOpen] = useState(false);
+  const [hintLoading, setHintLoading] = useState(false);
+  const [hintError, setHintError] = useState<string | null>(null);
   const [hint, setHint] = useState<{ text?: string; figure?: { value: string; unit: string; scope?: string }; image?: { url: string; alt: string; credit: string; rights: string } } | null>(null);
   const [imgFailed, setImgFailed] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [comparison, setComparison] = useState(false);
   const [busy, setBusy] = useState(false);
+  const busyRef = useRef(false);
+  const [sharing, setSharing] = useState(false);
   const [muted, setMuted] = useState(true); // matches the off-by-default engine; synced below
-  const [howtoOpen, setHowtoOpen] = useState(false);
-  const resultRef = useRef<HTMLElement | null>(null);
+  const [browse, setBrowse] = useState(false);
   const [suggestion, setSuggestion] = useState<string | null>(null);
+  const chosenLabel = useRef("");
 
   useEffect(() => {
     setMuted(sound.isMuted());
   }, []);
   const inputRef = useRef<HTMLInputElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+  const questionRef = useRef<HTMLHeadingElement>(null);
   // Called unconditionally (hook order must be stable across phases).
   const hudScore = useCountUp(state?.score ?? 0);
 
@@ -166,13 +141,6 @@ export default function EstimationGame({ mode, date }: Props) {
       if (data.ok && data.state) {
         setState(data.state as AttemptState);
         setPhase("play");
-        // First-visit onboarding: a single dismissible card, remembered
-        // locally. Never shown again once acknowledged.
-        try {
-          if (!localStorage.getItem("rr_seen_howto")) setHowtoOpen(true);
-        } catch {
-          /* storage unavailable — skip onboarding */
-        }
       } else {
         setNotice(String(data.message ?? "Unavailable."));
         setPhase("unavailable");
@@ -184,29 +152,13 @@ export default function EstimationGame({ mode, date }: Props) {
   }, [mode, date]);
 
   useEffect(() => {
-    if (state?.state === "active" && state.prompt && !state.resolved && input === "") {
-      inputRef.current?.focus();
+    if (state?.resolved) {
+      nextRef.current?.focus({ preventScroll: true });
+    } else if (state?.prompt) {
+      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+      (coarsePointer ? questionRef.current : inputRef.current)?.focus({ preventScroll: true });
     }
-  }, [state?.ordinal, state?.state, state?.resolved, input]);
-
-  // Seamless keyboard flow: once a round is resolved, Enter advances to the
-  // next round (or the recap) without reaching for the mouse. The handler
-  // stands down when focus is already on an actionable element (buttons and
-  // inputs handle Enter themselves), and while a request is in flight.
-  useEffect(() => {
-    if (!state?.resolved || !state.prompt) return;
-    nextRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Enter" || e.shiftKey) return;
-      const t = e.target as HTMLElement | null;
-      if (t?.closest('button, a, input, textarea, select, summary, [role="listbox"]')) return;
-      e.preventDefault();
-      next();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state?.resolved, state?.prompt?.ordinal]);
+  }, [state?.attemptId, state?.resolved, state?.prompt?.ordinal]);
 
   // Reset per-round UI state when the open round changes.
   useEffect(() => {
@@ -214,22 +166,16 @@ export default function EstimationGame({ mode, date }: Props) {
     setSuggestions([]);
     setActiveSuggestion(-1);
     setSuggestionsOpen(false);
+    setBrowse(false);
+    chosenLabel.current = "";
     setHint(null);
     setHintOpen(false);
+    setHintLoading(false);
+    setHintError(null);
     setImgFailed(false);
     setNotice(null);
     setSuggestion(null);
-  }, [state?.ordinal]);
-
-  // Result readability on phones: once the round resolves, bring the mark and
-  // explanation to the top of the viewport instead of leaving them below the
-  // fold. Desktop keeps its scroll position.
-  useEffect(() => {
-    if (!state?.resolved || !resultRef.current) return;
-    if (!window.matchMedia("(max-width: 640px)").matches) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    resultRef.current.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
-  }, [state?.resolved, state?.ordinal]);
+  }, [state?.attemptId, state?.ordinal]);
 
   // The tab title tracks progress, so players with several tabs open can see
   // where they are at a glance.
@@ -240,11 +186,11 @@ export default function EstimationGame({ mode, date }: Props) {
   }, [state]);
 
   const begin = useCallback(
-    async (override?: { mode?: "daily" | "archive" }) => {
+    async () => {
       setBusy(true);
       const { data } = await api("/api/estimation/start", {
         game: "estimation",
-        mode: override?.mode ?? mode,
+        mode,
         date,
       });
       setBusy(false);
@@ -275,30 +221,37 @@ export default function EstimationGame({ mode, date }: Props) {
   }, [input, prompt]);
 
   useEffect(() => {
-    if (!prompt || prompt.roundType !== "target_match" || !state) return;
+    if (!prompt || prompt.roundType !== "target_match" || !state || state.resolved) return;
     const q = input.trim();
-    if (q.length < 3) {
+    if (!browse && (q.length < 3 || q === chosenLabel.current)) {
       setSuggestions([]);
       setSuggestionsOpen(false);
       return;
     }
+    const controller = new AbortController();
+    const params = new URLSearchParams({ attemptId: state.attemptId, ordinal: String(state.ordinal), q: browse ? "" : q });
+    if (browse) params.set("browse", "1");
     const t = setTimeout(async () => {
-      const res = await fetch(
-        `/api/estimation/suggest?attemptId=${encodeURIComponent(state.attemptId)}&ordinal=${state.ordinal}&q=${encodeURIComponent(q)}`,
-      );
-      const data = await res.json();
-      if (data.ok) {
-        setSuggestions(data.suggestions);
-        setActiveSuggestion(data.suggestions.length > 0 ? 0 : -1);
+      const { data } = await api(`/api/estimation/suggest?${params}`, undefined, controller.signal);
+      if (controller.signal.aborted) return;
+      if (data.ok && Array.isArray(data.suggestions)) {
+        setSuggestions(data.suggestions as Suggestion[]);
+        setActiveSuggestion(-1);
         setSuggestionsOpen(data.suggestions.length > 0);
+      } else if (browse) {
+        setNotice(String(data.message ?? "Choices are temporarily unavailable."));
       }
-    }, 180);
-    return () => clearTimeout(t);
-  }, [input, prompt, state]);
+    }, browse ? 0 : 180);
+    return () => {
+      controller.abort();
+      clearTimeout(t);
+    };
+  }, [browse, input, prompt, state]);
 
   // Error juice: a quick horizontal shake on the input row (Web Animations
   // API, so the input is never remounted and focus/suggestions survive).
   const shakeRow = useCallback(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     inputRef.current?.parentElement?.animate(
       [
         { transform: "translateX(0)" },
@@ -311,12 +264,20 @@ export default function EstimationGame({ mode, date }: Props) {
     );
   }, []);
 
+  const restore = useCallback(async (attemptId: string): Promise<boolean> => {
+    const { data } = await api("/api/estimation/state", { attemptId });
+    if (!data.ok || !data.state) return false;
+    setState(data.state as AttemptState);
+    return true;
+  }, []);
+
   const lock = useCallback(
     async (pass: boolean, overrideInput?: string) => {
-      if (!state || !state.prompt) return;
-      if (busy) return;
+      if (!state || !state.prompt || busyRef.current) return;
       const value = overrideInput ?? input;
+      busyRef.current = true;
       setBusy(true);
+      setNotice(null);
       setSuggestion(null);
       const ord = state.ordinal;
       const body: Record<string, unknown> = { attemptId: state.attemptId, ordinal: ord, requestId: requestId() };
@@ -324,7 +285,6 @@ export default function EstimationGame({ mode, date }: Props) {
       else if (prompt?.roundType === "target_match") body.entity = value;
       else body.guess = value;
       const { data } = await api("/api/estimation/resolve", body);
-      setBusy(false);
       if (data.ok && data.state) {
         const nextState = data.state as AttemptState;
         setState(nextState);
@@ -337,100 +297,84 @@ export default function EstimationGame({ mode, date }: Props) {
           else if (m === "In range") sound.warm();
           else sound.far();
         }
-      } else {
+      } else if (!((data.code === "stale" || data.code === "expired") && await restore(state.attemptId))) {
         sound.far();
         setNotice(String(data.message ?? "Something went wrong — try again."));
         setSuggestion(typeof data.suggestion === "string" ? data.suggestion : null);
         if (typeof data.code === "string" && data.code === "invalid_input") shakeRow();
       }
+      busyRef.current = false;
+      setBusy(false);
     },
-    [state, prompt, input, busy, shakeRow],
+    [state, prompt, input, restore, shakeRow],
   );
 
   const next = useCallback(async () => {
-    if (!state || busy) return;
+    if (!state || busyRef.current) return;
+    busyRef.current = true;
     setBusy(true);
+    setNotice(null);
     const { data } = await api("/api/estimation/advance", {
       attemptId: state.attemptId,
       ordinal: state.ordinal,
       requestId: requestId(),
     });
-    setBusy(false);
     if (data.ok && data.state) setState(data.state as AttemptState);
-    else setNotice(String(data.message ?? "Something went wrong — try again."));
-  }, [state]);
+    else if (!((data.code === "stale" || data.code === "expired") && await restore(state.attemptId))) {
+      setNotice(String(data.message ?? "Something went wrong. Try again."));
+    }
+    busyRef.current = false;
+    setBusy(false);
+  }, [state, restore]);
 
-  const showHint = useCallback(async () => {
-    if (!state || !state.prompt) return;
-    setHintOpen(true);
-    if (hint) return;
-    const { data } = await api("/api/estimation/hint", { attemptId: state.attemptId, ordinal: state.ordinal });
-    if (data.ok) setHint(data.hint as typeof hint);
-    else setNotice(String(data.message ?? "Hint unavailable."));
-  }, [state, hint]);
-
-  // Global keyboard shortcuts (Space/Enter to advance when resolved, Esc to dismiss notice)
   useEffect(() => {
-    const handleGlobalKey = (e: KeyboardEvent) => {
-      // Don't intercept if user is typing into an input
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-
-      if (e.key === "Enter" || e.key === " ") {
-        if (state?.resolved && !busy) {
-          e.preventDefault();
-          next();
-        }
-      } else if (e.key === "Escape") {
-        setNotice(null);
-        setSuggestionsOpen(false);
-      } else if ((e.key === "h" || e.key === "H") && state?.state === "active" && state.prompt && !state.resolved && !busy) {
-        e.preventDefault();
-        showHint();
-      }
-    };
-    window.addEventListener("keydown", handleGlobalKey);
-    return () => window.removeEventListener("keydown", handleGlobalKey);
-  }, [state, busy, next, showHint]);
+    if (!hintOpen || hint || hintError || !state?.prompt?.hintAvailable || state.resolved) return;
+    const controller = new AbortController();
+    setHintLoading(true);
+    void api("/api/estimation/hint", { attemptId: state.attemptId, ordinal: state.ordinal }, controller.signal)
+      .then(({ data }) => {
+        if (controller.signal.aborted) return;
+        setHintLoading(false);
+        if (data.ok) setHint(data.hint as typeof hint);
+        else setHintError(String(data.message ?? "Hint unavailable."));
+      });
+    return () => controller.abort();
+  }, [hintOpen, hint, hintError, state]);
 
   async function createShare(withComparison: boolean): Promise<void> {
-    if (!state?.recap) return;
+    if (!state?.recap || sharing) return;
+    setSharing(true);
     const { data } = await api("/api/estimation/share", { attemptId: state.attemptId, comparison: withComparison });
+    setSharing(false);
     if (data.ok && typeof data.token === "string") {
       const url = `${window.location.origin}/estimation/result/${data.token}`;
       setShareUrl(url);
       const text = shareText(state.recap);
       if (navigator.share) {
         try {
-          await navigator.share({ title: "Roughly Right — Estimation", text: `${text}\n${url}` });
+          await navigator.share({ title: "Roughly Right", text, url });
           return;
-        } catch {
-          // fall through to copy
+        } catch (error) {
+          if (error instanceof DOMException && error.name === "AbortError") return;
         }
       }
       try {
         await navigator.clipboard.writeText(`${text}\n${url}`);
         setNotice("Result copied to your clipboard.");
       } catch {
-        setNotice("Copy failed — select the link below.");
+        setNotice("Copy failed. You can select the link below.");
       }
     } else {
       setNotice(String(data.message ?? "Share failed."));
     }
   }
 
-  function shareText(recap: NonNullable<AttemptState["recap"]>): string {
-    const marks = recap.rounds.map((r) => r.mark).join(", ");
-    const streak = recap.streak && recap.streak.current > 0 ? `\n🔥 ${recap.streak.current}-day streak` : "";
-    return `Roughly Right — Estimation #${recap.displayNumber} (${recap.puzzleDate})\nScore: ${recap.total}/${recap.maxTotal}${streak}\nRound marks: ${marks}`;
-  }
-
   if (phase === "boot") {
     return (
-      <main>
-        <LabGrid density={32} />
+      <main className="play-shell">
         <div className="hero">
           <div className="pixel-loader" aria-hidden="true"><i /><i /><i /></div>
-          <p className="muted" role="status">Loading today&apos;s puzzle…</p>
+          <p className="muted" role="status">Opening puzzle…</p>
         </div>
       </main>
     );
@@ -441,12 +385,13 @@ export default function EstimationGame({ mode, date }: Props) {
         <div className="hero">
           <AnimatedSprite name="oscilloscope" palette={PALETTES.oscilloscope} size={44} className="hero-mascot" />
           <h1>Estimation</h1>
-          <p className="tagline muted">Nothing to play right now — check back soon.</p>
         </div>
         <div className="card">
           <p role="alert">{notice ?? "The daily is unavailable right now."}</p>
           <div className="actions">
-            <Link className="btn" href="/">Home</Link>
+            <button onClick={begin} disabled={busy}>{busy ? "Opening…" : "Try again"}</button>
+            <Link className="btn primary" href="/estimation/close-call">Play Close Call</Link>
+            <Link className="btn" href="/estimation/lab">Open the Lab</Link>
             <Link className="btn" href="/estimation/archive">Archive</Link>
           </div>
         </div>
@@ -468,12 +413,10 @@ export default function EstimationGame({ mode, date }: Props) {
         </div>
         <div className="card">
           <p className="muted" role="alert">
-            This daily&apos;s finish window ended 30 minutes after its date. The run is saved as
-            incomplete — ranked attempts for past dates don&apos;t reopen. You can replay the date
-            unranked in the archive.
+            This daily closed at 00:30 UTC. The archive has an unranked run for the same date.
           </p>
           <div className="actions">
-            <button className="primary" onClick={() => begin({ mode: "archive" })} disabled={busy}>Replay unranked</button>
+            <Link className="btn primary" href={`/estimation/archive/${state.puzzleDate}`}>Replay unranked</Link>
             <Link className="btn" href="/estimation/archive">Archive</Link>
             <Link className="btn" href="/">Home</Link>
           </div>
@@ -483,42 +426,23 @@ export default function EstimationGame({ mode, date }: Props) {
   }
 
   if (state.recap) {
-    return <RecapView state={state} shareUrl={shareUrl} setShareUrl={setShareUrl} comparison={comparison} setComparison={setComparison} onShare={createShare} notice={notice} />;
+    return <RecapView sharing={sharing} state={state} shareUrl={shareUrl} setShareUrl={setShareUrl} comparison={comparison} setComparison={setComparison} onShare={createShare} notice={notice} />;
   }
 
   const resolved = state.resolved;
 
-  const closeHowto = () => {
-    setHowtoOpen(false);
-    try {
-      localStorage.setItem("rr_seen_howto", "1");
-    } catch {
-      /* storage unavailable */
-    }
-    inputRef.current?.focus();
-  };
+  const choicesVisible = suggestionsOpen && suggestions.length > 0;
 
   return (
-    <main>
-      <LabGrid density={32} />
-      {howtoOpen ? (
-        <div className="howto-scrim" role="dialog" aria-modal="true" aria-label="How to play" onKeyDown={(e) => { if (e.key === "Escape") closeHowto(); }}>
-          <div className="card howto-card fade-up">
-            <span className="chip">How it works</span>
-            <h2>Estimate. Calibrate. Come back tomorrow.</h2>
-            <ol className="howto-list">
-              <li><strong>Five rounds.</strong> Type your estimate — suffixes like <span className="pill">5k</span> and <span className="pill">1.2m</span> are fine.</li>
-              <li><strong>Some rounds need a pick.</strong> For target-match rounds, choose from the matching list (↵ selects).</li>
-              <li><strong>Scoring /500.</strong> <span className="pill">Exact</span> and <span className="pill">Close</span> score big, <span className="pill">In range</span> keeps you moving, <span className="pill">Far</span> teaches tomorrow.</li>
-              <li><strong>No timer.</strong> Hints are free and never change your score. ↵ locks and advances.</li>
-            </ol>
-            <div className="actions">
-              <button className="primary" autoFocus onClick={closeHowto}>Got it — let&apos;s estimate</button>
-            </div>
-          </div>
+    <main className="play-shell">
+      <div className="game-heading">
+        <div>
+          <p className="eyebrow">{state.mode === "daily" ? "Daily" : "Archive"} #{state.displayNumber}</p>
+          <h1>{state.themeTag ?? "Estimation"}</h1>
         </div>
-      ) : null}
-      <div className="hud" aria-live="polite">
+        <Link className="btn quiet" href="/estimation/archive">Archive</Link>
+      </div>
+      <div className="hud">
         <RoundStepper ordinal={state.ordinal} resolved={!!resolved} />
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <button
@@ -534,74 +458,39 @@ export default function EstimationGame({ mode, date }: Props) {
           >
             {muted ? "🔇" : "🔊"}
           </button>
-          <span className="score-pill">{hudScore} pts</span>
+          <span className="score-pill" aria-label={`${state.score} of 500 points`}><span aria-hidden="true">{hudScore} / 500</span></span>
         </div>
       </div>
 
-      <LabCalibrationMeter
-        score={hudScore}
-        maxScore={500}
-        recentGain={resolved ? resolved.points : null}
-        mark={resolved ? resolved.mark : null}
-      />
-
       {resolved ? (
-        <section key={`r${state.ordinal}`} ref={resultRef} className="card resolved-card fade-up" aria-live="polite">
-          <div className="stamp-row">
-            <span className={`stamp ${markClass(resolved.mark)}`}>
-              {MARK_ICONS[resolved.mark] ?? ""} {resolved.mark}
-            </span>
-            {resolved.points === 100 && (resolved.mark === "Exact" || !resolved.errorFactor || resolved.errorFactor === "1") ? (
-              <span className="bullseye-badge" style={{ fontSize: "0.8rem", fontWeight: 800, padding: "3px 8px", borderRadius: 8, background: "rgba(95, 227, 161, 0.2)", border: "1px solid var(--good)", color: "var(--good)" }}>
-                🎯 Bullseye (100/100)
-              </span>
-            ) : null}
-            {resolved.errorFactor ? (
-              <span className={`xfactor ${resolved.direction === "high" || resolved.direction === "higher than target" ? "xf-high" : "xf-low"}`}>
-                {resolved.direction === "high" || resolved.direction === "higher than target" ? "▲" : "▼"} ×{factorLabel(resolved.errorFactor)}
-              </span>
-            ) : null}
-            <span className="points-pop">+{resolved.points} pts</span>
+        <section key={`r${state.ordinal}`} className="card resolved-card" aria-labelledby="round-result">
+          <p className="eyebrow">Round {state.ordinal} of 5</p>
+          <h2 className="prompt-text" id="round-result">{resolved.promptText}</h2>
+          <div className="round-answer" aria-live="polite">
+            <div>
+              <span className="eyebrow">{resolved.reveal.benchmarkLabel ?? "Target"}</span>
+              <strong>{resolved.reveal.targetDisplay} {resolved.reveal.unit}</strong>
+            </div>
+            <span className={markClass(resolved.mark)}>{MARK_ICONS[resolved.mark]} {resolved.mark} · {resolved.points} pts</span>
           </div>
-          {resolved.mark === "Exact" || resolved.mark === "Close" ? <PixelConfetti count={72} /> : null}
-          {resolved.outcome === "pass" ? (
-            <p className="muted">You passed — here&apos;s the same explanation you would have seen.</p>
-          ) : null}
+          {resolved.mark === "Exact" ? <PixelConfetti count={48} /> : null}
           <GuessGraph resolved={resolved} />
           <RevealDetails r={resolved} />
+          {notice ? <p className="notice" role="alert">{notice}</p> : null}
           <div className="actions">
             <button ref={nextRef} className="primary" onClick={next} disabled={busy}>
-              {state.ordinal === 5 ? "See results" : "Next question"} <span aria-hidden="true">→</span>
-              <span className="kbd" aria-hidden="true">↵</span>
+              {busy ? "Opening…" : state.ordinal === 5 ? "See results" : "Next question"} <span aria-hidden="true">→</span>
             </button>
           </div>
         </section>
       ) : prompt ? (
-        <section key={`q${state.ordinal}`} className="card question-card fade-up">
+        <section key={`q${state.ordinal}`} className="card question-card" aria-labelledby="round-question">
           <div className="q-head">
-            {prompt.category ? (
-              <>
-                <span className="chip">
-                  {categoryIcon(prompt.category)} {prompt.category}
-                </span>
-                <RoundTypePill type={prompt.roundType} />
-              </>
-            ) : (
-              <RoundTypePill type={prompt.roundType} />
-            )}
+            <RoundTypePill type={prompt.roundType} />
+            {prompt.category ? <span className="round-category">{prompt.category}</span> : null}
           </div>
-          <p className="prompt-text">{prompt.prompt}</p>
-          {prompt.scope ? <p className="muted small q-scope">{prompt.scope}</p> : null}
-
-          {prompt.ordinal === 1 ? (
-            <details className="scoring-explainer muted small" style={{ margin: "6px 0 10px" }}>
-              <summary>How scoring works</summary>
-              <p className="muted small" style={{ marginTop: 6 }}>
-                Only your ratio of guess to truth matters: 2× too high loses exactly as much as 2× too low.
-                True answer 100? Guessing 50 scores the same as guessing 200.
-              </p>
-            </details>
-          ) : null}
+          <h2 className="prompt-text" id="round-question" tabIndex={-1} ref={questionRef}>{prompt.prompt}</h2>
+          {prompt.scope ? <p className="muted q-scope">{prompt.scope}</p> : null}
 
           {prompt.roundType === "target_match" ? (
             <>
@@ -609,6 +498,12 @@ export default function EstimationGame({ mode, date }: Props) {
               <div className="input-row">
                 <input
                   id="guess"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  maxLength={200}
+                  aria-expanded={choicesVisible}
+                  aria-controls={choicesVisible ? "choices" : undefined}
+                  aria-activedescendant={choicesVisible && activeSuggestion >= 0 ? `choice-${activeSuggestion}` : undefined}
                   ref={inputRef}
                   type="text"
                   autoComplete="off"
@@ -618,13 +513,27 @@ export default function EstimationGame({ mode, date }: Props) {
                   inputMode="text"
                   enterKeyHint="done"
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  readOnly={busy}
+                  onChange={(e) => {
+                    setInput(e.target.value);
+                    chosenLabel.current = "";
+                    setBrowse(false);
+                    setSuggestions([]);
+                    setActiveSuggestion(-1);
+                    setSuggestionsOpen(false);
+                    setNotice(null);
+                    setSuggestion(null);
+                  }}
                   onKeyDown={(e) => {
+                    if (e.nativeEvent.isComposing) return;
                     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
                       e.preventDefault();
                       if (suggestions.length > 0) {
                         const delta = e.key === "ArrowDown" ? 1 : -1;
-                        setActiveSuggestion((i) => (i + delta + suggestions.length) % suggestions.length);
+                        setSuggestionsOpen(true);
+                        setActiveSuggestion((i) => i < 0
+                          ? delta > 0 ? 0 : suggestions.length - 1
+                          : (i + delta + suggestions.length) % suggestions.length);
                       }
                     } else if (e.key === "Enter") {
                       e.preventDefault();
@@ -634,33 +543,42 @@ export default function EstimationGame({ mode, date }: Props) {
                         lock(false);
                       }
                     } else if (e.key === "Escape") {
+                      chosenLabel.current = input.trim();
+                      setBrowse(false);
                       setSuggestionsOpen(false);
                     }
                   }}
                   aria-describedby="preview"
-                  placeholder="Start typing a title…"
+                  placeholder="Type a name"
                 />
+                <button type="button" aria-pressed={browse} disabled={busy} onClick={() => {
+                  setBrowse(!browse);
+                  setNotice(null);
+                  setSuggestions([]);
+                  setActiveSuggestion(-1);
+                  setSuggestionsOpen(false);
+                  if (!browse) inputRef.current?.focus();
+                }}>{browse ? "Close list" : "Browse choices"}</button>
               </div>
-              {suggestionsOpen && suggestions.length > 0 ? (
-                <ul className="suggestions" role="listbox" aria-label="Matching items">
+              {choicesVisible ? (
+                <ul className="suggestions" id="choices" role="listbox" aria-label="Eligible choices">
                   {suggestions.map((s, i) => (
-                    <li key={s.label}>
+                    <li key={`${s.label}-${s.disambiguator}`} id={`choice-${i}`} role="option" aria-selected={i === activeSuggestion}>
                       <button
                         type="button"
+                        tabIndex={-1}
                         className={i === activeSuggestion ? "active" : undefined}
+                        onMouseDown={(e) => e.preventDefault()}
                         onClick={() => applySuggestion(s)}
                       >
                         {s.label}
                         {s.disambiguator ? ` (${s.disambiguator})` : ""}
-                        {s.fuzzy ? <span className="fuzzy-tag">close match</span> : null}
                       </button>
                     </li>
                   ))}
                 </ul>
               ) : null}
-              <p className="muted small" id="preview">
-                Suggestions appear after three characters — arrow keys and Enter pick one.
-              </p>
+              <p className="muted small" id="preview">Pick one from the list or type a name and lock it in.</p>
             </>
           ) : (
             <>
@@ -677,9 +595,11 @@ export default function EstimationGame({ mode, date }: Props) {
                   inputMode="decimal"
                   enterKeyHint="go"
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  readOnly={busy}
+                  maxLength={200}
+                  onChange={(e) => { setInput(e.target.value); setNotice(null); setSuggestion(null); }}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" && input.trim()) {
+                    if (!e.nativeEvent.isComposing && e.key === "Enter" && input.trim()) {
                       e.preventDefault();
                       lock(false);
                     }
@@ -689,54 +609,43 @@ export default function EstimationGame({ mode, date }: Props) {
                 />
                 <span className="unit-tag" aria-hidden="true">{prompt.unit}</span>
               </div>
-              <div className="suffix-row" aria-label="Quick number shortcuts">
-                {["k", "m", "b", "000"].map((sfx) => (
+              <div className="suffix-row" role="group" aria-label="Number suffixes">
+                {[["k", "thousand"], ["m", "million"], ["b", "billion"]].map(([suffix, label]) => (
                   <button
-                    key={sfx}
+                    key={suffix}
                     type="button"
                     className="suffix-chip"
+                    disabled={busy || !/\d\s*$/.test(input)}
                     onClick={() => {
                       sound.click();
-                      if (!/(\d|,)$/.test(input)) inputRef.current?.focus();
-                      setInput((v) => (/\d|,\s*$/.test(v) ? v.replace(/\s+$/, "") + sfx : v + (sfx === "000" ? "1000" : "1" + sfx)));
+                      setInput(input.trimEnd() + suffix);
+                      setNotice(null);
+                      setSuggestion(null);
                       inputRef.current?.focus();
                     }}
-                    tabIndex={-1}
-                    aria-label={`Append ${sfx}`}
                   >
-                    {sfx}
+                    {label}
                   </button>
                 ))}
-                <button
-                  type="button"
-                  className="suffix-chip"
-                  style={{ color: "var(--bad)" }}
-                  onClick={() => {
-                    sound.click();
-                    setInput("");
-                    inputRef.current?.focus();
-                  }}
-                  tabIndex={-1}
-                  aria-label="Clear input"
-                >
-                  Clear
-                </button>
               </div>
               <p id="preview" className={`preview${preview && !preview.valid ? " invalid" : ""}`} aria-live="polite">
                 {preview?.valid ? "✓ " : preview && !preview.valid ? "⚠ " : ""}
-                {preview?.text ?? (prompt.countMode ? "Whole numbers only — suffixes like k are fine." : "Decimals and suffixes like k, m, b are fine.")}
+                {preview?.text ?? (prompt.countMode ? "Enter a whole number. 5k works for 5,000." : "Enter a number. 1.2k works for 1,200.")}
               </p>
             </>
           )}
 
           {prompt.hintAvailable ? (
-            <details className="hint" open={hintOpen} onToggle={(e) => { if ((e.target as HTMLDetailsElement).open && !hint) showHint(); }}>
-              <summary>Show hint <span className="kbd" aria-hidden="true">H</span></summary>
+            <details className="hint" onToggle={(e) => setHintOpen(e.currentTarget.open)}>
+              <summary>Show hint</summary>
               {hint ? (
                 <HintContent hint={hint} imgFailed={imgFailed} setImgFailed={setImgFailed} />
-              ) : (
-                <p className="muted small">Loading hint…</p>
-              )}
+              ) : hintError ? (
+                <div className="hint-retry">
+                  <p role="status" className="muted">{hintError}</p>
+                  <button type="button" onClick={() => setHintError(null)}>Retry hint</button>
+                </div>
+              ) : hintLoading ? <p className="muted small" role="status">Loading hint…</p> : null}
             </details>
           ) : null}
 
@@ -744,18 +653,24 @@ export default function EstimationGame({ mode, date }: Props) {
             <div className="notice" role="alert">
               <span>{notice}</span>
               {suggestion ? (
-                <button onClick={() => lock(false, suggestion)}>Did you mean “{suggestion}”?</button>
+                <button onClick={() => lock(false, suggestion)} disabled={busy}>Lock “{suggestion}” instead</button>
               ) : null}
             </div>
           ) : null}
 
           <div className="actions">
             <button className="primary" onClick={() => lock(false)} disabled={busy || input.trim().length === 0}>
-              Lock guess <span className="kbd" aria-hidden="true">↵</span>
+              {busy ? "Submitting…" : "Lock guess"} <span className="kbd" aria-hidden="true">↵</span>
             </button>
             <button onClick={() => lock(true)} disabled={busy}>Pass</button>
           </div>
-          <p className="muted small">One locked answer per round. Untimed — hints never affect your score.</p>
+          {state.ordinal === 1 ? (
+            <details className="round-help">
+              <summary>How to play</summary>
+              <p>Make one estimate per question. Closer guesses earn more points, up to 100 per round. Guessing twice the answer or half the answer earns 50 points either way.</p>
+              <p>Hints are free. Passing earns zero points and shows the answer.</p>
+            </details>
+          ) : null}
         </section>
       ) : (
         <section className="card">
@@ -768,7 +683,9 @@ export default function EstimationGame({ mode, date }: Props) {
 
   function applySuggestion(s: Suggestion) {
     const text = s.disambiguator ? `${s.label} (${s.disambiguator})` : s.label;
+    chosenLabel.current = text;
     setInput(text);
+    setBrowse(false);
     setSuggestions([]);
     setActiveSuggestion(-1);
     setSuggestionsOpen(false);
@@ -824,52 +741,31 @@ function HintContent({
   );
 }
 
-function RevealDetails({ r }: { r: RoundResolved }) {
+function RevealDetails({ r, review = false }: { r: RoundResolved; review?: boolean }) {
   return (
     <>
-      <p>
-        {r.outcome === "pass" ? (
-          <span className="muted">Pass · 0 points</span>
-        ) : r.roundType === "target_match" ? (
-          r.entity ? (
-            <span>
-              Your pick: <strong>{r.entity.label}</strong> — {r.entity.valueDisplay} {r.reveal.unit}{" "}
-              ({r.direction}).
-            </span>
-          ) : null
-        ) : (
-          <span>
-            You guessed <strong>{r.guess?.display} {r.reveal.unit}</strong> — {r.direction}.
-            {r.absoluteGap ? <> Gap: {r.absoluteGap.display} {r.absoluteGap.unit}.</> : null}
-          </span>
-        )}
-      </p>
-      {r.roundType === "target_match" && r.closest && r.closest.entries.length > 0 ? (
+      {review && r.reveal.targetDisplay ? (
+        <p><strong>{r.reveal.benchmarkLabel ?? "Target"}:</strong> {r.reveal.targetDisplay} {r.reveal.unit}</p>
+      ) : null}
+      {r.entity ? (
+        <p>You picked <strong>{r.entity.label}</strong> ({r.entity.valueDisplay} {r.reveal.unit}).</p>
+      ) : r.guess ? (
+        <p>You guessed <strong>{r.guess.display} {r.reveal.unit}</strong>.</p>
+      ) : null}
+      {r.closest && r.closest.entries.length > 0 ? (
         <p>
-          Closest in the dataset:{" "}
+          Closest {r.closest.entries.length > 1 || r.closest.moreCount > 0 ? "matches" : "match"}:{ " " }
           {r.closest.entries.map((c, i) => (
             <span key={c.label}>
-              {i > 0 ? "; " : ""}
-              <strong>{c.label}</strong> ({c.valueDisplay} {r.reveal.unit})
+              {i > 0 ? ", " : ""}<strong>{c.label}</strong> ({c.valueDisplay} {r.reveal.unit})
             </span>
           ))}
-          {r.closest.moreCount > 0 ? ` — and ${r.closest.moreCount} equally close.` : ""}
+          {r.closest.moreCount > 0 ? ` and ${r.closest.moreCount} equally close.` : "."}
         </p>
       ) : null}
       <div className="reveal-box">
-        <p>
-          <strong>
-            {r.reveal.benchmarkLabel ? `${r.reveal.benchmarkLabel}: ${r.reveal.targetDisplay} ${r.reveal.unit}. ` : ""}
-          </strong>
-          {r.reveal.explanation}
-        </p>
-        {r.reveal.steps ? (
-          <ol>
-            {r.reveal.steps.map((s, i) => (
-              <li key={i}>{s}</li>
-            ))}
-          </ol>
-        ) : null}
+        <p>{r.reveal.explanation}</p>
+        {r.reveal.steps?.length ? <ol>{r.reveal.steps.map((s, i) => <li key={i}>{s}</li>)}</ol> : null}
         {r.reveal.comparison ? <p className="muted">{r.reveal.comparison}</p> : null}
         {r.reveal.source ? (
           <p className="muted small">
@@ -879,13 +775,6 @@ function RevealDetails({ r }: { r: RoundResolved }) {
       </div>
       {r.percentile != null ? (
         <p className="muted small">Closer than {r.percentile}% of players who guessed.</p>
-      ) : r.points > 0 ? (
-        <p className="muted small">Closer than {Math.max(1, Math.min(99, Math.round(r.points * 0.95)))}% of players who guessed.</p>
-      ) : null}
-      {r.hintText || r.hintFigure ? (
-        <p className="muted small">
-          Hint used: {[r.hintText, r.hintFigure ? `${r.hintFigure.value} ${r.hintFigure.unit}` : null].filter(Boolean).join(" · ")}
-        </p>
       ) : null}
     </>
   );
@@ -899,6 +788,7 @@ function RecapView({
   setComparison,
   onShare,
   notice,
+  sharing,
 }: {
   state: AttemptState;
   shareUrl: string | null;
@@ -907,226 +797,138 @@ function RecapView({
   setComparison: (v: boolean) => void;
   onShare: (c: boolean) => void;
   notice: string | null;
+  sharing: boolean;
 }) {
   const recap = state.recap!;
   const [resetIn, setResetIn] = useState("");
   const [reportFor, setReportFor] = useState<number | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [copiedText, setCopiedText] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "manual">("idle");
+  const heading = useRef<HTMLHeadingElement>(null);
+  const daily = recap.mode === "daily";
+  const newBest = daily && recap.previousBest != null && recap.total > recap.previousBest;
+  const great = recap.total >= 350;
+
+  useEffect(() => heading.current?.focus({ preventScroll: true }), []);
 
   useEffect(() => {
+    if (!daily) return;
     const tick = () => {
-      const target = new Date(recap.nextResetIso).getTime();
-      const diff = target - Date.now();
+      const diff = new Date(recap.nextResetIso).getTime() - Date.now();
       if (diff <= 0) {
         setResetIn("now");
         return;
       }
-      const h = Math.floor(diff / 3_600_000);
-      const m = Math.floor((diff % 3_600_000) / 60_000);
-      const s = Math.floor((diff % 60_000) / 1000);
-      setResetIn(`${h}h ${m}m ${s}s`);
+      const minutes = Math.ceil(diff / 60_000);
+      setResetIn(`${Math.floor(minutes / 60)}h ${minutes % 60}m`);
     };
     tick();
-    const id = setInterval(tick, 1000);
+    const id = setInterval(tick, 10_000);
     return () => clearInterval(id);
-  }, [recap.nextResetIso]);
+  }, [daily, recap.nextResetIso]);
 
-  const newBest = recap.mode === "daily" && recap.previousBest != null && recap.total > recap.previousBest;
-  const great = recap.total >= 350;
-  const celebrate = great || newBest;
+  async function copyMarks() {
+    try {
+      await navigator.clipboard.writeText(shareText(recap));
+      setCopyState("copied");
+    } catch {
+      setCopyState("manual");
+    }
+  }
 
   return (
-    <main>
-      <LabGrid density={32} />
-      <div className="card result-hero" aria-live="polite">
-        {celebrate ? <PixelConfetti count={newBest && !great ? 120 : 90} duration={3} /> : null}
-        <span className="chip">{recap.mode === "daily" ? "Daily" : "Archive · unranked"}</span>
-        {recap.streak && recap.streak.current > 0 ? (
-          <span className={`chip streak-chip${[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " milestone" : ""}`}>
-            <AnimatedSprite name="flame" palette={PALETTES.flame} size={14} />
-            {recap.streak.current}-day streak{[3, 7, 14, 30, 50, 100].includes(recap.streak.current) ? " · milestone!" : ""}
-          </span>
-        ) : null}
-        {recap.mode === "daily" && recap.previousBest != null && recap.total > recap.previousBest ? (
-          <span className="chip pb-chip">
-            <PixelSprite sprite={MEDAL} palette={PALETTES.medal} size={14} />
-            New personal best!
-          </span>
-        ) : null}
-        <ScoreRing total={recap.total} max={recap.maxTotal} />
-        <LabCalibrationMeter score={recap.total} maxScore={recap.maxTotal} className="recap-altitude-card" />
-        <p className="verdict-row">
-          {recap.total >= 350 ? (
-            <span className="trophy-shine">
-              <AnimatedSprite name="trophy" palette={PALETTES.trophy} size={22} />
-            </span>
-          ) : (
-            <AnimatedSprite name="sparkle" palette={PALETTES.sparkle} size={18} />
-          )}
-          <span className="verdict-text">
-            {recap.total >= 450
-              ? "National standard calibration."
-              : recap.total >= 350
-                ? "Laboratory grade accuracy."
-                : recap.total >= 200
-                  ? "Within empirical tolerance."
-                  : "Tomorrow's another calibration run."}
-          </span>
-        </p>
-        <p className="sub">
-          Estimation #{recap.displayNumber} · {recap.puzzleDate}
-        </p>
-        <div className="marks" role="list" aria-label="Round marks">
-          {recap.rounds.map((r) => (
-            <span role="listitem" key={r.ordinal} className={markClass(r.mark)}>
-              {MARK_ICONS[r.mark] ?? ""} {r.mark}
-            </span>
-          ))}
+    <main className="play-shell">
+      <div className="game-heading">
+        <div>
+          <p className="eyebrow">{daily ? "Daily" : "Archive"} #{recap.displayNumber} · {recap.puzzleDate}</p>
+          <h1 ref={heading} tabIndex={-1}>Puzzle complete</h1>
         </div>
-        {recap.closestRound ? (
-          <p className="muted small">Closest round: #{recap.closestRound.ordinal} — {recap.closestRound.shortLabel}</p>
-        ) : null}
-        {recap.mode === "daily" && recap.previousBest != null ? (
-          <p className="muted small">
-            {recap.total > recap.previousBest
-              ? `Beat your previous best of ${recap.previousBest}.`
-              : `Personal best: ${recap.previousBest} — ${recap.previousBest - recap.total} to beat it.`}
-          </p>
-        ) : null}
-        <p className="muted small">Next reset in <span className="countdown">{resetIn}</span> (00:00 UTC).</p>
+        {daily && resetIn !== "now"
+          ? <span className="muted">Next daily in {resetIn || "…"}</span>
+          : daily
+            ? <button onClick={() => window.location.reload()}>New daily puzzle →</button>
+            : <Link href="/estimation">Today’s puzzle →</Link>}
       </div>
 
-      <div className="card">
-        <h2>Share result</h2>
-        <label className="check-row">
-          <input
-            type="checkbox"
-            checked={comparison}
-            onChange={(e) => {
-              setComparison(e.target.checked);
-              setShareUrl(null);
-            }}
-          />
-          <span>Let friends who finished the same puzzle compare per question</span>
-        </label>
-        <div className="actions">
-          <button className="primary" onClick={() => onShare(comparison)}>Share result</button>
-          <button
-            className="btn"
-            onClick={async () => {
-              try {
-                await navigator.clipboard.writeText(shareText(recap));
-                setCopiedText(true);
-                setTimeout(() => setCopiedText(false), 1600);
-              } catch {
-                setCopiedText(false);
-              }
-            }}
-          >
-            {copiedText ? "✓ Emoji marks copied" : "Copy marks grid"}
-          </button>
-        </div>
-        {shareUrl ? (
-          <>
-            <p className="muted small">
-              Link: <a href={shareUrl}>{shareUrl}</a>
-            </p>
-            <button
-              className="quiet"
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(shareText(recap));
-                  setCopiedText(true);
-                  setTimeout(() => setCopiedText(false), 1600);
-                } catch {
-                  setCopiedText(false);
-                }
-              }}
-            >
-              {copiedText ? "✓ Text copied" : "Copy text"}
-            </button>
-            <button
-              className="quiet"
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(shareUrl);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 1600);
-                } catch {
-                  setCopied(false);
-                }
-              }}
-            >
-              {copied ? "✓ Copied" : "Copy link"}
-            </button>
-          </>
-        ) : null}
-        {notice ? <p role="status" className="muted">{notice}</p> : null}
-        <p className="muted small">The shared text and link never include prompts, answers or your guesses.</p>
-      </div>
-
-      <details className="card scoring-explainer" style={{ marginBottom: 14 }}>
-        <summary><strong>How scoring works</strong></summary>
-        <p className="muted" style={{ marginTop: 8 }}>
-          Each of the five rounds is worth up to 100 points. Only your <em>ratio</em> of guess to truth
-          matters — 2× too high loses exactly as much as 2× too low, so a reciprocal pair of misses scores
-          the same. Example: the true answer is 100. Guessing <strong>50</strong> scores the same as
-          guessing <strong>200</strong> — both are a factor of 2 off.
-        </p>
-        <p className="muted small" style={{ marginTop: 6 }}>
-          Marks: <span className="pill">Exact</span> spot-on or rounded right · <span className="pill">Close</span>{" "}
-          within the near band · <span className="pill">In range</span> inside a generous band ·{" "}
-          <span className="pill">Far</span> outside it. Passing keeps your streak but scores 0 for that round.
-          Percentiles, when shown, never change your points.
-        </p>
-      </details>
-
-      <h2>Answer review</h2>
-      {recap.rounds.map((r) => (
-        <details className="review" key={r.ordinal}>
-          <summary>
-            <span className={markClass(r.mark)}>{markChip(r)}</span>
-            {r.errorFactor ? (
-              <span className="factor-chip" style={{ fontSize: "0.75rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: "var(--surface-3)", color: "var(--text-dim)" }}>
-                {r.direction === "high" || r.direction === "higher than target" ? "▲" : "▼"} ×{factorLabel(r.errorFactor)}
-              </span>
-            ) : null}
-            <span className="q">{r.promptText.slice(0, 64)}{r.promptText.length > 64 ? "…" : ""}</span>
-          </summary>
-          <RevealDetails r={r} />
-          {reportFor === r.ordinal ? (
-            <ReportForm revisionId={r.revisionId} onDone={() => setReportFor(null)} />
-          ) : (
-            <button className="quiet" onClick={() => setReportFor(r.ordinal)}>Report a problem with this question</button>
-          )}
-        </details>
-      ))}
-
-      {recap.mode === "daily" ? (
-        <div className="keep-playing" role="region" aria-label="Keep playing">
-          <p className="kp-title">Done for today — the next calibration lands in {resetIn}</p>
-          <p className="muted small">Keep your hand in on any past puzzle. Archive runs are unranked, so they never touch your streak.</p>
-          <div className="actions">
-            <Link className="btn cta" href="/estimation/archive">Keep playing · the archive →</Link>
-            <Link className="btn" href="/">Home</Link>
+      <section className="card result-hero">
+        {great || newBest ? <PixelConfetti count={64} duration={2} /> : null}
+        <div className="recap-scoreboard">
+          <div className="recap-dial"><ScoreRing total={recap.total} max={recap.maxTotal} size={128} /></div>
+          <div>
+            <PixelSprite sprite={great ? OWL.star : OWL.happy} palette={OWL_PALETTE} size={48} />
+            <h2>{newBest ? "New personal best" : great ? "Sharp estimates" : "Good to get a reading"}</h2>
+            {recap.streak && recap.streak.current > 0 ? (
+              <p className="muted">{recap.streak.current}-day streak</p>
+            ) : <p className="muted">Five rounds scored.</p>}
           </div>
         </div>
-      ) : (
-        <div className="actions">
-          <Link className="btn" href="/">Home</Link>
-          <Link className="btn" href="/estimation">Back to today</Link>
-        </div>
-      )}
-      {SIBLING_GAMES.length > 0 ? (
-        <p className="muted small" style={{ textAlign: "center", marginTop: 18 }}>
-          More daily games: {SIBLING_GAMES.map((g, i) => (
-            <span key={g.url}>
-              {i > 0 ? " · " : ""}
-              <a href={g.url}>{g.name}</a>
-            </span>
+        <ol className="recap-marks" aria-label="Round scores">
+          {recap.rounds.map((r) => (
+            <li key={r.ordinal}>
+              <a className={markClass(r.mark)} href={`#review-${r.ordinal}`} onClick={() => {
+                const review = document.getElementById(`review-${r.ordinal}`);
+                if (review instanceof HTMLDetailsElement) review.open = true;
+              }}>
+                <strong>{r.points}</strong><span>{r.mark}</span>
+              </a>
+            </li>
           ))}
-        </p>
+        </ol>
+        <div className="actions recap-actions">
+          <button className="primary" onClick={copyMarks}>{copyState === "copied" ? "Marks copied" : "Copy spoiler-free marks"}</button>
+          <Link className="btn" href="/estimation/scale-run">Play Scale Run</Link>
+          <Link className="btn" href="/estimation/close-call">Play Close Call</Link>
+          <Link className="btn" href="/estimation/lab">Open the Lab</Link>
+          <Link className="btn" href="/estimation/warm-up">Play a warm-up</Link>
+          <Link className="btn" href="/estimation/archive">Browse the archive</Link>
+        </div>
+        {copyState === "manual" ? (
+          <textarea rows={2} aria-label="Spoiler-free result" readOnly value={shareText(recap)} onFocus={(e) => e.currentTarget.select()} />
+        ) : null}
+      </section>
+
+      <details className="card scoring-explainer">
+        <summary><strong>Share a result link</strong></summary>
+        <p className="muted">Share your score and round marks without revealing any answers.</p>
+        <label className="check-row">
+          <input type="checkbox" checked={comparison} disabled={sharing} onChange={(e) => {
+            setComparison(e.target.checked);
+            setShareUrl(null);
+          }} />
+          <span>Let friends who finished the same puzzle compare scores by round</span>
+        </label>
+        <div className="actions">
+          <button onClick={() => onShare(comparison)} disabled={sharing}>{sharing ? "Creating link…" : "Create share link"}</button>
+        </div>
+        {shareUrl ? (
+          <div className="share-link">
+            <label htmlFor="result-link">Result link</label>
+            <input id="result-link" type="text" value={shareUrl} readOnly onFocus={(e) => e.currentTarget.select()} />
+          </div>
+        ) : null}
+        {notice ? <p role="status" className="muted">{notice}</p> : null}
+      </details>
+
+      <section aria-labelledby="review-heading">
+        <h2 id="review-heading">Answer review</h2>
+        {recap.rounds.map((r) => (
+          <details className="review" id={`review-${r.ordinal}`} key={r.ordinal}>
+            <summary>
+              <span className={markClass(r.mark)}>{markChip(r)}</span>
+              <span className="q">{r.promptText}</span>
+            </summary>
+            <RevealDetails r={r} review />
+            {reportFor === r.ordinal ? (
+              <ReportForm revisionId={r.revisionId} onDone={() => setReportFor(null)} />
+            ) : (
+              <button className="quiet" onClick={() => setReportFor(r.ordinal)}>Report a problem with this question</button>
+            )}
+          </details>
+        ))}
+      </section>
+      {SIBLING_GAMES.length > 0 ? (
+        <p className="muted small">More daily games: {SIBLING_GAMES.map((g, i) => (
+          <span key={g.url}>{i > 0 ? " · " : ""}<a href={g.url}>{g.name}</a></span>
+        ))}</p>
       ) : null}
     </main>
   );
@@ -1136,6 +938,7 @@ function ReportForm({ revisionId, onDone }: { revisionId: string; onDone: () => 
   const [reason, setReason] = useState("");
   const [url, setUrl] = useState("");
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   return done ? (
@@ -1144,14 +947,11 @@ function ReportForm({ revisionId, onDone }: { revisionId: string; onDone: () => 
     <form
       onSubmit={async (e) => {
         e.preventDefault();
-        const res = await fetch("/api/estimation/report", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ revisionId, reason, url: url || undefined }),
-        });
-        const data = await res.json();
+        setSending(true);
+        const { data } = await api("/api/estimation/report", { revisionId, reason, url: url || undefined });
+        setSending(false);
         if (data.ok) setDone(true);
-        else setErr(data.message ?? "Report failed.");
+        else setErr(String(data.message ?? "Report failed."));
       }}
     >
       <label htmlFor={`reason-${revisionId}`}>What&apos;s wrong?</label>
@@ -1160,7 +960,7 @@ function ReportForm({ revisionId, onDone }: { revisionId: string; onDone: () => 
       <input id={`url-${revisionId}`} type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
       {err ? <p role="alert" className="muted">{err}</p> : null}
       <div className="actions">
-        <button type="submit" disabled={reason.trim().length === 0}>Send report</button>
+        <button type="submit" disabled={sending || reason.trim().length === 0}>{sending ? "Sending…" : "Send report"}</button>
         <button type="button" onClick={onDone}>Cancel</button>
       </div>
     </form>
