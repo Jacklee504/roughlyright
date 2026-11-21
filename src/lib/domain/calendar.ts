@@ -14,6 +14,12 @@ export function utcToday(): UtcDate {
   return utcDateOf(now());
 }
 
+export function isUtcDate(value: unknown): value is UtcDate {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value) || value.startsWith("0000")) return false;
+  const date = new Date(`${value}T00:00:00Z`);
+  return Number.isFinite(date.getTime()) && utcDateOf(date) === value;
+}
+
 export function datePlusDays(date: UtcDate, days: number): UtcDate {
   const d = new Date(date + "T00:00:00Z");
   d.setUTCDate(d.getUTCDate() + days);

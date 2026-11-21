@@ -18,12 +18,13 @@ import { utcToday, dailyFinishWindowEndIso, nextResetIso } from "@/lib/domain/ca
 import { now } from "@/lib/domain/clock";
 import type { AttemptState, PromptPublic, Recap, RoundResolved } from "@/lib/dto";
 import { getPuzzleByDate, getPromptRevisions, getPromptRevision, type PromptRevisionRow, type PuzzleRow } from "./puzzles";
-import { buildCommunityPercentile, computeStreaks } from "./stats";
+import { buildCommunityPercentile, computeCalibration, computeStreaks } from "./stats";
+import { FREE_ARCHIVE_DAYS, featuresFor, getTier } from "./tiers";
 
 export type StartInput = { game: string; date?: string; mode?: "daily" | "archive" };
 export type StartResult =
   | { ok: true; state: AttemptState }
-  | { ok: false; code: "unavailable" | "not_found" | "forbidden" | "stale"; message: string };
+  | { ok: false; code: "unavailable" | "not_found" | "forbidden" | "stale" | "locked"; message: string };
 
 export type ResolveInput =
   | { attemptId: string; ordinal: number; requestId: string; pass: true }
@@ -127,11 +128,26 @@ export async function startOrResume(guestId: string, input: StartInput): Promise
       return { ok: true, state: await buildState(tx, frozen, puzzle) };
     }
 
+    // Freemium: a new archive run needs the date inside the guest's archive
+    // window (the most recent released dates for free players, everything for
+    // supporters). Runs that already exist above stay reachable regardless.
+    if (mode === "archive") {
+      const allowed = await archiveDateAllowed(tx, guestId, game, date, today, !!daily);
+      if (!allowed) {
+        return {
+          ok: false as const,
+          code: "locked" as const,
+          message: `The free archive covers the last ${FREE_ARCHIVE_DAYS} puzzles. Supporters can play every past date.`,
+        };
+      }
+    }
+
     const id = crypto.randomUUID();
     const isDaily = mode === "daily";
-    await tx.query(
+    const inserted = await tx.query<{ id: string }>(
       `insert into attempts (id, guest_id, puzzle_id, mode, state, current_ordinal, started_at, daily_expiry)
-       values ($1,$2,$3,$4,'active',1,$5,$6)`,
+       values ($1,$2,$3,$4,'active',1,$5,$6)
+       on conflict (guest_id, puzzle_id, mode) do nothing returning id`,
       [
         id,
         guestId,
@@ -141,12 +157,49 @@ export async function startOrResume(guestId: string, input: StartInput): Promise
         isDaily ? new Date(dailyFinishWindowEndIso(date)) : null,
       ],
     );
-    await armRound(tx, id, 1, puzzle.prompt_revision_ids[0]);
-    await recordEventTx(tx, game, "start", isDaily ? "daily" : `archive:${date}`);
-    if (puzzle.theme_tag) await recordEventTx(tx, game, "theme_tag", puzzle.theme_tag);
+    if (inserted.rows.length > 0) {
+      await armRound(tx, id, 1, puzzle.prompt_revision_ids[0]);
+      await recordEventTx(tx, game, "start", isDaily ? "daily" : `archive:${date}`);
+      if (puzzle.theme_tag) await recordEventTx(tx, game, "theme_tag", puzzle.theme_tag);
+    }
     const attempt = await getAttemptFor(tx, guestId, puzzle.id, mode);
     return { ok: true, state: await buildState(tx, attempt!, puzzle) };
   });
+}
+
+/**
+ * Archive window check (server-side entitlement). Free players can open the
+ * FREE_ARCHIVE_DAYS most recent released dates before today; a date whose
+ * ranked daily expired (the handoff's "offer a fresh unranked attempt") is
+ * always allowed. Supporters, and every guest while freemium is off, can
+ * open any released date.
+ */
+export async function archiveDateAllowed(
+  tx: Queryable,
+  guestId: string,
+  game: string,
+  date: string,
+  today: string,
+  hadDaily: boolean,
+): Promise<boolean> {
+  if (hadDaily) return true;
+  const tier = await getTier(guestId, tx);
+  const window = featuresFor(tier).archiveDays;
+  if (!Number.isFinite(window)) return true;
+  const recent = await freeArchiveDates(game, today, tx);
+  return recent.includes(date);
+}
+
+/** The released dates (newest first) that the free archive window covers. */
+export async function freeArchiveDates(game: string, today: string, client?: Queryable): Promise<string[]> {
+  const c = client ?? (await getDb());
+  const rows = await c.query<{ date: string }>(
+    `select date::text as date from puzzles
+     where game_slug = $1 and status = 'live' and date < $2
+     order by date desc limit $3`,
+    [game, today, FREE_ARCHIVE_DAYS],
+  );
+  return rows.rows.map((r) => r.date);
 }
 
 async function getAttemptFor(tx: Queryable, guestId: string, puzzleId: string, mode: string): Promise<AttemptRow | null> {
@@ -370,96 +423,20 @@ export async function resolveRound(guestId: string, input: ResolveInput): Promis
 
     const revision = await getPromptRevision(round.revision_id, tx);
     if (!revision) return { ok: false as const, code: "stale" as const, message: "Prompt revision missing." };
-    const scoring = revision.private as PrivateScoring;
 
-    let outcome: "scored" | "pass";
-    let points = 0;
-    let mark = "Pass";
-    let submittedValue: string | null = null;
-    let submittedEntity: { entryId: string; label: string; value: string } | null = null;
-    let errorFactor: string | null = null;
-
-    if (input.pass) {
-      outcome = "pass";
-    } else if (revision.round_type === "target_match") {
-      if (scoring.type !== "target_match") return { ok: false as const, code: "stale" as const, message: "Scoring data mismatch." };
-      if (!input.entity || !input.entity.trim()) {
+    const sub = await scoreSubmission(tx, revision, input);
+    if (!sub.ok) {
+      if (sub.reason) {
+        // Q48: coarse reason codes only, never the rejected text.
         await tx.query(
           `insert into invalid_guess_events (id, attempt_id, ordinal, round_type, reason)
-           values (gen_random_uuid(), $1, $2, $3, 'empty_entity')`,
-          [attempt.id, input.ordinal, revision.round_type],
+           values (gen_random_uuid(), $1, $2, $3, $4)`,
+          [attempt.id, input.ordinal, revision.round_type, sub.reason],
         );
-        return { ok: false as const, code: "invalid_input" as const, message: "Type the name of an item from the list, then lock your guess." };
       }
-      const entries = await eligibleEntries(scoring.datasetId, scoring.eligibleEntryIds, tx);
-      const wanted = normalizeKey(input.entity);
-      const match = entries.find(
-        (e) =>
-          normalizeKey(e.label) === wanted ||
-          normalizeKey(e.disambiguator ? `${e.label} (${e.disambiguator})` : e.label) === wanted ||
-          e.aliases.some((a) => normalizeKey(a) === wanted),
-      );
-      if (!match) {
-        // Advisory autocorrect: offer a close typo correction only when there
-        // is exactly one best candidate (ambiguity never gets guessed).
-        const cands: FuzzyCandidate[] = entries.flatMap((e) => {
-          const forms = [e.label, e.disambiguator ? `${e.label} (${e.disambiguator})` : null, ...e.aliases];
-          return forms.filter((f): f is string => !!f).map((display) => ({ display, entryKey: e.entry_id }));
-        });
-        const hits = fuzzyEntityMatches(input.entity, cands, normalizeKey);
-        const best = hits[0];
-        const tie = hits.length > 1 && hits[1].distance === best?.distance && hits[1].candidate.entryKey !== best?.candidate.entryKey;
-        let suggestion: string | undefined;
-        if (best && !tie) {
-          const bestEntry = entries.find((e) => e.entry_id === best.candidate.entryKey);
-          // The plain label is always an accepted match form on resolve.
-          suggestion = bestEntry?.label ?? best.candidate.display;
-        }
-        await tx.query(
-          `insert into invalid_guess_events (id, attempt_id, ordinal, round_type, reason)
-           values (gen_random_uuid(), $1, $2, $3, 'no_match')`,
-          [attempt.id, input.ordinal, revision.round_type],
-        );
-        return {
-          ok: false as const,
-          code: "invalid_input" as const,
-          message: `We couldn't match "${input.entity.trim()}" to an item in this list. Try the suggestions, or check the spelling.`,
-          ...(suggestion ? { suggestion } : {}),
-        };
-      }
-      submittedEntity = { entryId: match.entry_id, label: match.label, value: match.value };
-      submittedValue = match.value;
-      outcome = "scored";
-      const scored = scoreValue(parseDecimalToRat(match.value)!, parseDecimalToRat(scoring.target)!);
-      points = scored.points;
-      mark = scored.mark;
-      errorFactor = stringifyRat(scored.errorFactor);
-    } else {
-      const parsed = parseNumber(input.guess ?? "", revision.count_mode ? "count" : "measured", revision.unit);
-      if (!parsed.ok) {
-        const repair = repairNumberInput(input.guess ?? "", revision.count_mode ? "count" : "measured", revision.unit);
-        await tx.query(
-          `insert into invalid_guess_events (id, attempt_id, ordinal, round_type, reason)
-           values (gen_random_uuid(), $1, $2, $3, 'parse_error')`,
-          [attempt.id, input.ordinal, revision.round_type],
-        );
-        return {
-          ok: false as const,
-          code: "invalid_input" as const,
-          message: parsed.message,
-          // Advisory only: the client offers it; the player still confirms it.
-          ...(repair ? { suggestion: repair.fixed } : {}),
-        };
-      }
-      const targetRat = targetValue(scoring);
-      if (!targetRat) return { ok: false as const, code: "stale" as const, message: "Benchmark missing." };
-      submittedValue = parsed.canonical;
-      outcome = "scored";
-      const scored = scoreValue(parsed.value, targetRat);
-      points = scored.points;
-      mark = scored.mark;
-      errorFactor = stringifyRat(scored.errorFactor);
+      return { ok: false as const, code: sub.code, message: sub.message, ...(sub.suggestion ? { suggestion: sub.suggestion } : {}) };
     }
+    const { outcome, points, mark, submittedValue, submittedEntity, errorFactor } = sub;
 
     await tx.query(
       `update attempt_rounds set outcome=$3, submitted_value=$4, submitted_entity=$5, points=$6,
@@ -488,6 +465,113 @@ export async function resolveRound(guestId: string, input: ResolveInput): Promis
     const state = await buildState(tx, attempt, puzzle);
     return { ok: true, state };
   });
+}
+
+export type Submission =
+  | {
+      ok: true;
+      outcome: "scored" | "pass";
+      points: number;
+      mark: string;
+      submittedValue: string | null;
+      submittedEntity: { entryId: string; label: string; value: string } | null;
+      errorFactor: string | null;
+    }
+  | {
+      ok: false;
+      code: "invalid_input" | "stale";
+      message: string;
+      suggestion?: string;
+      /** Invalid-input funnel reason (Q48); absent for non-player errors. */
+      reason?: "empty_entity" | "no_match" | "parse_error";
+    };
+
+/**
+ * Pure scoring of one submission against a prompt revision (no writes).
+ * Shared by ranked/archive rounds and unrecorded practice rounds, so every
+ * mode uses the identical parser, autocorrect and scoring contract.
+ */
+export async function scoreSubmission(
+  client: Queryable,
+  revision: PromptRevisionRow,
+  input: { pass: boolean; guess?: string; entity?: string },
+): Promise<Submission> {
+  const scoring = revision.private as PrivateScoring;
+  if (input.pass) {
+    return { ok: true, outcome: "pass", points: 0, mark: "Pass", submittedValue: null, submittedEntity: null, errorFactor: null };
+  }
+  if (revision.round_type === "target_match") {
+    if (scoring.type !== "target_match") return { ok: false, code: "stale", message: "Scoring data mismatch." };
+    if (!input.entity || !input.entity.trim()) {
+      return { ok: false, code: "invalid_input", reason: "empty_entity", message: "Type the name of an item from the list, then lock your guess." };
+    }
+    const entries = await eligibleEntries(scoring.datasetId, scoring.eligibleEntryIds, client);
+    const wanted = normalizeKey(input.entity);
+    const match = entries.find(
+      (e) =>
+        normalizeKey(e.label) === wanted ||
+        normalizeKey(e.disambiguator ? `${e.label} (${e.disambiguator})` : e.label) === wanted ||
+        e.aliases.some((a) => normalizeKey(a) === wanted),
+    );
+    if (!match) {
+      // Advisory autocorrect: offer a close typo correction only when there
+      // is exactly one best candidate (ambiguity never gets guessed).
+      const cands: FuzzyCandidate[] = entries.flatMap((e) => {
+        const forms = [e.label, e.disambiguator ? `${e.label} (${e.disambiguator})` : null, ...e.aliases];
+        return forms.filter((f): f is string => !!f).map((display) => ({ display, entryKey: e.entry_id }));
+      });
+      const hits = fuzzyEntityMatches(input.entity, cands, normalizeKey);
+      const best = hits[0];
+      const tie = hits.length > 1 && hits[1].distance === best?.distance && hits[1].candidate.entryKey !== best?.candidate.entryKey;
+      let suggestion: string | undefined;
+      if (best && !tie) {
+        const bestEntry = entries.find((e) => e.entry_id === best.candidate.entryKey);
+        // The plain label is always an accepted match form on resolve.
+        suggestion = bestEntry?.label ?? best.candidate.display;
+      }
+      return {
+        ok: false,
+        code: "invalid_input",
+        reason: "no_match",
+        message: `"${input.entity.trim().slice(0, 60)}" isn't in this list. Pick one of the suggestions, or check the spelling.`,
+        ...(suggestion ? { suggestion } : {}),
+      };
+    }
+    const scored = scoreValue(parseDecimalToRat(match.value)!, parseDecimalToRat(scoring.target)!);
+    return {
+      ok: true,
+      outcome: "scored",
+      points: scored.points,
+      mark: scored.mark,
+      submittedValue: match.value,
+      submittedEntity: { entryId: match.entry_id, label: match.label, value: match.value },
+      errorFactor: stringifyRat(scored.errorFactor),
+    };
+  }
+  const parsed = parseNumber(input.guess ?? "", revision.count_mode ? "count" : "measured", revision.unit);
+  if (!parsed.ok) {
+    const repair = repairNumberInput(input.guess ?? "", revision.count_mode ? "count" : "measured", revision.unit);
+    return {
+      ok: false,
+      code: "invalid_input",
+      reason: "parse_error",
+      message: parsed.message,
+      // Advisory only: the client offers it; the player still confirms it.
+      ...(repair ? { suggestion: repair.fixed } : {}),
+    };
+  }
+  const targetRat = targetValue(scoring);
+  if (!targetRat) return { ok: false, code: "stale", message: "Benchmark missing." };
+  const scored = scoreValue(parsed.value, targetRat);
+  return {
+    ok: true,
+    outcome: "scored",
+    points: scored.points,
+    mark: scored.mark,
+    submittedValue: parsed.canonical,
+    submittedEntity: null,
+    errorFactor: stringifyRat(scored.errorFactor),
+  };
 }
 
 function stringifyRat(r: Rat): string {
@@ -592,7 +676,7 @@ export async function advanceRound(guestId: string, input: AdvanceInput): Promis
 // Reveal / recap assembly
 // ---------------------------------------------------------------------------
 
-async function buildResolved(
+export async function buildResolved(
   round: AttemptRoundRow,
   rev: PromptRevisionRow,
   puzzle: PuzzleRow,
@@ -616,27 +700,30 @@ async function buildResolved(
   // The player's own ratio only; share/comparison payloads never include it.
   let errorFactor: string | null = null;
 
+  if (scoring.type !== "target_match") {
+    targetDisplay = formatDisplay(scoring.type === "calculation" ? scoring.benchmark! : scoring.value);
+    benchmarkLabel = scoring.type === "direct_fact" ? "Official figure" : "Worked estimate";
+  }
   if (!passed && !isTarget && scoring.type !== "target_match") {
     const target = targetValue(scoring)!;
     const guessRat = parseDecimalToRat(round.submitted_value!)!;
-    const targetStr = formatDisplay(scoring.type === "calculation" ? scoring.benchmark! : scoring.value);
-    targetDisplay = targetStr;
-    benchmarkLabel = scoring.type === "direct_fact" ? "Official figure" : "Worked estimate";
     guess = { display: formatDisplay(round.submitted_value!), canonical: round.submitted_value! };
-    dir = guessDirection(guessRat, target) === "high" ? "high" : "low";
+    // An exact guess is neither high nor low.
+    dir = cmp(guessRat, target) === 0 ? null : guessDirection(guessRat, target) === "high" ? "high" : "low";
     const abs = cmp(guessRat, target) > 0 ? sub(guessRat, target) : sub(target, guessRat);
     gap = { display: formatDisplay(stringifyRat(abs)), unit: rev.unit };
     errorFactor = round.error_factor ?? null;
   }
-  if (!passed && isTarget && scoring.type === "target_match") {
+  if (isTarget && scoring.type === "target_match") {
     const target = parseDecimalToRat(scoring.target)!;
     targetDisplay = formatDisplay(scoring.target);
     const entries = await eligibleEntries(scoring.datasetId, scoring.eligibleEntryIds, client);
-    const chosen = entries.find((e) => e.entry_id === round.submitted_entity?.entryId);
+    const chosen = passed ? undefined : entries.find((e) => e.entry_id === round.submitted_entity?.entryId);
     if (chosen) {
       const chosenRat = parseDecimalToRat(chosen.value)!;
       entity = { label: chosen.label, valueDisplay: formatDisplay(chosen.value) };
-      dir = cmp(chosenRat, target) > 0 ? "higher than target" : "lower than target";
+      const c = cmp(chosenRat, target);
+      dir = c === 0 ? null : c > 0 ? "higher than target" : "lower than target";
       const r = div(chosenRat, target);
       const ratio = cmp(chosenRat, target) > 0 ? r : div(target, chosenRat);
       errorFactor = stringifyRat(ratio);
@@ -744,16 +831,17 @@ export async function buildRecap(
     // extended. Archive runs are unranked and never touch the streak.
     streak: attempt.mode === "daily" ? await computeStreaks(puzzle.game_slug, attempt.guest_id, client) : null,
     // Previous daily best (excluding this attempt) for the "new best" moment.
-    previousBest: await previousBestScore(attempt, client),
+    previousBest: attempt.mode === "daily" ? await previousBestScore(attempt, puzzle, client) : null,
+    calibration: attempt.mode === "daily" ? await computeCalibration(attempt.guest_id, 7, client) : null,
   };
 }
 
 /** Highest completed daily score before this attempt; null if none. */
-async function previousBestScore(attempt: AttemptRow, client?: Queryable): Promise<number | null> {
+async function previousBestScore(attempt: AttemptRow, puzzle: PuzzleRow, client?: Queryable): Promise<number | null> {
   const rows = await (client ?? (await getDb())).query<{ best: number | string | null }>(
-    `select max(score) as best from attempts
-     where guest_id = $1 and mode = 'daily' and state = 'completed' and id <> $2`,
-    [attempt.guest_id, attempt.id],
+    `select max(a.score) as best from attempts a join puzzles p on p.id = a.puzzle_id
+     where a.guest_id = $1 and a.mode = 'daily' and a.state = 'completed' and p.game_slug = $2 and p.date < $3`,
+    [attempt.guest_id, puzzle.game_slug, puzzle.date],
   );
   const best = rows.rows[0]?.best;
   return best == null ? null : Number(best);
@@ -781,26 +869,23 @@ export async function getRecapForGuest(guestId: string, attemptId: string): Prom
 
 /** Hint content for an open round (server-supplied only). */
 export async function getHint(guestId: string, attemptId: string, ordinal: number): Promise<{ ok: true; hint: unknown } | { ok: false; message: string }> {
-  const db = await getDb();
-  const rows = await q<{ hint: unknown; state: string }>(
-    `select r.hint, a.state from attempts a
-     join puzzles p on p.id = a.puzzle_id
-     join prompt_revisions r on r.revision_id = p.prompt_revision_ids[$3]
+  if (!Number.isInteger(ordinal) || ordinal < 1 || ordinal > 5) return { ok: false, message: "Hint not available." };
+  // The hint comes from the round's armed revision, so it always matches the
+  // prompt on screen. (An earlier version passed an unused parameter to a
+  // second query, which Postgres rejects, so every hint request failed.)
+  const rows = await q<{ hint: unknown; state: string; round_type: string }>(
+    `select r.hint, a.state, r.round_type from attempts a
+     join attempt_rounds ar on ar.attempt_id = a.id and ar.ordinal = a.current_ordinal
+     join prompt_revisions r on r.revision_id = ar.revision_id
      where a.id = $1 and a.guest_id = $2 and a.current_ordinal = $3`,
     [attemptId, guestId, ordinal],
   );
   const row = rows[0];
   if (!row) return { ok: false, message: "Hint not available." };
   if (row.state !== "active") return { ok: false, message: "Hint not available." };
-  // Q17: hints exist only on numerical fact and calculation rounds — never on
+  // Q17: hints exist only on numerical fact and calculation rounds, never on
   // target matches, even if malformed content slipped one in.
-  const roundTypeRows = await q<{ round_type: string }>(
-    `select r.round_type from prompt_revisions r
-     join puzzles p on p.prompt_revision_ids[$3] = r.revision_id
-     where p.id = (select puzzle_id from attempts where id = $1)`,
-    [attemptId, guestId, ordinal],
-  );
-  if (roundTypeRows[0]?.round_type === "target_match") {
+  if (row.round_type === "target_match") {
     return { ok: false, message: "Target rounds don't have hints." };
   }
   return { ok: true, hint: row.hint };

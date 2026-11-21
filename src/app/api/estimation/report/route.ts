@@ -32,7 +32,11 @@ export async function POST(req: NextRequest) {
   ) {
     return NextResponse.json({ ok: false, code: "bad_request", message: "A short explanation is required." }, { status: 400 });
   }
-  const url = typeof body.url === "string" && body.url.length <= 2000 ? body.url : null;
+  const rawUrl = typeof body.url === "string" ? body.url.trim() : "";
+  if (rawUrl && (rawUrl.length > 2000 || !/^https?:\/\/[^\s]+$/i.test(rawUrl))) {
+    return NextResponse.json({ ok: false, code: "bad_request", message: "The supporting link should start with http:// or https://." }, { status: 400 });
+  }
+  const url = rawUrl || null;
   const proposed = typeof body.proposedAnswer === "string" && body.proposedAnswer.length <= 500 ? body.proposedAnswer : null;
   await createContentReport({ revisionId: body.revisionId, reason: body.reason.trim(), proposedAnswer: proposed, url });
   return NextResponse.json({ ok: true });

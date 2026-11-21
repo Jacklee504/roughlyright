@@ -75,6 +75,15 @@ export type Recap = {
   streak: { current: number; best: number } | null;
   /** Best earlier completed daily score (null when this is the first daily). */
   previousBest: number | null;
+  /** Own-data calibration over recent dailies (null for archive runs or no data). */
+  calibration: CalibrationDto | null;
+};
+
+export type CalibrationDto = {
+  typicalMiss: number;
+  previousMiss: number | null;
+  rounds: number;
+  closeRate: number;
 };
 
 export type AttemptState = {
@@ -102,6 +111,10 @@ export type GameStatus = {
   themeTag: string | null;
   attempt: { exists: boolean; state: "none" | "active" | "completed" | "expired"; score: number; mode: string } | null;
   streak: { current: number; best: number };
+  /** Yesterday's ranked run, still open inside its 30-minute finish window. */
+  pending: { date: string; puzzleNumber: number; expiresAt: string; ordinal: number } | null;
+  /** Number of completed dailies (first-run detection without client storage). */
+  dailiesPlayed: number;
 };
 
 export type TaggedErr<T extends string = string> = { ok: false; code: T; message: string };
