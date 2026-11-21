@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 /** Public, crawlable pages only. Results and API routes are excluded. */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const routes = ["", "/estimation", "/estimation/archive", "/estimation/insights", "/terms", "/privacy"];
+  const routes = ["", "/estimation/close-call", "/estimation", "/estimation/archive", "/estimation/warm-up", "/estimation/scale-run", "/estimation/lab", "/estimation/insights", "/terms", "/privacy"];
   return routes.map((r) => ({
     url: `${base}${r}`,
     lastModified: new Date(),

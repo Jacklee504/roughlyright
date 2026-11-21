@@ -5,22 +5,19 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: {
-    default: "Roughly Right — daily estimation games",
+    default: "Roughly Right · Close Call",
     template: "%s · Roughly Right",
   },
-  description: "Make five real-world estimates. Get closer to earn more points. A new puzzle every day at 00:00 UTC.",
+  description: "Take on the House in five rounds of real-world estimation. Get close, call the range and bet on the final answer.",
   openGraph: {
     type: "website",
     siteName: "Roughly Right",
-    title: "Roughly Right — daily estimation games",
-    description: "Five real-world estimates a day. Get closer to earn more points. No timer, no signup.",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Roughly Right — a daily estimation game" }],
+    title: "Close Call by Roughly Right",
+    description: "Five rounds of real-world estimation against the House. One final wager.",
+    images: [{ url: "/estimation/close-call/opengraph-image", width: 1200, height: 630, alt: "Close Call by Roughly Right" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Roughly Right — daily estimation games",
-    description: "Five real-world estimates a day. Get closer to earn more points. No timer, no signup.",
-    images: ["/og.png"],
   },
   manifest: "/manifest.webmanifest",
 };
@@ -28,7 +25,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#060a17",
+  themeColor: "#0b1916",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -40,9 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <span className="logo" aria-hidden="true">RR</span>
             Roughly Right
           </Link>
-          <nav aria-label="Games">
-            {/* Partial rollout: only released games appear in navigation. */}
-            <Link href="/estimation">Estimation</Link>
+          <nav aria-label="Main">
+            <Link href="/estimation">Today</Link>
             <Link href="/estimation/insights">Insights</Link>
           </nav>
         </header>
