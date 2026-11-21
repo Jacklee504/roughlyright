@@ -19,6 +19,10 @@ export type SharePayload = {
   marks: { ordinal: number; mark: Mark }[];
   comparisonEnabled: boolean;
   comparison: { ordinal: number; owner: { points: number; mark: Mark }; viewer: { points: number; mark: Mark } }[] | null;
+  /** The viewer's own run used for comparison (labelled when modes differ). */
+  viewerRun: { mode: "daily" | "archive"; total: number } | null;
+  /** Cosmetic supporter badge (only when the owner is a supporter). */
+  ownerSupporter: boolean;
 };
 
 export async function createShare(guestId: string, attemptId: string, comparison: boolean): Promise<{ ok: true; token: string } | { ok: false; message: string }> {
@@ -59,11 +63,18 @@ export async function revokeShare(guestId: string, token: string): Promise<{ ok:
   return { ok: res.rows.length > 0 };
 }
 
+/**
+ * Public share view. Comparison unlocks only when the owner enabled it and the
+ * viewer has completed the same puzzle themselves (either mode; a daily run is
+ * preferred). The third parameter is accepted for older callers and ignored:
+ * the viewer's completion is always looked up server-side.
+ */
 export async function getSharePayload(
   token: string,
   viewerGuestId: string | null,
-  viewerCompletedPuzzleId: string | null,
-): Promise<{ found: true; payload: SharePayload; attemptId: string; puzzleId: string } | { found: false }> {
+  _ignored?: string | null,
+): Promise<{ found: true; payload: SharePayload; attemptId: string; puzzleId: string; ownerGuestId: string } | { found: false }> {
+  if (typeof token !== "string" || !/^[A-Za-z0-9_-]{16,64}$/.test(token)) return { found: false };
   const db = await getDb();
   const rows = await db.query<{
     token: string;
@@ -75,10 +86,13 @@ export async function getSharePayload(
     display_number: number;
     mode: string;
     score: number;
+    owner_guest: string;
+    owner_tier: string;
     marks: { ordinal: number; mark: string }[];
   }>(
     `select s.token, s.comparison, a.id as attempt_id, p.id as puzzle_id, p.game_slug,
             p.date::text as date, p.display_number, a.mode, a.score,
+            a.guest_id as owner_guest, coalesce(g.tier, 'free') as owner_tier,
             coalesce(
               (select json_agg(json_build_object('ordinal', r.ordinal, 'mark', r.mark) order by r.ordinal)
                from attempt_rounds r where r.attempt_id = a.id and r.outcome is not null),
@@ -87,6 +101,7 @@ export async function getSharePayload(
      from share_results s
      join attempts a on a.id = s.attempt_id
      join puzzles p on p.id = a.puzzle_id
+     left join guests g on g.id = a.guest_id
      where s.token = $1 and s.revoked_at is null and a.state = 'completed'`,
     [token],
   );
@@ -94,14 +109,24 @@ export async function getSharePayload(
   if (!row) return { found: false };
 
   let comparison: SharePayload["comparison"] = null;
-  if (row.comparison && viewerCompletedPuzzleId && viewerCompletedPuzzleId === row.puzzle_id) {
-    const viewerRows = await db.query<{ ordinal: number; points: number; mark: string }>(
-      `select r.ordinal, r.points, r.mark from attempt_rounds r
-       join attempts a on a.id = r.attempt_id
-       where a.puzzle_id = $1 and a.guest_id = $2 and a.state = 'completed' and r.outcome is not null`,
+  let viewerRun: SharePayload["viewerRun"] = null;
+  if (row.comparison && viewerGuestId) {
+    // The viewer's own completed run of the same puzzle; daily preferred.
+    const runs = await db.query<{ id: string; mode: string; score: number }>(
+      `select id, mode, score from attempts
+       where puzzle_id = $1 and guest_id = $2 and state = 'completed'
+       order by (mode = 'daily') desc limit 1`,
       [row.puzzle_id, viewerGuestId],
     );
-    if (viewerRows.rows.length > 0) {
+    const run = runs.rows[0];
+    const viewerRows = run
+      ? await db.query<{ ordinal: number; points: number; mark: string }>(
+          `select ordinal, points, mark from attempt_rounds where attempt_id = $1 and outcome is not null`,
+          [run.id],
+        )
+      : { rows: [] as { ordinal: number; points: number; mark: string }[] };
+    if (run && viewerRows.rows.length > 0) {
+      viewerRun = { mode: run.mode as "daily" | "archive", total: run.score };
       const ownerRows = await db.query<{ ordinal: number; points: number; mark: string }>(
         `select r.ordinal, r.points, r.mark from attempt_rounds r where r.attempt_id = $1 and r.outcome is not null`,
         [row.attempt_id],
@@ -122,6 +147,7 @@ export async function getSharePayload(
     found: true,
     attemptId: row.attempt_id,
     puzzleId: row.puzzle_id,
+    ownerGuestId: row.owner_guest,
     payload: {
       game: row.game_slug,
       displayNumber: row.display_number,
@@ -132,8 +158,30 @@ export async function getSharePayload(
       marks: row.marks.map((m) => ({ ordinal: m.ordinal, mark: m.mark as Mark })),
       comparisonEnabled: row.comparison,
       comparison,
+      viewerRun,
+      ownerSupporter: row.owner_tier === "supporter",
     },
   };
+}
+
+/** The guest's live (unrevoked) share links, for the privacy page. */
+export async function listShares(guestId: string): Promise<{ token: string; displayNumber: number; puzzleDate: string; mode: string; comparison: boolean; createdAt: string }[]> {
+  const db = await getDb();
+  const rows = await db.query<{ token: string; display_number: number; date: string; mode: string; comparison: boolean; created_at: string }>(
+    `select s.token, p.display_number, p.date::text as date, a.mode, s.comparison, s.created_at::text as created_at
+     from share_results s join attempts a on a.id = s.attempt_id join puzzles p on p.id = a.puzzle_id
+     where a.guest_id = $1 and s.revoked_at is null
+     order by s.created_at desc`,
+    [guestId],
+  );
+  return rows.rows.map((r) => ({
+    token: r.token,
+    displayNumber: r.display_number,
+    puzzleDate: r.date,
+    mode: r.mode,
+    comparison: r.comparison,
+    createdAt: r.created_at,
+  }));
 }
 
 async function recordShareEvent(game: string): Promise<void> {

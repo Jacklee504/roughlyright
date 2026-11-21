@@ -62,20 +62,51 @@ export async function buildCommunityPercentile(
     ? (await client.query<{ others: string; closer: string }>(sql, [revisionId, viewerErrorFactor, viewerAttemptId, viewerOrdinal])).rows
     : await q<{ others: string; closer: string }>(sql, [revisionId, viewerErrorFactor, viewerAttemptId, viewerOrdinal]);
   const others = Number(rows[0]?.others ?? 0);
-  if (others >= 50) {
-    const closer = Number(rows[0]?.closer ?? 0);
-    return Math.floor((closer / others) * 100);
-  }
+  // Contract: the percentile is shown only once 50+ other real guesses exist.
+  // (An earlier build synthesised a fake figure below that threshold; it
+  // has been removed. No data means no percentile.)
+  if (others < 50) return null;
+  const closer = Number(rows[0]?.closer ?? 0);
+  return Math.floor((closer / others) * 100);
+}
 
-  // Developer / Preview fallback when live community pool is under 50 players:
-  // Synthesize realistic percentile from log-distance calibration curve so the UI & graph
-  // are immediately visible during local testing before 50 human players complete today's run.
-  const ef = parseFloat(viewerErrorFactor);
-  if (!Number.isFinite(ef) || ef <= 0) return null;
-  // Approximation of log-normal CDF for typical human Fermi estimators (sigma ~ 0.55):
-  const logDistance = Math.abs(Math.log(ef));
-  // Probability of being further than this guess:
-  const z = logDistance / 0.55;
-  const simulatedPercentile = Math.max(1, Math.min(99, Math.round(100 * Math.exp(-0.7 * z * z))));
-  return simulatedPercentile;
+export type Calibration = {
+  /** Geometric-mean miss factor over the window (1 = perfect), e.g. 1.6 means "typically 1.6x off". */
+  typicalMiss: number;
+  /** Same measure for the previous window, for a trend arrow (null if not enough data). */
+  previousMiss: number | null;
+  rounds: number;
+  /** Share of scored rounds in the window that landed Close or Exact. */
+  closeRate: number;
+};
+
+/**
+ * Own-data calibration: how far off a guest's scored daily guesses typically
+ * are, as a geometric mean of error factors over their last `windowDays`
+ * completed dailies, compared with the window before. Passes are excluded.
+ */
+export async function computeCalibration(guestId: string, windowDays = 7, client?: Queryable): Promise<Calibration | null> {
+  const sql = `with days as (
+       select a.id, row_number() over (order by p.date desc) as rn
+       from attempts a join puzzles p on p.id = a.puzzle_id
+       where a.guest_id = $1 and a.mode = 'daily' and a.state = 'completed'
+     )
+     select d.rn::int as rn, r.error_factor, r.mark
+     from days d join attempt_rounds r on r.attempt_id = d.id
+     where r.outcome = 'scored' and r.error_factor is not null and d.rn <= $2`;
+  const params = [guestId, windowDays * 2];
+  const rows = client
+    ? (await client.query<{ rn: number; error_factor: string; mark: string }>(sql, params)).rows
+    : await q<{ rn: number; error_factor: string; mark: string }>(sql, params);
+  const current = rows.filter((r) => r.rn <= windowDays);
+  const previous = rows.filter((r) => r.rn > windowDays);
+  if (current.length === 0) return null;
+  const geo = (list: { error_factor: string }[]) =>
+    Math.exp(list.reduce((s, r) => s + Math.log(Math.max(1, Number(r.error_factor) || 1)), 0) / list.length);
+  return {
+    typicalMiss: geo(current),
+    previousMiss: previous.length >= 5 ? geo(previous) : null,
+    rounds: current.length,
+    closeRate: current.filter((r) => r.mark === "Close" || r.mark === "Exact").length / current.length,
+  };
 }

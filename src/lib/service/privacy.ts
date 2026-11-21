@@ -38,6 +38,8 @@ export type PrivacyExport = {
   createdAt: string;
   attempts: ExportAttempt[];
   shareTokens: { tokenPrefix: string; createdAt: string; revoked: boolean }[];
+  tier: string;
+  purchases: { provider: string; status: string; createdAt: string; completedAt: string | null }[];
 };
 
 /** First 8 characters only: exports identify without enabling impersonation. */
@@ -123,7 +125,16 @@ export async function exportGuestData(guestId: string): Promise<PrivacyExport | 
     [guestId],
   );
 
+  const tierRows = await q<{ tier: string }>(`select tier from guests where id = $1`, [guestId]);
+  const purchases = await q<{ provider: string; status: string; created_at: string; completed_at: string | null }>(
+    `select provider, status, created_at::text as created_at, completed_at::text as completed_at
+     from purchases where guest_id = $1 order by created_at asc`,
+    [guestId],
+  );
+
   return {
+    tier: tierRows[0]?.tier ?? "free",
+    purchases: purchases.map((p) => ({ provider: p.provider, status: p.status, createdAt: p.created_at, completedAt: p.completed_at })),
     exportedAt: new Date().toISOString(),
     guestIdPrefix: prefix(guestId),
     createdAt: guest.created_at,
@@ -173,6 +184,9 @@ export async function deleteGuestData(guestId: string): Promise<{ ok: true; atte
       [guestId],
     );
     await tx.query(`delete from attempts where guest_id = $1`, [guestId]);
+    // Purchases are unlinked, not deleted: the payment provider keeps its own
+    // records, and the restore code still re-grants the supporter tier.
+    await tx.query(`update purchases set guest_id = null where guest_id = $1`, [guestId]);
     await tx.query(`delete from guests where id = $1`, [guestId]);
     return counts.rows[0];
   });

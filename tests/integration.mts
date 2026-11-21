@@ -146,7 +146,8 @@ test("plays the full daily: fact, three calcs, target match, then recap", async 
     assert.equal(r.state.resolved?.entity?.label, "Harbor Lights");
     assert.equal(r.state.resolved?.points, 100);
     assert.equal(r.state.resolved?.mark, "Exact");
-    assert.equal(r.state.resolved?.direction, "lower than target");
+    // An exact pick is neither higher nor lower than the target.
+    assert.equal(r.state.resolved?.direction, null);
     assert.deepEqual(
       r.state.resolved?.closest?.entries.map((e) => e.label).sort(),
       ["Harbor Lights", "The Long Crossing"],
@@ -317,8 +318,25 @@ test("pass resolves for zero and shows the same explanation", async () => {
     assert.equal(r.state.resolved?.mark, "Pass");
     assert.equal(r.state.resolved?.points, 0);
     assert.equal(r.state.resolved?.guess, null);
+    assert.equal(r.state.resolved?.reveal.benchmarkLabel, "Official figure");
+    assert.ok(r.state.resolved?.reveal.targetDisplay);
     assert.ok(r.state.resolved?.reveal.explanation);
   }
+});
+
+test("passing a target match shows the closest eligible entries", async () => {
+  const guest = await newGuest();
+  const s = await startDaily(guest);
+  for (let ordinal = 1; ordinal < 5; ordinal++) {
+    await resolveRound(guest, { attemptId: s.attemptId, ordinal, requestId: rid(), pass: true });
+    await advanceRound(guest, { attemptId: s.attemptId, ordinal, requestId: rid() });
+  }
+
+  const r = await resolveRound(guest, { attemptId: s.attemptId, ordinal: 5, requestId: rid(), pass: true });
+  assert.ok(r.ok);
+  assert.equal(r.state.resolved?.entity, null);
+  assert.ok(r.state.resolved?.reveal.targetDisplay);
+  assert.ok(r.state.resolved?.closest?.entries.length);
 });
 
 test("duplicated submissions return the original outcome; a conflicting guess cannot alter it", async () => {
@@ -538,6 +556,203 @@ test("invalid-input funnel logs coarse reasons only, never the rejected text, an
   assert.deepEqual(reasons, ["parse_error", "empty_entity", "no_match"]);
   assert.ok(events.rows.every((r) => r.attempt_id === attemptId));
   assert.ok(events.rows.every((r) => r.corrected), "all three were corrected by the eventual success");
+});
+
+// ---------------------------------------------------------------------------
+// Release pass: hints, honest percentiles, comparison, freemium, practice
+// ---------------------------------------------------------------------------
+
+test("hints load for the open round and never for a target match", async () => {
+  const { getHint } = await import("@/lib/service/attempts");
+  setClock(FIXED_NOW); // earlier tests move the clock; pin it for this block
+  const guest = await newGuest();
+  const s = await startDaily(guest);
+  const h = await getHint(guest, s.attemptId, 1);
+  assert.ok(h.ok, "hint for round 1 loads");
+  if (h.ok) assert.ok(JSON.stringify(h.hint).includes("Curiosity"));
+  // Not the open round: refused.
+  const wrong = await getHint(guest, s.attemptId, 2);
+  assert.equal(wrong.ok, false);
+  // Another guest cannot read it.
+  const other = await getHint(await newGuest(), s.attemptId, 1);
+  assert.equal(other.ok, false);
+});
+
+test("community percentile is withheld below 50 real guesses (no synthetic figures)", async () => {
+  const { guest, attemptId } = completedDaily;
+  const recap = await getRecapForGuest(guest, attemptId);
+  assert.ok(recap.ok);
+  if (recap.ok) assert.ok(recap.recap.rounds.every((r) => r.percentile == null));
+});
+
+test("recap carries an own-data calibration summary for dailies", async () => {
+  const { guest, attemptId } = completedDaily;
+  const recap = await getRecapForGuest(guest, attemptId);
+  assert.ok(recap.ok);
+  if (recap.ok) {
+    const c = recap.recap.calibration;
+    assert.ok(c, "calibration present");
+    if (c) {
+      assert.equal(c.rounds, 5);
+      assert.ok(c.typicalMiss >= 1 && c.typicalMiss < 2);
+      assert.ok(c.closeRate > 0 && c.closeRate <= 1);
+    }
+  }
+});
+
+test("share comparison unlocks for a different viewer who finished the same puzzle", async () => {
+  const owner = await newGuest();
+  const viewer = await newGuest();
+  const finish = async (g: string) => {
+    const s = await startDaily(g);
+    for (let i = 1; i <= 5; i++) {
+      await resolveRound(g, { attemptId: s.attemptId, ordinal: i, requestId: rid(), pass: true });
+      await advanceRound(g, { attemptId: s.attemptId, ordinal: i, requestId: rid() });
+    }
+    return s.attemptId;
+  };
+  const ownerAttempt = await finish(owner);
+  const share = await createShare(owner, ownerAttempt, true);
+  assert.ok(share.ok);
+  if (!share.ok) return;
+  // Before finishing, the viewer sees marks only.
+  const early = await getSharePayload(share.token, viewer);
+  assert.ok(early.found);
+  if (early.found) assert.equal(early.payload.comparison, null);
+  await finish(viewer);
+  const later = await getSharePayload(share.token, viewer);
+  assert.ok(later.found);
+  if (later.found) {
+    assert.equal(later.payload.comparison?.length, 5);
+    assert.deepEqual(later.payload.viewerRun, { mode: "daily", total: 0 });
+  }
+  // A link without comparison never compares.
+  const plain = await createShare(owner, ownerAttempt, false);
+  assert.ok(plain.ok);
+  if (plain.ok) {
+    const p = await getSharePayload(plain.token, viewer);
+    assert.ok(p.found);
+    if (p.found) assert.equal(p.payload.comparison, null);
+  }
+});
+
+test("free archive window: older dates lock for free players, open for supporters", async () => {
+  const { setTier } = await import("@/lib/service/tiers");
+  const db = await getDb();
+  // Seed ten extra released dates well before the fixture days, reusing a
+  // fixture day's prompts, so the free window (7 most recent) excludes them.
+  const src = await db.query<{ ids: string[] }>(
+    `select prompt_revision_ids as ids from puzzles where game_slug = 'estimation' order by date asc limit 1`,
+  );
+  const ids = src.rows[0].ids;
+  const maxNum = await db.query<{ n: number }>(`select max(display_number)::int as n from puzzles`);
+  for (let i = 0; i < 10; i++) {
+    const date = `2026-10-${String(10 + i).padStart(2, "0")}`;
+    await db.query(
+      `insert into puzzles (id, game_slug, date, display_number, content_revision, rules_version, status, prompt_revision_ids)
+       values (gen_random_uuid(), 'estimation', $1, $2, 'test', '1', 'live', $3::uuid[]) on conflict do nothing`,
+      [date, maxNum.rows[0].n + 1 + i, ids],
+    );
+  }
+  const free = await newGuest();
+  const locked = await startOrResume(free, { game: "estimation", date: "2026-10-10", mode: "archive" });
+  assert.ok(!locked.ok);
+  if (!locked.ok) assert.equal(locked.code, "locked");
+  // A recent date is still free.
+  const recent = await startOrResume(free, { game: "estimation", date: "2026-11-16", mode: "archive" });
+  assert.ok(recent.ok);
+
+  const sup = await newGuest();
+  await setTier(sup, "supporter");
+  const open = await startOrResume(sup, { game: "estimation", date: "2026-10-10", mode: "archive" });
+  assert.ok(open.ok);
+  if (open.ok) assert.equal(open.state.mode, "archive");
+});
+
+test("mock purchase grants the tier once, issues a restore code that works elsewhere", async () => {
+  const { createPurchase, completePurchase, redeemRestoreCode, rotateRestoreCode } = await import("@/lib/billing/purchases");
+  const { getTier } = await import("@/lib/service/tiers");
+  const buyer = await newGuest();
+  const p = await createPurchase(buyer, "mock");
+  assert.equal(await getTier(buyer), "free");
+  const done = await completePurchase(p.id);
+  assert.ok(done.ok);
+  if (!done.ok || !done.restoreCode) throw new Error("no restore code");
+  assert.match(done.restoreCode, /^RR-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/);
+  assert.equal(await getTier(buyer), "supporter");
+  // Completing again is a no-op (webhook + redirect race).
+  const again = await completePurchase(p.id);
+  assert.ok(again.ok);
+  if (again.ok) {
+    assert.equal(again.alreadyCompleted, true);
+    assert.equal(again.restoreCode, null);
+  }
+  // Only the hash is stored.
+  const db = await getDb();
+  const stored = await db.query<{ restore_hash: string }>(`select restore_hash from purchases where id = $1`, [p.id]);
+  assert.notEqual(stored.rows[0].restore_hash, done.restoreCode);
+  // Another browser restores with the code (case/dash-insensitive).
+  const other = await newGuest();
+  const r = await redeemRestoreCode(other, done.restoreCode.toLowerCase().replace(/-/g, " "));
+  assert.ok(r.ok);
+  assert.equal(await getTier(other), "supporter");
+  // Rotating invalidates the old code.
+  const rotated = await rotateRestoreCode(buyer);
+  assert.ok(rotated.ok);
+  const stale = await redeemRestoreCode(await newGuest(), done.restoreCode);
+  assert.equal(stale.ok, false);
+  // Deleting the buyer's data keeps the purchase restorable but unlinked.
+  const { deleteGuestData } = await import("@/lib/service/privacy");
+  await deleteGuestData(buyer);
+  const unlinked = await db.query<{ guest_id: string | null; status: string }>(`select guest_id, status from purchases where id = $1`, [p.id]);
+  assert.deepEqual(unlinked.rows[0], { guest_id: null, status: "paid" });
+  if (rotated.ok) {
+    const back = await redeemRestoreCode(await newGuest(), rotated.restoreCode);
+    assert.ok(back.ok);
+  }
+});
+
+test("practice serves only past prompts, scores them, and writes nothing", async () => {
+  const { nextPracticePrompt, resolvePractice, isPracticeEligible } = await import("@/lib/service/practice");
+  const { getPuzzleByDate } = await import("@/lib/service/puzzles");
+  const { utcToday } = await import("@/lib/domain/calendar");
+  const db = await getDb();
+  const today = await getPuzzleByDate("estimation", utcToday());
+  assert.ok(today);
+  // Today's prompts are never practice-eligible (they may be shared with no past day).
+  for (const id of today!.prompt_revision_ids) {
+    const shared = await db.query<{ n: string }>(
+      `select count(*)::text as n from puzzles where date < $1 and $2::uuid = any(prompt_revision_ids)`,
+      [utcToday(), id],
+    );
+    if (shared.rows[0].n === "0") assert.equal(await isPracticeEligible(id), false);
+  }
+  const before = await db.query<{ n: string }>(`select count(*)::text as n from attempt_rounds`);
+  const prompt = await nextPracticePrompt([], null);
+  assert.ok(prompt, "a past prompt is available");
+  if (!prompt) return;
+  assert.ok(!JSON.stringify(prompt).includes("benchmark"), "no answer key in the prompt");
+  const resolved = await resolvePractice(prompt.revisionId, { pass: true });
+  assert.ok(resolved.ok);
+  if (resolved.ok) assert.equal(resolved.resolved.mark, "Pass");
+  const after = await db.query<{ n: string }>(`select count(*)::text as n from attempt_rounds`);
+  assert.equal(after.rows[0].n, before.rows[0].n, "practice never writes rounds");
+});
+
+test("home status reports an open ranked run from yesterday during the finish window", async () => {
+  const guest = await newGuest();
+  setClock(new Date("2026-11-16T23:55:00Z"));
+  const s = await startDaily(guest);
+  setClock(new Date("2026-11-17T00:10:00Z"));
+  const status = await getGameStatus("estimation", guest);
+  assert.equal(status.pending?.date, "2026-11-16");
+  assert.equal(status.pending?.ordinal, 1);
+  assert.equal(status.attempt?.exists, false); // today's daily is untouched
+  setClock(new Date("2026-11-17T01:00:00Z"));
+  const later = await getGameStatus("estimation", guest);
+  assert.equal(later.pending, null);
+  void s;
+  setClock(FIXED_NOW);
 });
 
 async function completedPuzzleId(attemptId: string): Promise<string | null> {
