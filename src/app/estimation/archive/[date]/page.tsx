@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import EstimationGame from "@/components/EstimationGame";
-import { utcToday } from "@/lib/domain/calendar";
+import { isUtcDate, utcToday } from "@/lib/domain/calendar";
 import { getPuzzleByDate } from "@/lib/service/puzzles";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ date: str
 
 export default async function ArchiveDatePage({ params }: { params: Promise<{ date: string }> }) {
   const { date } = await params;
-  const valid = /^\d{4}-\d{2}-\d{2}$/.test(date) && date < utcToday();
+  const valid = isUtcDate(date) && date < utcToday();
   const puzzle = valid ? await getPuzzleByDate("estimation", date) : null;
 
   if (!puzzle) {
