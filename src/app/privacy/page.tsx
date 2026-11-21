@@ -34,6 +34,8 @@ export default async function PrivacyPage() {
           <li>Your <strong>game attempts</strong>: which daily you played, the guesses you locked in, your scores and streaks.</li>
           <li>Any <strong>share links</strong> you created for a finished result.</li>
           <li><strong>Anonymous daily totals</strong> (how many people played) with nothing that identifies you.</li>
+          <li>Your <strong>Close Call record, Scale Run progress and Lab best scores</strong> stay in this browser. The controls below can clear that progress. Your Close Call sound preference stays on this device.</li>
+          <li>A <strong>Close Call challenge link</strong> carries your score target and episode. Anyone with the link can try that episode.</li>
         </ul>
         <p className="muted" style={{ marginTop: 10 }}>
           Content-error reports you may have sent are separate and are not exported here. Play data is
